@@ -1,0 +1,28 @@
+use Test;
+
+use lib 'lib';
+
+use Grammar;
+use Actions;
+
+my $code = q:to/END/;
+RLAPI Music LoadMusicStream(const char *fileName);                    // Load music stream from file
+RLAPI Music LoadMusicStreamFromMemory(const char *fileType, const unsigned char *data, int dataSize); // Load music stream from data
+RLAPI bool WindowShouldClose(void);                               // Check if KEY_ESCAPE pressed or Close icon pressed
+RLAPI void CloseWindow(void);                                     // Close window and unload OpenGL context
+RLAPI bool IsWindowReady(void);
+END
+
+my $parser = RaylibGrammar.new;
+my $actions = RaylibActions.new;
+
+$parser.parse($code, actions => $actions);
+ for $actions.bindings -> $binding {
+     say $binding;
+ }
+
+
+
+
+
+
