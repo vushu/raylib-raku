@@ -1,0 +1,318 @@
+use Test;
+
+use lib 'lib';
+
+use Grammar;
+plan 15;
+
+my $parser = RaylibGrammar.new;
+
+my $code = q:to/END/;
+typedef struct VrStereoConfig {
+    Matrix projection[2];           // VR projection matrices (per eye)
+    Matrix viewOffset[2];           // VR view offset matrices (per eye)
+    float leftLensCenter[2];        // VR left lens center
+    float rightLensCenter[2];       // VR right lens center
+    float leftScreenCenter[2];      // VR left screen center
+    float rightScreenCenter[2];     // VR right screen center
+    float scale[2];                 // VR distortion scale
+    float scaleIn[2];               // VR distortion scale in
+} VrStereoConfig;
+
+typedef struct RayCollision {
+    bool hit;               // Did the ray hit something?
+    float distance;         // Distance to the nearest hit
+    Vector3 point;          // Point of the nearest hit
+    Vector3 normal;         // Surface normal of hit
+} RayCollision;
+
+typedef struct Matrix {
+    float m0, m4, m8, m12;  // Matrix first row (4 components)
+    float m1, m5, m9, m13;  // Matrix second row (4 components)
+    float m2, m6, m10, m14; // Matrix third row (4 components)
+    float m3, m7, m11, m15; // Matrix fourth row (4 components)
+} Matrix;
+
+typedef struct Mesh {
+    int vertexCount;        // Number of vertices stored in arrays
+    int triangleCount;      // Number of triangles stored (indexed or not)
+
+    // Vertex attributes data
+    float *vertices;        // Vertex position (XYZ - 3 components per vertex) (shader-location = 0)
+    float *texcoords;       // Vertex texture coordinates (UV - 2 components per vertex) (shader-location = 1)
+    float *texcoords2;      // Vertex texture second coordinates (UV - 2 components per vertex) (shader-location = 5)
+    float *normals;         // Vertex normals (XYZ - 3 components per vertex) (shader-location = 2)
+    float *tangents;        // Vertex tangents (XYZW - 4 components per vertex) (shader-location = 4)
+    unsigned char *colors;      // Vertex colors (RGBA - 4 components per vertex) (shader-location = 3)
+    unsigned short *indices;    // Vertex indices (in case vertex data comes indexed)
+
+    float *animVertices;    // Animated vertex positions (after bones transformations)
+    float *animNormals;     // Animated normals (after bones transformations)
+    unsigned char *boneIds; // Vertex bone ids, max 255 bone ids, up to 4 bones influence by vertex (skinning)
+    float *boneWeights;     // Vertex bone weight, up to 4 bones influence by vertex (skinning)
+
+    unsigned int vaoId;     // OpenGL Vertex Array Object id
+    unsigned int *vboId;    // OpenGL Vertex Buffer Objects id (default vertex data)
+} Mesh;
+
+END
+
+ok $parser.parse($code), 'Parsing typedef-struct';
+
+$code = q:to/END/;
+//Some comment
+RLAPI Music LoadMusicStream(const char *fileName);                    // Load music stream from file
+RLAPI Music LoadMusicStreamFromMemory(const char *fileType, const unsigned char *data, int dataSize); // Load music stream from data
+RLAPI bool WindowShouldClose(void);                               // Check if KEY_ESCAPE pressed or Close icon pressed
+RLAPI void CloseWindow(void);                                     // Close window and unload OpenGL context
+RLAPI bool IsWindowReady(void);                                   // Check if window has been initialized successfully
+END
+
+ok $parser.parse($code), 'Parsing function rule';
+
+$code = q:to/END/;
+/********
+Hello world
+*********/
+// one-line-comment
+END
+
+ok $parser.parse($code), 'Parsing comment rule';
+
+
+$code = q:to/END/;
+//sfdsadfa
+typedef enum {
+    TEXTURE_FILTER_POINT = 0,
+    TEXTURE_FILTER_BILINEAR,
+    TEXTURE_FILTER_TRILINEAR,
+    TEXTURE_FILTER_ANISOTROPIC_4X,
+    TEXTURE_FILTER_ANISOTROPIC_8X,
+    TEXTURE_FILTER_ANISOTROPIC_16X,
+} TextureFilter;
+
+typedef enum {
+    FLAG_VSYNC_HINT         = 0x00000040,   // Set to try enabling V-Sync on GPU
+    FLAG_FULLSCREEN_MODE    = 0x00000002,   // Set to run program in fullscreen
+    FLAG_WINDOW_RESIZABLE   = 0x00000004,   // Set to allow resizable window
+    FLAG_WINDOW_UNDECORATED = 0x00000008,   // Set to disable window decoration (frame and buttons)
+    FLAG_WINDOW_HIDDEN      = 0x00000080,   // Set to hide window
+    FLAG_WINDOW_MINIMIZED   = 0x00000200,   // Set to minimize window (iconify)
+    FLAG_WINDOW_MAXIMIZED   = 0x00000400,   // Set to maximize window (expanded to monitor)
+    FLAG_WINDOW_UNFOCUSED   = 0x00000800,   // Set to window non focused
+    FLAG_WINDOW_TOPMOST     = 0x00001000,   // Set to window always on top
+    FLAG_WINDOW_ALWAYS_RUN  = 0x00000100,   // Set to allow windows running while minimized
+    FLAG_WINDOW_TRANSPARENT = 0x00000010,   // Set to allow transparent framebuffer
+    FLAG_WINDOW_HIGHDPI     = 0x00002000,   // Set to support HighDPI
+    FLAG_WINDOW_MOUSE_PASSTHROUGH = 0x00004000, // Set to support mouse passthrough, only supported when FLAG_WINDOW_UNDECORATED
+    FLAG_BORDERLESS_WINDOWED_MODE = 0x00008000, // Set to run program in borderless windowed mode
+    FLAG_MSAA_4X_HINT       = 0x00000020,   // Set to try enabling MSAA 4X
+    FLAG_INTERLACED_HINT    = 0x00010000    // Set to try enabling interlaced video format (for V3D)
+} ConfigFlags;
+END
+
+ok $parser.parse($code), 'Parsing typedef enum rule';
+
+
+$code = q:to/END/;
+// Callbacks to hook some internal functions
+// WARNING: These callbacks are intended for advance users
+typedef void (*TraceLogCallback)(int logLevel, const char *text, va_list args);  // Logging: Redirect trace log messages
+typedef unsigned char *(*LoadFileDataCallback)(const char *fileName, unsigned int *bytesRead);      // FileIO: Load binary data
+typedef bool (*SaveFileDataCallback)(const char *fileName, void *data, unsigned int bytesToWrite);  // FileIO: Save binary data
+typedef char *(*LoadFileTextCallback)(const char *fileName);            // FileIO: Load text data
+typedef bool (*SaveFileTextCallback)(const char *fileName, char *text); // FileIO: Save text data
+typedef void (*AudioCallback)(void *bufferData, unsigned int frames);
+END
+
+ok $parser.parse($code), 'Parsing typedef-callback rule';
+
+
+$code = q:to/END/;
+#ifndef RAYLIB_H
+#define RAYLIB_H
+#define RAYLIB_VERSION_MAJOR 4
+#define RAYLIB_VERSION_MINOR 6
+#define RAYLIB_VERSION_PATCH 0
+#define RAYLIB_VERSION  "4.6-dev"
+
+#define RL_COLOR_TYPE
+#define RL_COLOR_TYPE
+#define RL_RECTANGLE_TYPE
+#define RL_VECTOR2_TYPE
+#define RL_VECTOR3_TYPE
+#define RL_VECTOR4_TYPE
+#define RL_QUATERNION_TYPE
+#define RL_MATRIX_TYPE
+
+#define WHITE      CLITERAL(Color){ 255, 255, 255, 255 }   // White
+#define BLACK      CLITERAL(Color){ 0, 0, 0, 255 }         // Black
+#define BLANK      CLITERAL(Color){ 0, 0, 0, 0 }           // Blank (Transparent)
+#define MAGENTA    CLITERAL(Color){ 255, 0, 255, 255 }     // Magenta
+#define RAYWHITE   CLITERAL(Color){ 245, 245, 245, 255 }   // My own White (raylib logo)
+#ifndef RAD2DEG
+#define RAD2DEG (180.0f/PI)
+#endif
+#endif //RAYLIB_H
+
+END
+
+ok $parser.parse($code), 'Parsing define macro rule';
+
+$code = q:to/END/;
+#ifndef RAD2DEG
+#define RAD2DEG (180.0f/PI)
+#endif
+END
+
+ok $parser.parse($code), 'Parsing define macro with group';
+
+$code = q:to/END/;
+#if defined(_WIN32)
+#endif
+
+#define RLAPI __declspec(dllexport)     // We are building the library as a Win32 shared library (.dll)
+
+END
+ok $parser.parse($code), 'Parsing ignore rule';
+
+$code = q:to/END/;
+#include<stdarg.h>
+END
+ok $parser.parse($code), 'Parsing ignore include rule';
+
+$code = q:to/END/;
+#ifndef EPSILON
+#define EPSILON 0.000001f
+#endif
+
+END
+ok $parser.parse($code), 'Parsing ifndef-block rule';
+
+$code = q:to/END/;
+// Function specifiers definition
+#if defined(RAYMATH_IMPLEMENTATION)
+    #if defined(_WIN32) && defined(BUILD_LIBTYPE_SHARED)
+        #define RMAPI __declspec(dllexport) extern inline // We are building raylib as a Win32 shared library (.dll).
+    #elif defined(_WIN32) && defined(USE_LIBTYPE_SHARED)
+        #define RMAPI __declspec(dllimport)         // We are using raylib as a Win32 shared library (.dll)
+    #else
+        #define RMAPI extern inline // Provide external definition
+    #endif
+#elif defined(RAYMATH_STATIC_INLINE)
+    #define RMAPI static inline // Functions may be inlined, no external out-of-line definition
+#else
+    #if defined(__TINYC__)
+        #define RMAPI static inline // plain inline not supported by tinycc (See issue #435)
+    #else
+        #define RMAPI inline        // Functions may be inlined or external definition used
+    #endif
+#endif
+
+
+// Function specifiers in case library is build/used as a shared library (Windows)
+// NOTE: Microsoft specifiers to tell compiler that symbols are imported/exported from a .dll
+#if defined(_WIN32)
+    #if defined(BUILD_LIBTYPE_SHARED)
+        #if defined(__TINYC__)
+            #define __declspec(x) __attribute__((x))
+        #endif
+        #define RLAPI __declspec(dllexport)     // We are building the library as a Win32 shared library (.dll)
+    #elif defined(USE_LIBTYPE_SHARED)
+        #define RLAPI __declspec(dllimport)     // We are using the library as a Win32 shared library (.dll)
+    #endif
+#endif
+
+
+END
+ok $parser.parse($code), 'Parsing ifndef-block rule';
+
+$code = q:to/END/;
+#define RL_MALLOC(sz)       malloc(sz)
+#define __declspec(x) __attribute__((x))
+#define RL_REALLOC(ptr,sz)
+
+END
+ok $parser.parse($code), 'Parsing define rule 2';
+$code = q:to/END/;
+#ifndef RL_MALLOC
+#define RL_REALLOC(ptr,sz)
+#endif
+#ifndef RL_CALLOC
+#endif
+#ifndef RL_REALLOC
+    #define RL_REALLOC(ptr,sz)  realloc(ptr,sz)
+#endif
+#ifndef RL_FREE
+    #define RL_FREE(ptr)        free(ptr)
+#endif
+
+#ifndef RLAPI
+    #define RLAPI       // Functions defined as 'extern' by default (implicit specifiers)
+#endif
+
+#if defined(__cplusplus)
+    #define CLITERAL(type)      type
+#else
+    #define CLITERAL(type)      (type)
+#endif
+END
+$code = q:to/END/;
+typedef enum bool { false = 0, true = !false } bool;
+END
+
+ok $parser.parse($code), 'Parsing define rule 4';
+
+$code = q:to/END/;
+#ifndef PI
+    #define PI 3.14159265358979323846f
+#endif
+#ifndef DEG2RAD
+    #define DEG2RAD (PI/180.0f)
+#endif
+#ifndef RAD2DEG
+    #define RAD2DEG (180.0f/PI)
+#endif
+
+// Allow custom memory allocators
+// NOTE: Require recompiling raylib sources
+#ifndef RL_MALLOC
+    #define RL_MALLOC(sz)       malloc(sz)
+#endif
+#ifndef RL_CALLOC
+    #define RL_CALLOC(n,sz)     calloc(n,sz)
+#endif
+#ifndef RL_REALLOC
+    #define RL_REALLOC(ptr,sz)  realloc(ptr,sz)
+#endif
+#ifndef RL_FREE
+    #define RL_FREE(ptr)        free(ptr)
+#endif
+
+// NOTE: MSVC C++ compiler does not support compound literals (C99 feature)
+// Plain structures in C++ (without constructors) can be initialized with { }
+// This is called aggregate initialization (C++11 feature)
+#if defined(__cplusplus)
+    #define CLITERAL(type)      type
+#else
+    #define CLITERAL(type)      (type)
+#endif
+
+// Some compilers (mostly macos clang) default to C++98,
+// where aggregate initialization can't be used
+// So, give a more clear error stating how to fix this
+
+extern "C" {            // Prevents name mangling of functions
+END
+
+ok $parser.parse($code), 'Parsing multiple rule ';
+
+$code = q:to/END/;
+#if defined(__cplusplus)
+extern "C" {            // Prevents name mangling of functions
+#endif
+END
+
+ok $parser.parse($code), 'Parsing extern rule ';
+
+done-testing;

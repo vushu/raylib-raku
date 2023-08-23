@@ -1,0 +1,19 @@
+use Test;
+
+use lib 'lib';
+
+use Grammar;
+
+my $parser = RaylibGrammar.new;
+
+my $raylib-header = slurp "t/raylib.h";
+
+my $match = $parser.parse($raylib-header);
+
+if $match {
+    ok True, "---- Successfully parsed raylib.h ----";
+} else {
+    ok False, "Failed to parse ralib.h";
+}
+
+

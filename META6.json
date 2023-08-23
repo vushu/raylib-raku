@@ -1,0 +1,17 @@
+{
+    "auth": "",
+  "build-depends": [
+  ],
+  "depends": [
+  ],
+  "description": "Raylib bindings for raku, using grammar to parse raylib.h and auto generate the bindings",
+  "name": "Raylib",
+  "provides": {
+    "RaylibGrammar": "lib/Grammar.rakumod"
+  },
+  "resources": [
+  ],
+  "test-depends": [
+  ],
+  "version": "0.0.1"
+}
