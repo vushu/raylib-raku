@@ -3,7 +3,7 @@ use Test;
 use lib 'lib';
 
 use Grammar;
-plan 15;
+plan 16;
 
 my $parser = RaylibGrammar.new;
 
@@ -314,5 +314,12 @@ extern "C" {            // Prevents name mangling of functions
 END
 
 ok $parser.parse($code), 'Parsing extern rule ';
+
+$code = q:to/END/;
+typedef Vector4 Quaternion;
+END
+
+ok $parser.parse($code), 'Parsing typedef-alias rule ';
+
 
 done-testing;

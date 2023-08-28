@@ -7,7 +7,6 @@ grammar RaylibGrammar {
         | <macro-block>
         | <closing-bracket>
         | <typedef>
-        | <typedef-callback>
         | <function>
         | <include>
         | <define-decl>
@@ -21,6 +20,10 @@ grammar RaylibGrammar {
         | <else-macro-line>
         | <elif-macro-line>
         | <error-macro-line>
+    }
+
+    rule typedef-ignored {
+        'typedef' 'enum' 'bool' <block> 'bool' ';'
     }
 
     rule extern {
@@ -80,8 +83,16 @@ grammar RaylibGrammar {
     }
 
     token typedef {
+        | <typedef-ignored>
         | <typedef-struct>
+        | <typedef-struct-forward>
         | <typedef-enum>
+        | <typedef-callback>
+        | <typedef-alias>
+    }
+
+    rule typedef-alias {
+        'typedef' <type> <identifier> ';'
     }
 
     rule typedef-callback {
@@ -89,6 +100,9 @@ grammar RaylibGrammar {
     }
     rule typedef-struct {
         'typedef' 'struct' <identifier> <comment>? <block> <identifier> ';'
+    }
+    rule typedef-struct-forward {
+        'typedef' 'struct' <type> <identifier>';'
     }
 
     rule typedef-enum {
@@ -178,6 +192,7 @@ grammar RaylibGrammar {
         | 'double'
         | 'char'
         | 'short'
+        | 'va_list'
         | <identifier>
     }
 

@@ -7,7 +7,7 @@
   "description": "Raylib bindings for raku, using grammar to parse raylib.h and auto generate the bindings",
   "name": "Raylib",
   "provides": {
-    "RaylibGrammar": "lib/Grammar.rakumod"
+    "Raylib": "lib/Raylib.rakumod"
   },
   "resources": [
   ],
