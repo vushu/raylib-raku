@@ -1,2 +1,3 @@
 lib/.precomp
 t/raylib.h
+.precomp/

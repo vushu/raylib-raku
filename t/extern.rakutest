@@ -4,6 +4,7 @@ use lib 'lib';
 
 use Grammar;
 
+plan 1;
 my $parser = RaylibGrammar.new;
 
 my $code = q:to/END/;
@@ -29,3 +30,4 @@ END
 
 
 ok $parser.parse($code), 'Parsing extern rule ';
+done-testing;

@@ -4,7 +4,7 @@ class RaylibActions {
     has Int $!incrementer = 0;
     has @.ignored-functions = "SetTraceLogCallback",
         "SetLoadFileDataCallback", "SetSaveFileDataCallback",
-        "SetLoadFileTextCallback", "SetSaveFileTextCallback", 
+        "SetLoadFileTextCallback", "SetSaveFileTextCallback",
         "SetAudioStreamCallback", "AttachAudioMixedProcessor",
         "DetachAudioMixedProcessor", "AttachAudioStreamProcessor",
         "DetachAudioStreamProcessor";

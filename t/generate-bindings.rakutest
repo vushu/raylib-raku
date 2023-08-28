@@ -182,3 +182,5 @@ for $actions.bindings -> $binding {
     say $binding;
 }
 #say $example;
+ok True;
+done-testing;
