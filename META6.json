@@ -1,18 +1,15 @@
 {
-  "auth": "zef:vushu",
-  "build-depends": [
-  ],
-  "depends": [
-  ],
-  "description": "Raylib bindings for raku, using grammar to parse raylib.h and auto generate the bindings",
-  "name": "Raylib",
-  "provides": {
-    "Raylib": "lib/Raylib.rakumod"
-  },
-  "resources": [
-  ],
-  "source-url": "git@github.com:vushu/raylib-raku.git",
-  "test-depends": [
-  ],
-  "version": "0.0.1"
+    "name": "Raylib",
+    "auth": "zef:vushu",
+    "authors": ["Dan Vu (vushu)"],
+    "description": "Raylib bindings for raku, using grammar to parse raylib.h and auto generate the bindings",
+    "version": "0.0.1",
+    "build-depends": [],
+    "depends": [],
+    "provides": {
+        "Raylib": "lib/Raylib.rakumod"
+    },
+    "test-depends": [],
+    "resources": [],
+    "source-url": "git@github.com:vushu/raylib-raku.git"
 }
