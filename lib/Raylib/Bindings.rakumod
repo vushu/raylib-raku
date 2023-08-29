@@ -4,19 +4,19 @@ class Vector2 is export is repr('CStruct') {
    has num32 $.x;
     has num32 $.y;
 }
-class Vector3 is repr('CStruct') {
-    has num32 $.x;
+class Vector3 is export is repr('CStruct') {
+   has num32 $.x;
     has num32 $.y;
     has num32 $.z;
 }
-class Vector4 is repr('CStruct') {
+class Vector4 is export is repr('CStruct') {
    has num32 $.x;
     has num32 $.y;
     has num32 $.z;
     has num32 $.w;
 }
-class Quaternion is Vector4 is repr('CStruct') {}
-class Matrix is repr('CStruct') {
+class Quaternion is Vector4 is export is repr('CStruct') {}
+class Matrix is export is repr('CStruct') {
    has num32 $.m0;
     has num32 $.m4;
     has num32 $.m8;
@@ -34,41 +34,41 @@ class Matrix is repr('CStruct') {
     has num32 $.m11;
     has num32 $.m15;
 }
-class Color is repr('CStruct') {
+class Color is export is repr('CStruct') {
    has Str $.r;
     has Str $.g;
     has Str $.b;
     has Str $.a;
 }
-class Rectangle is repr('CStruct') {
+class Rectangle is export is repr('CStruct') {
    has num32 $.x;
     has num32 $.y;
     has num32 $.width;
     has num32 $.height;
 }
-class Image is repr('CStruct') {
+class Image is export is repr('CStruct') {
    has Pointer[void] $.data;
     has int32 $.width;
     has int32 $.height;
     has int32 $.mipmaps;
     has int32 $.format;
 }
-class Texture is repr('CStruct') {
+class Texture is export is repr('CStruct') {
    has int32 $.id;
     has int32 $.width;
     has int32 $.height;
     has int32 $.mipmaps;
     has int32 $.format;
 }
-class Texture2D is Texture is repr('CStruct') {}
-class TextureCubemap is Texture is repr('CStruct') {}
-class RenderTexture is repr('CStruct') {
+class Texture2D is Texture is export is repr('CStruct') {}
+class TextureCubemap is Texture is export is repr('CStruct') {}
+class RenderTexture is export is repr('CStruct') {
    has int32 $.id;
     has Texture $.texture;
     has Texture $.depth;
 }
-class RenderTexture2D is RenderTexture is repr('CStruct') {}
-class NPatchInfo is repr('CStruct') {
+class RenderTexture2D is RenderTexture is export is repr('CStruct') {}
+class NPatchInfo is export is repr('CStruct') {
    has Rectangle $.source;
     has int32 $.left;
     has int32 $.top;
@@ -76,14 +76,14 @@ class NPatchInfo is repr('CStruct') {
     has int32 $.bottom;
     has int32 $.layout;
 }
-class GlyphInfo is repr('CStruct') {
+class GlyphInfo is export is repr('CStruct') {
    has int32 $.value;
     has int32 $.offsetX;
     has int32 $.offsetY;
     has int32 $.advanceX;
     has Image $.image;
 }
-class Font is repr('CStruct') {
+class Font is export is repr('CStruct') {
    has int32 $.baseSize;
     has int32 $.glyphCount;
     has int32 $.glyphPadding;
@@ -91,21 +91,21 @@ class Font is repr('CStruct') {
     has Rectangle $.recs;
     has GlyphInfo $.glyphs;
 }
-class Camera3D is repr('CStruct') {
+class Camera3D is export is repr('CStruct') {
    has Vector3 $.position;
     has Vector3 $.target;
     has Vector3 $.up;
     has num32 $.fovy;
     has int32 $.projection;
 }
-class Camera is Camera3D is repr('CStruct') {}
-class Camera2D is repr('CStruct') {
+class Camera is Camera3D is export is repr('CStruct') {}
+class Camera2D is export is repr('CStruct') {
    has Vector2 $.offset;
     has Vector2 $.target;
     has num32 $.rotation;
     has num32 $.zoom;
 }
-class Mesh is repr('CStruct') {
+class Mesh is export is repr('CStruct') {
    has int32 $.vertexCount;
     has int32 $.triangleCount;
     has num32 $.vertices;
@@ -122,30 +122,30 @@ class Mesh is repr('CStruct') {
     has int32 $.vaoId;
     has int32 $.vboId;
 }
-class Shader is repr('CStruct') {
+class Shader is export is repr('CStruct') {
    has int32 $.id;
     has int32 $.locs;
 }
-class MaterialMap is repr('CStruct') {
+class MaterialMap is export is repr('CStruct') {
    has Texture2D $.texture;
     has Color $.color;
     has num32 $.value;
 }
-class Material is repr('CStruct') {
+class Material is export is repr('CStruct') {
    has Shader $.shader;
     has MaterialMap $.maps;
     has CArray[num32] $.params;
 }
-class Transform is repr('CStruct') {
+class Transform is export is repr('CStruct') {
    has Vector3 $.translation;
     has Quaternion $.rotation;
     has Vector3 $.scale;
 }
-class BoneInfo is repr('CStruct') {
+class BoneInfo is export is repr('CStruct') {
    has CArray[Str] $.name;
     has int32 $.parent;
 }
-class Model is repr('CStruct') {
+class Model is export is repr('CStruct') {
    has Matrix $.transform;
     has int32 $.meshCount;
     has int32 $.materialCount;
@@ -156,55 +156,55 @@ class Model is repr('CStruct') {
     has BoneInfo $.bones;
     has Transform $.bindPose;
 }
-class ModelAnimation is repr('CStruct') {
+class ModelAnimation is export is repr('CStruct') {
    has int32 $.boneCount;
     has int32 $.frameCount;
     has BoneInfo $.bones;
     has Transform $.framePoses;
     has CArray[Str] $.name;
 }
-class Ray is repr('CStruct') {
+class Ray is export is repr('CStruct') {
    has Vector3 $.position;
     has Vector3 $.direction;
 }
-class RayCollision is repr('CStruct') {
+class RayCollision is export is repr('CStruct') {
    has bool $.hit;
     has num32 $.distance;
     has Vector3 $.point;
     has Vector3 $.normal;
 }
-class BoundingBox is repr('CStruct') {
+class BoundingBox is export is repr('CStruct') {
    has Vector3 $.min;
     has Vector3 $.max;
 }
-class Wave is repr('CStruct') {
+class Wave is export is repr('CStruct') {
    has int32 $.frameCount;
     has int32 $.sampleRate;
     has int32 $.sampleSize;
     has int32 $.channels;
     has Pointer[void] $.data;
 }
-class rAudioBuffer is repr('CStruct') {  has int32 $.dummy;}
-class rAudioProcessor is repr('CStruct') {  has int32 $.dummy;}
-class AudioStream is repr('CStruct') {
+class rAudioBuffer is export is repr('CStruct') {  has int32 $.dummy;}
+class rAudioProcessor is export is repr('CStruct') {  has int32 $.dummy;}
+class AudioStream is export is repr('CStruct') {
    has rAudioBuffer $.buffer;
     has rAudioProcessor $.processor;
     has int32 $.sampleRate;
     has int32 $.sampleSize;
     has int32 $.channels;
 }
-class Sound is repr('CStruct') {
+class Sound is export is repr('CStruct') {
    has AudioStream $.stream;
     has int32 $.frameCount;
 }
-class Music is repr('CStruct') {
+class Music is export is repr('CStruct') {
    has AudioStream $.stream;
     has int32 $.frameCount;
     has bool $.looping;
     has int32 $.ctxType;
     has Pointer[void] $.ctxData;
 }
-class VrDeviceInfo is repr('CStruct') {
+class VrDeviceInfo is export is repr('CStruct') {
    has int32 $.hResolution;
     has int32 $.vResolution;
     has num32 $.hScreenSize;
@@ -216,7 +216,7 @@ class VrDeviceInfo is repr('CStruct') {
     has CArray[num32] $.lensDistortionValues;
     has CArray[num32] $.chromaAbCorrection;
 }
-class VrStereoConfig is repr('CStruct') {
+class VrStereoConfig is export is repr('CStruct') {
    has CArray[Matrix] $.projection;
     has CArray[Matrix] $.viewOffset;
     has CArray[num32] $.leftLensCenter;
@@ -226,7 +226,7 @@ class VrStereoConfig is repr('CStruct') {
     has CArray[num32] $.scale;
     has CArray[num32] $.scaleIn;
 }
-class FilePathList is repr('CStruct') {
+class FilePathList is export is repr('CStruct') {
    has int32 $.capacity;
     has int32 $.count;
     has Str $.paths;
