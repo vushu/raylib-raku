@@ -7,9 +7,15 @@ https://github.com/raysan5/raylib
 ### Generating bindings from raylib.h
 ```
 git clone git@github.com:vushu/raylib-raku.git
-cd t
-wget https://raw.githubusercontent.com/raysan5/raylib/master/src/raylib.h .
-raku t/generate-bindings.rakutest > lib/Raylib.rakumod
+cd raylib-raku
+wget https://raw.githubusercontent.com/raysan5/raylib/master/src/raylib.h -P generator
+raku generator/generate-bindings.raku
+```
+
+### Test
+
+```
+raku examples/window.raku
 ```
 
 #### Missing:

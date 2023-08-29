@@ -11,7 +11,6 @@ class RaylibActions {
 
 
     method TOP ($/) {
-        #say (make $<defined-content>.map: *.made);
     }
 
     method typedef-alias($/) {
@@ -19,7 +18,7 @@ class RaylibActions {
     }
 
     method typedef-struct-forward($/){
-        @.bindings.push("class $<identifier> is repr('CStruct') \{ has int32 \$.dummy;\}");
+        @.bindings.push("class $<identifier> is repr('CStruct') \{  has int32 \$.dummy;\}");
     }
 
 
@@ -106,7 +105,7 @@ class RaylibActions {
 
     method gen-function($return-type, $function-name, $parameters) {
         my $raku-type = self.get-return-type($return-type);
-        return "sub $function-name ($parameters)$raku-type is native(LIBRAYLIB)\{ * \}";
+        return "sub $function-name ($parameters)$raku-type is export is native(LIBRAYLIB)\{ * \}";
     }
 
     method parameters($/) {

@@ -1,3 +1,3 @@
 lib/.precomp
-t/raylib.h
 .precomp/
+generator/raylib.h

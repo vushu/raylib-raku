@@ -161,26 +161,12 @@ typedef enum {
 
 END
 
-$actions = RaylibActions.new;
-my $parsed = $parser.parse($raylib, actions => $actions);
-#my $parsed = $parser.parse($code, actions => $actions);
-
-my $example= q:to/END/;
-InitWindow(800, 450, "hello");
-while (!WindowShouldClose()) {
-    BeginDrawing();
-    EndDrawing();
-}
-CloseWindow();
-
-END
-
+my $parsed = $parser.parse($code, actions => $actions);
 
 say "use NativeCall;";
 say "constant LIBRAYLIB = '/usr/local/lib/libraylib.so';";
 for $actions.bindings -> $binding {
     say $binding;
 }
-#say $example;
 ok True;
 done-testing;

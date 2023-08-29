@@ -2,13 +2,13 @@ use Test;
 
 use lib 'lib';
 
-use Grammar;
+# use Grammar;
 
-my $parser = RaylibGrammar.new;
+# my $parser = RaylibGrammar.new;
 
-my $raylib-header = slurp "t/raylib.h";
+# my $raylib-header = slurp "generator/raylib.h";
 
-my $match = $parser.parse($raylib-header);
+# my $match = $parser.parse($raylib-header);
 
 # download the h file
 #wget https://raw.githubusercontent.com/raysan5/raylib/master/src/raylib.h .

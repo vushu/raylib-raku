@@ -1,5 +1,5 @@
 {
-    "auth": "",
+  "auth": "zef:vushu",
   "build-depends": [
   ],
   "depends": [
@@ -11,6 +11,7 @@
   },
   "resources": [
   ],
+  "source-url": "git@github.com:vushu/raylib-raku.git",
   "test-depends": [
   ],
   "version": "0.0.1"
