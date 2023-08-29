@@ -1,3 +1,4 @@
+unit module Raylib::Bindings:ver<0.0.1>:auth<zef:vushu>;
 use NativeCall;
 constant LIBRAYLIB = '/usr/local/lib/libraylib.so';
 class Vector2 is export is repr('CStruct') {
@@ -54,7 +55,7 @@ class Image is export is repr('CStruct') {
     has int32 $.format;
 }
 class Texture is export is repr('CStruct') {
-   has int32 $.id;
+   has uint32 $.id;
     has int32 $.width;
     has int32 $.height;
     has int32 $.mipmaps;
@@ -63,7 +64,7 @@ class Texture is export is repr('CStruct') {
 class Texture2D is Texture is export is repr('CStruct') {}
 class TextureCubemap is Texture is export is repr('CStruct') {}
 class RenderTexture is export is repr('CStruct') {
-   has int32 $.id;
+   has uint32 $.id;
     has Texture $.texture;
     has Texture $.depth;
 }
@@ -88,8 +89,8 @@ class Font is export is repr('CStruct') {
     has int32 $.glyphCount;
     has int32 $.glyphPadding;
     has Texture2D $.texture;
-    has Rectangle $.recs;
-    has GlyphInfo $.glyphs;
+    has Pointer[Rectangle] $.recs;
+    has Pointer[GlyphInfo] $.glyphs;
 }
 class Camera3D is export is repr('CStruct') {
    has Vector3 $.position;
@@ -108,23 +109,23 @@ class Camera2D is export is repr('CStruct') {
 class Mesh is export is repr('CStruct') {
    has int32 $.vertexCount;
     has int32 $.triangleCount;
-    has num32 $.vertices;
-    has num32 $.texcoords;
-    has num32 $.texcoords2;
-    has num32 $.normals;
-    has num32 $.tangents;
-    has Str $.colors;
-    has int16 $.indices;
-    has num32 $.animVertices;
-    has num32 $.animNormals;
-    has Str $.boneIds;
-    has num32 $.boneWeights;
-    has int32 $.vaoId;
-    has int32 $.vboId;
+    has Pointer[num32] $.vertices;
+    has Pointer[num32] $.texcoords;
+    has Pointer[num32] $.texcoords2;
+    has Pointer[num32] $.normals;
+    has Pointer[num32] $.tangents;
+    has Pointer[Str] $.colors;
+    has Pointer[uint16] $.indices;
+    has Pointer[num32] $.animVertices;
+    has Pointer[num32] $.animNormals;
+    has Pointer[Str] $.boneIds;
+    has Pointer[num32] $.boneWeights;
+    has uint32 $.vaoId;
+    has Pointer[uint32] $.vboId;
 }
 class Shader is export is repr('CStruct') {
-   has int32 $.id;
-    has int32 $.locs;
+   has uint32 $.id;
+    has Pointer[int32] $.locs;
 }
 class MaterialMap is export is repr('CStruct') {
    has Texture2D $.texture;
@@ -133,7 +134,7 @@ class MaterialMap is export is repr('CStruct') {
 }
 class Material is export is repr('CStruct') {
    has Shader $.shader;
-    has MaterialMap $.maps;
+    has Pointer[MaterialMap] $.maps;
     has CArray[num32] $.params;
 }
 class Transform is export is repr('CStruct') {
@@ -149,18 +150,18 @@ class Model is export is repr('CStruct') {
    has Matrix $.transform;
     has int32 $.meshCount;
     has int32 $.materialCount;
-    has Mesh $.meshes;
-    has Material $.materials;
-    has int32 $.meshMaterial;
+    has Pointer[Mesh] $.meshes;
+    has Pointer[Material] $.materials;
+    has Pointer[int32] $.meshMaterial;
     has int32 $.boneCount;
-    has BoneInfo $.bones;
-    has Transform $.bindPose;
+    has Pointer[BoneInfo] $.bones;
+    has Pointer[Transform] $.bindPose;
 }
 class ModelAnimation is export is repr('CStruct') {
    has int32 $.boneCount;
     has int32 $.frameCount;
-    has BoneInfo $.bones;
-    has Transform $.framePoses;
+    has Pointer[BoneInfo] $.bones;
+    has Pointer[Transform] $.framePoses;
     has CArray[Str] $.name;
 }
 class Ray is export is repr('CStruct') {
@@ -178,28 +179,28 @@ class BoundingBox is export is repr('CStruct') {
     has Vector3 $.max;
 }
 class Wave is export is repr('CStruct') {
-   has int32 $.frameCount;
-    has int32 $.sampleRate;
-    has int32 $.sampleSize;
-    has int32 $.channels;
+   has uint32 $.frameCount;
+    has uint32 $.sampleRate;
+    has uint32 $.sampleSize;
+    has uint32 $.channels;
     has Pointer[void] $.data;
 }
 class rAudioBuffer is export is repr('CStruct') {  has int32 $.dummy;}
 class rAudioProcessor is export is repr('CStruct') {  has int32 $.dummy;}
 class AudioStream is export is repr('CStruct') {
-   has rAudioBuffer $.buffer;
-    has rAudioProcessor $.processor;
-    has int32 $.sampleRate;
-    has int32 $.sampleSize;
-    has int32 $.channels;
+   has Pointer[rAudioBuffer] $.buffer;
+    has Pointer[rAudioProcessor] $.processor;
+    has uint32 $.sampleRate;
+    has uint32 $.sampleSize;
+    has uint32 $.channels;
 }
 class Sound is export is repr('CStruct') {
    has AudioStream $.stream;
-    has int32 $.frameCount;
+    has uint32 $.frameCount;
 }
 class Music is export is repr('CStruct') {
    has AudioStream $.stream;
-    has int32 $.frameCount;
+    has uint32 $.frameCount;
     has bool $.looping;
     has int32 $.ctxType;
     has Pointer[void] $.ctxData;
@@ -227,9 +228,9 @@ class VrStereoConfig is export is repr('CStruct') {
     has CArray[num32] $.scaleIn;
 }
 class FilePathList is export is repr('CStruct') {
-   has int32 $.capacity;
-    has int32 $.count;
-    has Str $.paths;
+   has uint32 $.capacity;
+    has uint32 $.count;
+    has Pointer[Str] $.paths;
 }
 enum ConfigFlags is export (
 FLAG_VSYNC_HINT => 0x00000040,
@@ -590,7 +591,7 @@ sub MaximizeWindow () is export is native(LIBRAYLIB){ * }
 sub MinimizeWindow () is export is native(LIBRAYLIB){ * }
 sub RestoreWindow () is export is native(LIBRAYLIB){ * }
 sub SetWindowIcon (Image $image) is export is native(LIBRAYLIB){ * }
-sub SetWindowIcons (Image $images, int32 $count) is export is native(LIBRAYLIB){ * }
+sub SetWindowIcons (Pointer[Image] $images, int32 $count) is export is native(LIBRAYLIB){ * }
 sub SetWindowTitle (Str $title) is export is native(LIBRAYLIB){ * }
 sub SetWindowPosition (int32 $x, int32 $y) is export is native(LIBRAYLIB){ * }
 sub SetWindowMonitor (int32 $monitor) is export is native(LIBRAYLIB){ * }
@@ -677,7 +678,7 @@ sub MemAlloc (int32 $size) is export is native(LIBRAYLIB){ * }
 sub MemRealloc () is export is native(LIBRAYLIB){ * }
 sub MemFree () is export is native(LIBRAYLIB){ * }
 sub OpenURL (Str $url) is export is native(LIBRAYLIB){ * }
-sub LoadFileData (Str $fileName, int32 $bytesRead) of Str is export is native(LIBRAYLIB){ * }
+sub LoadFileData (Str $fileName, Pointer[int32] $bytesRead) of Str is export is native(LIBRAYLIB){ * }
 sub UnloadFileData (Str $data) is export is native(LIBRAYLIB){ * }
 sub SaveFileData (Str $fileName, ) of bool is export is native(LIBRAYLIB){ * }
 sub ExportDataAsCode (Str $data, int32 $size, Str $fileName) of bool is export is native(LIBRAYLIB){ * }
@@ -704,10 +705,10 @@ sub IsFileDropped () of bool is export is native(LIBRAYLIB){ * }
 sub LoadDroppedFiles () of FilePathList is export is native(LIBRAYLIB){ * }
 sub UnloadDroppedFiles (FilePathList $files) is export is native(LIBRAYLIB){ * }
 sub GetFileModTime (Str $fileName) of long is export is native(LIBRAYLIB){ * }
-sub CompressData (Str $data, int32 $dataSize, int32 $compDataSize) of Str is export is native(LIBRAYLIB){ * }
-sub DecompressData (Str $compData, int32 $compDataSize, int32 $dataSize) of Str is export is native(LIBRAYLIB){ * }
-sub EncodeDataBase64 (Str $data, int32 $dataSize, int32 $outputSize) of Str is export is native(LIBRAYLIB){ * }
-sub DecodeDataBase64 (Str $data, int32 $outputSize) of Str is export is native(LIBRAYLIB){ * }
+sub CompressData (Str $data, int32 $dataSize, Pointer[int32] $compDataSize) of Str is export is native(LIBRAYLIB){ * }
+sub DecompressData (Str $compData, int32 $compDataSize, Pointer[int32] $dataSize) of Str is export is native(LIBRAYLIB){ * }
+sub EncodeDataBase64 (Str $data, int32 $dataSize, Pointer[int32] $outputSize) of Str is export is native(LIBRAYLIB){ * }
+sub DecodeDataBase64 (Str $data, Pointer[int32] $outputSize) of Str is export is native(LIBRAYLIB){ * }
 sub IsKeyPressed (int32 $key) of bool is export is native(LIBRAYLIB){ * }
 sub IsKeyPressedRepeat (int32 $key) of bool is export is native(LIBRAYLIB){ * }
 sub IsKeyDown (int32 $key) of bool is export is native(LIBRAYLIB){ * }
@@ -753,8 +754,8 @@ sub GetGestureDragVector () of Vector2 is export is native(LIBRAYLIB){ * }
 sub GetGestureDragAngle () of num32 is export is native(LIBRAYLIB){ * }
 sub GetGesturePinchVector () of Vector2 is export is native(LIBRAYLIB){ * }
 sub GetGesturePinchAngle () of num32 is export is native(LIBRAYLIB){ * }
-sub UpdateCamera (Camera $camera, int32 $mode) is export is native(LIBRAYLIB){ * }
-sub UpdateCameraPro (Camera $camera, Vector3 $movement, Vector3 $rotation, num32 $zoom) is export is native(LIBRAYLIB){ * }
+sub UpdateCamera (Pointer[Camera] $camera, int32 $mode) is export is native(LIBRAYLIB){ * }
+sub UpdateCameraPro (Pointer[Camera] $camera, Vector3 $movement, Vector3 $rotation, num32 $zoom) is export is native(LIBRAYLIB){ * }
 sub SetShapesTexture (Texture2D $texture, Rectangle $source) is export is native(LIBRAYLIB){ * }
 sub DrawPixel (int32 $posX, int32 $posY, Color $color) is export is native(LIBRAYLIB){ * }
 sub DrawPixelV (Vector2 $position, Color $color) is export is native(LIBRAYLIB){ * }
@@ -764,9 +765,9 @@ sub DrawLineEx (Vector2 $startPos, Vector2 $endPos, num32 $thick, Color $color) 
 sub DrawLineBezier (Vector2 $startPos, Vector2 $endPos, num32 $thick, Color $color) is export is native(LIBRAYLIB){ * }
 sub DrawLineBezierQuad (Vector2 $startPos, Vector2 $endPos, Vector2 $controlPos, num32 $thick, Color $color) is export is native(LIBRAYLIB){ * }
 sub DrawLineBezierCubic (Vector2 $startPos, Vector2 $endPos, Vector2 $startControlPos, Vector2 $endControlPos, num32 $thick, Color $color) is export is native(LIBRAYLIB){ * }
-sub DrawLineBSpline (Vector2 $points, int32 $pointCount, num32 $thick, Color $color) is export is native(LIBRAYLIB){ * }
-sub DrawLineCatmullRom (Vector2 $points, int32 $pointCount, num32 $thick, Color $color) is export is native(LIBRAYLIB){ * }
-sub DrawLineStrip (Vector2 $points, int32 $pointCount, Color $color) is export is native(LIBRAYLIB){ * }
+sub DrawLineBSpline (Pointer[Vector2] $points, int32 $pointCount, num32 $thick, Color $color) is export is native(LIBRAYLIB){ * }
+sub DrawLineCatmullRom (Pointer[Vector2] $points, int32 $pointCount, num32 $thick, Color $color) is export is native(LIBRAYLIB){ * }
+sub DrawLineStrip (Pointer[Vector2] $points, int32 $pointCount, Color $color) is export is native(LIBRAYLIB){ * }
 sub DrawCircle (int32 $centerX, int32 $centerY, num32 $radius, Color $color) is export is native(LIBRAYLIB){ * }
 sub DrawCircleSector (Vector2 $center, num32 $radius, num32 $startAngle, num32 $endAngle, int32 $segments, Color $color) is export is native(LIBRAYLIB){ * }
 sub DrawCircleSectorLines (Vector2 $center, num32 $radius, num32 $startAngle, num32 $endAngle, int32 $segments, Color $color) is export is native(LIBRAYLIB){ * }
@@ -790,8 +791,8 @@ sub DrawRectangleRounded (Rectangle $rec, num32 $roundness, int32 $segments, Col
 sub DrawRectangleRoundedLines (Rectangle $rec, num32 $roundness, int32 $segments, num32 $lineThick, Color $color) is export is native(LIBRAYLIB){ * }
 sub DrawTriangle (Vector2 $v1, Vector2 $v2, Vector2 $v3, Color $color) is export is native(LIBRAYLIB){ * }
 sub DrawTriangleLines (Vector2 $v1, Vector2 $v2, Vector2 $v3, Color $color) is export is native(LIBRAYLIB){ * }
-sub DrawTriangleFan (Vector2 $points, int32 $pointCount, Color $color) is export is native(LIBRAYLIB){ * }
-sub DrawTriangleStrip (Vector2 $points, int32 $pointCount, Color $color) is export is native(LIBRAYLIB){ * }
+sub DrawTriangleFan (Pointer[Vector2] $points, int32 $pointCount, Color $color) is export is native(LIBRAYLIB){ * }
+sub DrawTriangleStrip (Pointer[Vector2] $points, int32 $pointCount, Color $color) is export is native(LIBRAYLIB){ * }
 sub DrawPoly (Vector2 $center, int32 $sides, num32 $radius, num32 $rotation, Color $color) is export is native(LIBRAYLIB){ * }
 sub DrawPolyLines (Vector2 $center, int32 $sides, num32 $radius, num32 $rotation, Color $color) is export is native(LIBRAYLIB){ * }
 sub DrawPolyLinesEx (Vector2 $center, int32 $sides, num32 $radius, num32 $rotation, num32 $lineThick, Color $color) is export is native(LIBRAYLIB){ * }
@@ -801,20 +802,20 @@ sub CheckCollisionCircleRec (Vector2 $center, num32 $radius, Rectangle $rec) of 
 sub CheckCollisionPointRec (Vector2 $point, Rectangle $rec) of bool is export is native(LIBRAYLIB){ * }
 sub CheckCollisionPointCircle (Vector2 $point, Vector2 $center, num32 $radius) of bool is export is native(LIBRAYLIB){ * }
 sub CheckCollisionPointTriangle (Vector2 $point, Vector2 $p1, Vector2 $p2, Vector2 $p3) of bool is export is native(LIBRAYLIB){ * }
-sub CheckCollisionPointPoly (Vector2 $point, Vector2 $points, int32 $pointCount) of bool is export is native(LIBRAYLIB){ * }
-sub CheckCollisionLines (Vector2 $startPos1, Vector2 $endPos1, Vector2 $startPos2, Vector2 $endPos2, Vector2 $collisionPoint) of bool is export is native(LIBRAYLIB){ * }
+sub CheckCollisionPointPoly (Vector2 $point, Pointer[Vector2] $points, int32 $pointCount) of bool is export is native(LIBRAYLIB){ * }
+sub CheckCollisionLines (Vector2 $startPos1, Vector2 $endPos1, Vector2 $startPos2, Vector2 $endPos2, Pointer[Vector2] $collisionPoint) of bool is export is native(LIBRAYLIB){ * }
 sub CheckCollisionPointLine (Vector2 $point, Vector2 $p1, Vector2 $p2, int32 $threshold) of bool is export is native(LIBRAYLIB){ * }
 sub GetCollisionRec (Rectangle $rec1, Rectangle $rec2) of Rectangle is export is native(LIBRAYLIB){ * }
 sub LoadImage (Str $fileName) of Image is export is native(LIBRAYLIB){ * }
 sub LoadImageRaw (Str $fileName, int32 $width, int32 $height, int32 $format, int32 $headerSize) of Image is export is native(LIBRAYLIB){ * }
-sub LoadImageAnim (Str $fileName, int32 $frames) of Image is export is native(LIBRAYLIB){ * }
+sub LoadImageAnim (Str $fileName, Pointer[int32] $frames) of Image is export is native(LIBRAYLIB){ * }
 sub LoadImageFromMemory (Str $fileType, Str $fileData, int32 $dataSize) of Image is export is native(LIBRAYLIB){ * }
 sub LoadImageFromTexture (Texture2D $texture) of Image is export is native(LIBRAYLIB){ * }
 sub LoadImageFromScreen () of Image is export is native(LIBRAYLIB){ * }
 sub IsImageReady (Image $image) of bool is export is native(LIBRAYLIB){ * }
 sub UnloadImage (Image $image) is export is native(LIBRAYLIB){ * }
 sub ExportImage (Image $image, Str $fileName) of bool is export is native(LIBRAYLIB){ * }
-sub ExportImageToMemory (Image $image, Str $fileType, int32 $fileSize) of Str is export is native(LIBRAYLIB){ * }
+sub ExportImageToMemory (Image $image, Str $fileType, Pointer[int32] $fileSize) of Str is export is native(LIBRAYLIB){ * }
 sub ExportImageAsCode (Image $image, Str $fileName) of bool is export is native(LIBRAYLIB){ * }
 sub GenImageColor (int32 $width, int32 $height, Color $color) of Image is export is native(LIBRAYLIB){ * }
 sub GenImageGradientLinear (int32 $width, int32 $height, int32 $direction, Color $start, Color $end) of Image is export is native(LIBRAYLIB){ * }
@@ -829,52 +830,52 @@ sub ImageCopy (Image $image) of Image is export is native(LIBRAYLIB){ * }
 sub ImageFromImage (Image $image, Rectangle $rec) of Image is export is native(LIBRAYLIB){ * }
 sub ImageText (Str $text, int32 $fontSize, Color $color) of Image is export is native(LIBRAYLIB){ * }
 sub ImageTextEx (Font $font, Str $text, num32 $fontSize, num32 $spacing, Color $tint) of Image is export is native(LIBRAYLIB){ * }
-sub ImageFormat (Image $image, int32 $newFormat) is export is native(LIBRAYLIB){ * }
-sub ImageToPOT (Image $image, Color $fill) is export is native(LIBRAYLIB){ * }
-sub ImageCrop (Image $image, Rectangle $crop) is export is native(LIBRAYLIB){ * }
-sub ImageAlphaCrop (Image $image, num32 $threshold) is export is native(LIBRAYLIB){ * }
-sub ImageAlphaClear (Image $image, Color $color, num32 $threshold) is export is native(LIBRAYLIB){ * }
-sub ImageAlphaMask (Image $image, Image $alphaMask) is export is native(LIBRAYLIB){ * }
-sub ImageAlphaPremultiply (Image $image) is export is native(LIBRAYLIB){ * }
-sub ImageBlurGaussian (Image $image, int32 $blurSize) is export is native(LIBRAYLIB){ * }
-sub ImageResize (Image $image, int32 $newWidth, int32 $newHeight) is export is native(LIBRAYLIB){ * }
-sub ImageResizeNN (Image $image, int32 $newWidth, int32 $newHeight) is export is native(LIBRAYLIB){ * }
-sub ImageResizeCanvas (Image $image, int32 $newWidth, int32 $newHeight, int32 $offsetX, int32 $offsetY, Color $fill) is export is native(LIBRAYLIB){ * }
-sub ImageMipmaps (Image $image) is export is native(LIBRAYLIB){ * }
-sub ImageDither (Image $image, int32 $rBpp, int32 $gBpp, int32 $bBpp, int32 $aBpp) is export is native(LIBRAYLIB){ * }
-sub ImageFlipVertical (Image $image) is export is native(LIBRAYLIB){ * }
-sub ImageFlipHorizontal (Image $image) is export is native(LIBRAYLIB){ * }
-sub ImageRotate (Image $image, int32 $degrees) is export is native(LIBRAYLIB){ * }
-sub ImageRotateCW (Image $image) is export is native(LIBRAYLIB){ * }
-sub ImageRotateCCW (Image $image) is export is native(LIBRAYLIB){ * }
-sub ImageColorTint (Image $image, Color $color) is export is native(LIBRAYLIB){ * }
-sub ImageColorInvert (Image $image) is export is native(LIBRAYLIB){ * }
-sub ImageColorGrayscale (Image $image) is export is native(LIBRAYLIB){ * }
-sub ImageColorContrast (Image $image, num32 $contrast) is export is native(LIBRAYLIB){ * }
-sub ImageColorBrightness (Image $image, int32 $brightness) is export is native(LIBRAYLIB){ * }
-sub ImageColorReplace (Image $image, Color $color, Color $replace) is export is native(LIBRAYLIB){ * }
+sub ImageFormat (Pointer[Image] $image, int32 $newFormat) is export is native(LIBRAYLIB){ * }
+sub ImageToPOT (Pointer[Image] $image, Color $fill) is export is native(LIBRAYLIB){ * }
+sub ImageCrop (Pointer[Image] $image, Rectangle $crop) is export is native(LIBRAYLIB){ * }
+sub ImageAlphaCrop (Pointer[Image] $image, num32 $threshold) is export is native(LIBRAYLIB){ * }
+sub ImageAlphaClear (Pointer[Image] $image, Color $color, num32 $threshold) is export is native(LIBRAYLIB){ * }
+sub ImageAlphaMask (Pointer[Image] $image, Image $alphaMask) is export is native(LIBRAYLIB){ * }
+sub ImageAlphaPremultiply (Pointer[Image] $image) is export is native(LIBRAYLIB){ * }
+sub ImageBlurGaussian (Pointer[Image] $image, int32 $blurSize) is export is native(LIBRAYLIB){ * }
+sub ImageResize (Pointer[Image] $image, int32 $newWidth, int32 $newHeight) is export is native(LIBRAYLIB){ * }
+sub ImageResizeNN (Pointer[Image] $image, int32 $newWidth, int32 $newHeight) is export is native(LIBRAYLIB){ * }
+sub ImageResizeCanvas (Pointer[Image] $image, int32 $newWidth, int32 $newHeight, int32 $offsetX, int32 $offsetY, Color $fill) is export is native(LIBRAYLIB){ * }
+sub ImageMipmaps (Pointer[Image] $image) is export is native(LIBRAYLIB){ * }
+sub ImageDither (Pointer[Image] $image, int32 $rBpp, int32 $gBpp, int32 $bBpp, int32 $aBpp) is export is native(LIBRAYLIB){ * }
+sub ImageFlipVertical (Pointer[Image] $image) is export is native(LIBRAYLIB){ * }
+sub ImageFlipHorizontal (Pointer[Image] $image) is export is native(LIBRAYLIB){ * }
+sub ImageRotate (Pointer[Image] $image, int32 $degrees) is export is native(LIBRAYLIB){ * }
+sub ImageRotateCW (Pointer[Image] $image) is export is native(LIBRAYLIB){ * }
+sub ImageRotateCCW (Pointer[Image] $image) is export is native(LIBRAYLIB){ * }
+sub ImageColorTint (Pointer[Image] $image, Color $color) is export is native(LIBRAYLIB){ * }
+sub ImageColorInvert (Pointer[Image] $image) is export is native(LIBRAYLIB){ * }
+sub ImageColorGrayscale (Pointer[Image] $image) is export is native(LIBRAYLIB){ * }
+sub ImageColorContrast (Pointer[Image] $image, num32 $contrast) is export is native(LIBRAYLIB){ * }
+sub ImageColorBrightness (Pointer[Image] $image, int32 $brightness) is export is native(LIBRAYLIB){ * }
+sub ImageColorReplace (Pointer[Image] $image, Color $color, Color $replace) is export is native(LIBRAYLIB){ * }
 sub LoadImageColors (Image $image) of Color is export is native(LIBRAYLIB){ * }
-sub LoadImagePalette (Image $image, int32 $maxPaletteSize, int32 $colorCount) of Color is export is native(LIBRAYLIB){ * }
-sub UnloadImageColors (Color $colors) is export is native(LIBRAYLIB){ * }
-sub UnloadImagePalette (Color $colors) is export is native(LIBRAYLIB){ * }
+sub LoadImagePalette (Image $image, int32 $maxPaletteSize, Pointer[int32] $colorCount) of Color is export is native(LIBRAYLIB){ * }
+sub UnloadImageColors (Pointer[Color] $colors) is export is native(LIBRAYLIB){ * }
+sub UnloadImagePalette (Pointer[Color] $colors) is export is native(LIBRAYLIB){ * }
 sub GetImageAlphaBorder (Image $image, num32 $threshold) of Rectangle is export is native(LIBRAYLIB){ * }
 sub GetImageColor (Image $image, int32 $x, int32 $y) of Color is export is native(LIBRAYLIB){ * }
-sub ImageClearBackground (Image $dst, Color $color) is export is native(LIBRAYLIB){ * }
-sub ImageDrawPixel (Image $dst, int32 $posX, int32 $posY, Color $color) is export is native(LIBRAYLIB){ * }
-sub ImageDrawPixelV (Image $dst, Vector2 $position, Color $color) is export is native(LIBRAYLIB){ * }
-sub ImageDrawLine (Image $dst, int32 $startPosX, int32 $startPosY, int32 $endPosX, int32 $endPosY, Color $color) is export is native(LIBRAYLIB){ * }
-sub ImageDrawLineV (Image $dst, Vector2 $start, Vector2 $end, Color $color) is export is native(LIBRAYLIB){ * }
-sub ImageDrawCircle (Image $dst, int32 $centerX, int32 $centerY, int32 $radius, Color $color) is export is native(LIBRAYLIB){ * }
-sub ImageDrawCircleV (Image $dst, Vector2 $center, int32 $radius, Color $color) is export is native(LIBRAYLIB){ * }
-sub ImageDrawCircleLines (Image $dst, int32 $centerX, int32 $centerY, int32 $radius, Color $color) is export is native(LIBRAYLIB){ * }
-sub ImageDrawCircleLinesV (Image $dst, Vector2 $center, int32 $radius, Color $color) is export is native(LIBRAYLIB){ * }
-sub ImageDrawRectangle (Image $dst, int32 $posX, int32 $posY, int32 $width, int32 $height, Color $color) is export is native(LIBRAYLIB){ * }
-sub ImageDrawRectangleV (Image $dst, Vector2 $position, Vector2 $size, Color $color) is export is native(LIBRAYLIB){ * }
-sub ImageDrawRectangleRec (Image $dst, Rectangle $rec, Color $color) is export is native(LIBRAYLIB){ * }
-sub ImageDrawRectangleLines (Image $dst, Rectangle $rec, int32 $thick, Color $color) is export is native(LIBRAYLIB){ * }
-sub ImageDraw (Image $dst, Image $src, Rectangle $srcRec, Rectangle $dstRec, Color $tint) is export is native(LIBRAYLIB){ * }
-sub ImageDrawText (Image $dst, Str $text, int32 $posX, int32 $posY, int32 $fontSize, Color $color) is export is native(LIBRAYLIB){ * }
-sub ImageDrawTextEx (Image $dst, Font $font, Str $text, Vector2 $position, num32 $fontSize, num32 $spacing, Color $tint) is export is native(LIBRAYLIB){ * }
+sub ImageClearBackground (Pointer[Image] $dst, Color $color) is export is native(LIBRAYLIB){ * }
+sub ImageDrawPixel (Pointer[Image] $dst, int32 $posX, int32 $posY, Color $color) is export is native(LIBRAYLIB){ * }
+sub ImageDrawPixelV (Pointer[Image] $dst, Vector2 $position, Color $color) is export is native(LIBRAYLIB){ * }
+sub ImageDrawLine (Pointer[Image] $dst, int32 $startPosX, int32 $startPosY, int32 $endPosX, int32 $endPosY, Color $color) is export is native(LIBRAYLIB){ * }
+sub ImageDrawLineV (Pointer[Image] $dst, Vector2 $start, Vector2 $end, Color $color) is export is native(LIBRAYLIB){ * }
+sub ImageDrawCircle (Pointer[Image] $dst, int32 $centerX, int32 $centerY, int32 $radius, Color $color) is export is native(LIBRAYLIB){ * }
+sub ImageDrawCircleV (Pointer[Image] $dst, Vector2 $center, int32 $radius, Color $color) is export is native(LIBRAYLIB){ * }
+sub ImageDrawCircleLines (Pointer[Image] $dst, int32 $centerX, int32 $centerY, int32 $radius, Color $color) is export is native(LIBRAYLIB){ * }
+sub ImageDrawCircleLinesV (Pointer[Image] $dst, Vector2 $center, int32 $radius, Color $color) is export is native(LIBRAYLIB){ * }
+sub ImageDrawRectangle (Pointer[Image] $dst, int32 $posX, int32 $posY, int32 $width, int32 $height, Color $color) is export is native(LIBRAYLIB){ * }
+sub ImageDrawRectangleV (Pointer[Image] $dst, Vector2 $position, Vector2 $size, Color $color) is export is native(LIBRAYLIB){ * }
+sub ImageDrawRectangleRec (Pointer[Image] $dst, Rectangle $rec, Color $color) is export is native(LIBRAYLIB){ * }
+sub ImageDrawRectangleLines (Pointer[Image] $dst, Rectangle $rec, int32 $thick, Color $color) is export is native(LIBRAYLIB){ * }
+sub ImageDraw (Pointer[Image] $dst, Image $src, Rectangle $srcRec, Rectangle $dstRec, Color $tint) is export is native(LIBRAYLIB){ * }
+sub ImageDrawText (Pointer[Image] $dst, Str $text, int32 $posX, int32 $posY, int32 $fontSize, Color $color) is export is native(LIBRAYLIB){ * }
+sub ImageDrawTextEx (Pointer[Image] $dst, Font $font, Str $text, Vector2 $position, num32 $fontSize, num32 $spacing, Color $tint) is export is native(LIBRAYLIB){ * }
 sub LoadTexture (Str $fileName) of Texture2D is export is native(LIBRAYLIB){ * }
 sub LoadTextureFromImage (Image $image) of Texture2D is export is native(LIBRAYLIB){ * }
 sub LoadTextureCubemap (Image $image, int32 $layout) of TextureCubemap is export is native(LIBRAYLIB){ * }
@@ -885,7 +886,7 @@ sub IsRenderTextureReady (RenderTexture2D $target) of bool is export is native(L
 sub UnloadRenderTexture (RenderTexture2D $target) is export is native(LIBRAYLIB){ * }
 sub UpdateTexture (Texture2D $texture, ) is export is native(LIBRAYLIB){ * }
 sub UpdateTextureRec (Texture2D $texture, Rectangle $rec, ) is export is native(LIBRAYLIB){ * }
-sub GenTextureMipmaps (Texture2D $texture) is export is native(LIBRAYLIB){ * }
+sub GenTextureMipmaps (Pointer[Texture2D] $texture) is export is native(LIBRAYLIB){ * }
 sub SetTextureFilter (Texture2D $texture, int32 $filter) is export is native(LIBRAYLIB){ * }
 sub SetTextureWrap (Texture2D $texture, int32 $wrap) is export is native(LIBRAYLIB){ * }
 sub DrawTexture (Texture2D $texture, int32 $posX, int32 $posY, Color $tint) is export is native(LIBRAYLIB){ * }
@@ -911,13 +912,13 @@ sub SetPixelColor () is export is native(LIBRAYLIB){ * }
 sub GetPixelDataSize (int32 $width, int32 $height, int32 $format) of int32 is export is native(LIBRAYLIB){ * }
 sub GetFontDefault () of Font is export is native(LIBRAYLIB){ * }
 sub LoadFont (Str $fileName) of Font is export is native(LIBRAYLIB){ * }
-sub LoadFontEx (Str $fileName, int32 $fontSize, int32 $fontChars, int32 $glyphCount) of Font is export is native(LIBRAYLIB){ * }
+sub LoadFontEx (Str $fileName, int32 $fontSize, Pointer[int32] $fontChars, int32 $glyphCount) of Font is export is native(LIBRAYLIB){ * }
 sub LoadFontFromImage (Image $image, Color $key, int32 $firstChar) of Font is export is native(LIBRAYLIB){ * }
-sub LoadFontFromMemory (Str $fileType, Str $fileData, int32 $dataSize, int32 $fontSize, int32 $fontChars, int32 $glyphCount) of Font is export is native(LIBRAYLIB){ * }
+sub LoadFontFromMemory (Str $fileType, Str $fileData, int32 $dataSize, int32 $fontSize, Pointer[int32] $fontChars, int32 $glyphCount) of Font is export is native(LIBRAYLIB){ * }
 sub IsFontReady (Font $font) of bool is export is native(LIBRAYLIB){ * }
-sub LoadFontData (Str $fileData, int32 $dataSize, int32 $fontSize, int32 $fontChars, int32 $glyphCount, int32 $type) of GlyphInfo is export is native(LIBRAYLIB){ * }
-sub GenImageFontAtlas (GlyphInfo $chars, Rectangle $recs, int32 $glyphCount, int32 $fontSize, int32 $padding, int32 $packMethod) of Image is export is native(LIBRAYLIB){ * }
-sub UnloadFontData (GlyphInfo $chars, int32 $glyphCount) is export is native(LIBRAYLIB){ * }
+sub LoadFontData (Str $fileData, int32 $dataSize, int32 $fontSize, Pointer[int32] $fontChars, int32 $glyphCount, int32 $type) of GlyphInfo is export is native(LIBRAYLIB){ * }
+sub GenImageFontAtlas (Pointer[GlyphInfo] $chars, Pointer[Rectangle] $recs, int32 $glyphCount, int32 $fontSize, int32 $padding, int32 $packMethod) of Image is export is native(LIBRAYLIB){ * }
+sub UnloadFontData (Pointer[GlyphInfo] $chars, int32 $glyphCount) is export is native(LIBRAYLIB){ * }
 sub UnloadFont (Font $font) is export is native(LIBRAYLIB){ * }
 sub ExportFontAsCode (Font $font, Str $fileName) of bool is export is native(LIBRAYLIB){ * }
 sub DrawFPS (int32 $posX, int32 $posY) is export is native(LIBRAYLIB){ * }
@@ -925,22 +926,22 @@ sub DrawText (Str $text, int32 $posX, int32 $posY, int32 $fontSize, Color $color
 sub DrawTextEx (Font $font, Str $text, Vector2 $position, num32 $fontSize, num32 $spacing, Color $tint) is export is native(LIBRAYLIB){ * }
 sub DrawTextPro (Font $font, Str $text, Vector2 $position, Vector2 $origin, num32 $rotation, num32 $fontSize, num32 $spacing, Color $tint) is export is native(LIBRAYLIB){ * }
 sub DrawTextCodepoint (Font $font, int32 $codepoint, Vector2 $position, num32 $fontSize, Color $tint) is export is native(LIBRAYLIB){ * }
-sub DrawTextCodepoints (Font $font, int32 $codepoints, int32 $count, Vector2 $position, num32 $fontSize, num32 $spacing, Color $tint) is export is native(LIBRAYLIB){ * }
+sub DrawTextCodepoints (Font $font, Pointer[int32] $codepoints, int32 $count, Vector2 $position, num32 $fontSize, num32 $spacing, Color $tint) is export is native(LIBRAYLIB){ * }
 sub SetTextLineSpacing (int32 $spacing) is export is native(LIBRAYLIB){ * }
 sub MeasureText (Str $text, int32 $fontSize) of int32 is export is native(LIBRAYLIB){ * }
 sub MeasureTextEx (Font $font, Str $text, num32 $fontSize, num32 $spacing) of Vector2 is export is native(LIBRAYLIB){ * }
 sub GetGlyphIndex (Font $font, int32 $codepoint) of int32 is export is native(LIBRAYLIB){ * }
 sub GetGlyphInfo (Font $font, int32 $codepoint) of GlyphInfo is export is native(LIBRAYLIB){ * }
 sub GetGlyphAtlasRec (Font $font, int32 $codepoint) of Rectangle is export is native(LIBRAYLIB){ * }
-sub LoadUTF8 (int32 $codepoints, int32 $length) of Str is export is native(LIBRAYLIB){ * }
+sub LoadUTF8 (Pointer[int32] $codepoints, int32 $length) of Str is export is native(LIBRAYLIB){ * }
 sub UnloadUTF8 (Str $text) is export is native(LIBRAYLIB){ * }
-sub LoadCodepoints (Str $text, int32 $count) of int32 is export is native(LIBRAYLIB){ * }
-sub UnloadCodepoints (int32 $codepoints) is export is native(LIBRAYLIB){ * }
+sub LoadCodepoints (Str $text, Pointer[int32] $count) of int32 is export is native(LIBRAYLIB){ * }
+sub UnloadCodepoints (Pointer[int32] $codepoints) is export is native(LIBRAYLIB){ * }
 sub GetCodepointCount (Str $text) of int32 is export is native(LIBRAYLIB){ * }
-sub GetCodepoint (Str $text, int32 $codepointSize) of int32 is export is native(LIBRAYLIB){ * }
-sub GetCodepointNext (Str $text, int32 $codepointSize) of int32 is export is native(LIBRAYLIB){ * }
-sub GetCodepointPrevious (Str $text, int32 $codepointSize) of int32 is export is native(LIBRAYLIB){ * }
-sub CodepointToUTF8 (int32 $codepoint, int32 $utf8Size) of Str is export is native(LIBRAYLIB){ * }
+sub GetCodepoint (Str $text, Pointer[int32] $codepointSize) of int32 is export is native(LIBRAYLIB){ * }
+sub GetCodepointNext (Str $text, Pointer[int32] $codepointSize) of int32 is export is native(LIBRAYLIB){ * }
+sub GetCodepointPrevious (Str $text, Pointer[int32] $codepointSize) of int32 is export is native(LIBRAYLIB){ * }
+sub CodepointToUTF8 (int32 $codepoint, Pointer[int32] $utf8Size) of Str is export is native(LIBRAYLIB){ * }
 sub TextCopy (Str $dst, Str $src) of int32 is export is native(LIBRAYLIB){ * }
 sub TextIsEqual (Str $text1, Str $text2) of bool is export is native(LIBRAYLIB){ * }
 sub TextLength (Str $text) of int32 is export is native(LIBRAYLIB){ * }
@@ -949,8 +950,8 @@ sub TextSubtext (Str $text, int32 $position, int32 $length) of Str is export is 
 sub TextReplace (Str $text, Str $replace, Str $by) of Str is export is native(LIBRAYLIB){ * }
 sub TextInsert (Str $text, Str $insert, int32 $position) of Str is export is native(LIBRAYLIB){ * }
 sub TextJoin (Str $textList, int32 $count, Str $delimiter) of Str is export is native(LIBRAYLIB){ * }
-sub TextSplit (Str $text, Str $delimiter, int32 $count) of Str is export is native(LIBRAYLIB){ * }
-sub TextAppend (Str $text, Str $append, int32 $position) is export is native(LIBRAYLIB){ * }
+sub TextSplit (Str $text, Str $delimiter, Pointer[int32] $count) of Str is export is native(LIBRAYLIB){ * }
+sub TextAppend (Str $text, Str $append, Pointer[int32] $position) is export is native(LIBRAYLIB){ * }
 sub TextFindIndex (Str $text, Str $find) of int32 is export is native(LIBRAYLIB){ * }
 sub TextToUpper (Str $text) of Str is export is native(LIBRAYLIB){ * }
 sub TextToLower (Str $text) of Str is export is native(LIBRAYLIB){ * }
@@ -960,7 +961,7 @@ sub DrawLine3D (Vector3 $startPos, Vector3 $endPos, Color $color) is export is n
 sub DrawPoint3D (Vector3 $position, Color $color) is export is native(LIBRAYLIB){ * }
 sub DrawCircle3D (Vector3 $center, num32 $radius, Vector3 $rotationAxis, num32 $rotationAngle, Color $color) is export is native(LIBRAYLIB){ * }
 sub DrawTriangle3D (Vector3 $v1, Vector3 $v2, Vector3 $v3, Color $color) is export is native(LIBRAYLIB){ * }
-sub DrawTriangleStrip3D (Vector3 $points, int32 $pointCount, Color $color) is export is native(LIBRAYLIB){ * }
+sub DrawTriangleStrip3D (Pointer[Vector3] $points, int32 $pointCount, Color $color) is export is native(LIBRAYLIB){ * }
 sub DrawCube (Vector3 $position, num32 $width, num32 $height, num32 $length, Color $color) is export is native(LIBRAYLIB){ * }
 sub DrawCubeV (Vector3 $position, Vector3 $size, Color $color) is export is native(LIBRAYLIB){ * }
 sub DrawCubeWires (Vector3 $position, num32 $width, num32 $height, num32 $length, Color $color) is export is native(LIBRAYLIB){ * }
@@ -990,14 +991,14 @@ sub DrawBoundingBox (BoundingBox $box, Color $color) is export is native(LIBRAYL
 sub DrawBillboard (Camera $camera, Texture2D $texture, Vector3 $position, num32 $size, Color $tint) is export is native(LIBRAYLIB){ * }
 sub DrawBillboardRec (Camera $camera, Texture2D $texture, Rectangle $source, Vector3 $position, Vector2 $size, Color $tint) is export is native(LIBRAYLIB){ * }
 sub DrawBillboardPro (Camera $camera, Texture2D $texture, Rectangle $source, Vector3 $position, Vector3 $up, Vector2 $size, Vector2 $origin, num32 $rotation, Color $tint) is export is native(LIBRAYLIB){ * }
-sub UploadMesh (Mesh $mesh, bool $dynamic) is export is native(LIBRAYLIB){ * }
+sub UploadMesh (Pointer[Mesh] $mesh, bool $dynamic) is export is native(LIBRAYLIB){ * }
 sub UpdateMeshBuffer (Mesh $mesh, int32 $index, ) is export is native(LIBRAYLIB){ * }
 sub UnloadMesh (Mesh $mesh) is export is native(LIBRAYLIB){ * }
 sub DrawMesh (Mesh $mesh, Material $material, Matrix $transform) is export is native(LIBRAYLIB){ * }
-sub DrawMeshInstanced (Mesh $mesh, Material $material, Matrix $transforms, int32 $instances) is export is native(LIBRAYLIB){ * }
+sub DrawMeshInstanced (Mesh $mesh, Material $material, Pointer[Matrix] $transforms, int32 $instances) is export is native(LIBRAYLIB){ * }
 sub ExportMesh (Mesh $mesh, Str $fileName) of bool is export is native(LIBRAYLIB){ * }
 sub GetMeshBoundingBox (Mesh $mesh) of BoundingBox is export is native(LIBRAYLIB){ * }
-sub GenMeshTangents (Mesh $mesh) is export is native(LIBRAYLIB){ * }
+sub GenMeshTangents (Pointer[Mesh] $mesh) is export is native(LIBRAYLIB){ * }
 sub GenMeshPoly (int32 $sides, num32 $radius) of Mesh is export is native(LIBRAYLIB){ * }
 sub GenMeshPlane (num32 $width, num32 $length, int32 $resX, int32 $resZ) of Mesh is export is native(LIBRAYLIB){ * }
 sub GenMeshCube (num32 $width, num32 $height, num32 $length) of Mesh is export is native(LIBRAYLIB){ * }
@@ -1009,16 +1010,16 @@ sub GenMeshTorus (num32 $radius, num32 $size, int32 $radSeg, int32 $sides) of Me
 sub GenMeshKnot (num32 $radius, num32 $size, int32 $radSeg, int32 $sides) of Mesh is export is native(LIBRAYLIB){ * }
 sub GenMeshHeightmap (Image $heightmap, Vector3 $size) of Mesh is export is native(LIBRAYLIB){ * }
 sub GenMeshCubicmap (Image $cubicmap, Vector3 $cubeSize) of Mesh is export is native(LIBRAYLIB){ * }
-sub LoadMaterials (Str $fileName, int32 $materialCount) of Material is export is native(LIBRAYLIB){ * }
+sub LoadMaterials (Str $fileName, Pointer[int32] $materialCount) of Material is export is native(LIBRAYLIB){ * }
 sub LoadMaterialDefault () of Material is export is native(LIBRAYLIB){ * }
 sub IsMaterialReady (Material $material) of bool is export is native(LIBRAYLIB){ * }
 sub UnloadMaterial (Material $material) is export is native(LIBRAYLIB){ * }
-sub SetMaterialTexture (Material $material, int32 $mapType, Texture2D $texture) is export is native(LIBRAYLIB){ * }
-sub SetModelMeshMaterial (Model $model, int32 $meshId, int32 $materialId) is export is native(LIBRAYLIB){ * }
-sub LoadModelAnimations (Str $fileName, int32 $animCount) of ModelAnimation is export is native(LIBRAYLIB){ * }
+sub SetMaterialTexture (Pointer[Material] $material, int32 $mapType, Texture2D $texture) is export is native(LIBRAYLIB){ * }
+sub SetModelMeshMaterial (Pointer[Model] $model, int32 $meshId, int32 $materialId) is export is native(LIBRAYLIB){ * }
+sub LoadModelAnimations (Str $fileName, Pointer[int32] $animCount) of ModelAnimation is export is native(LIBRAYLIB){ * }
 sub UpdateModelAnimation (Model $model, ModelAnimation $anim, int32 $frame) is export is native(LIBRAYLIB){ * }
 sub UnloadModelAnimation (ModelAnimation $anim) is export is native(LIBRAYLIB){ * }
-sub UnloadModelAnimations (ModelAnimation $animations, int32 $count) is export is native(LIBRAYLIB){ * }
+sub UnloadModelAnimations (Pointer[ModelAnimation] $animations, int32 $count) is export is native(LIBRAYLIB){ * }
 sub IsModelAnimationValid (Model $model, ModelAnimation $anim) of bool is export is native(LIBRAYLIB){ * }
 sub CheckCollisionSpheres (Vector3 $center1, num32 $radius1, Vector3 $center2, num32 $radius2) of bool is export is native(LIBRAYLIB){ * }
 sub CheckCollisionBoxes (BoundingBox $box1, BoundingBox $box2) of bool is export is native(LIBRAYLIB){ * }
@@ -1054,10 +1055,10 @@ sub SetSoundVolume (Sound $sound, num32 $volume) is export is native(LIBRAYLIB){
 sub SetSoundPitch (Sound $sound, num32 $pitch) is export is native(LIBRAYLIB){ * }
 sub SetSoundPan (Sound $sound, num32 $pan) is export is native(LIBRAYLIB){ * }
 sub WaveCopy (Wave $wave) of Wave is export is native(LIBRAYLIB){ * }
-sub WaveCrop (Wave $wave, int32 $initSample, int32 $finalSample) is export is native(LIBRAYLIB){ * }
-sub WaveFormat (Wave $wave, int32 $sampleRate, int32 $sampleSize, int32 $channels) is export is native(LIBRAYLIB){ * }
+sub WaveCrop (Pointer[Wave] $wave, int32 $initSample, int32 $finalSample) is export is native(LIBRAYLIB){ * }
+sub WaveFormat (Pointer[Wave] $wave, int32 $sampleRate, int32 $sampleSize, int32 $channels) is export is native(LIBRAYLIB){ * }
 sub LoadWaveSamples (Wave $wave) of num32 is export is native(LIBRAYLIB){ * }
-sub UnloadWaveSamples (num32 $samples) is export is native(LIBRAYLIB){ * }
+sub UnloadWaveSamples (Pointer[num32] $samples) is export is native(LIBRAYLIB){ * }
 sub LoadMusicStream (Str $fileName) of Music is export is native(LIBRAYLIB){ * }
 sub LoadMusicStreamFromMemory (Str $fileType, Str $data, int32 $dataSize) of Music is export is native(LIBRAYLIB){ * }
 sub IsMusicReady (Music $music) of bool is export is native(LIBRAYLIB){ * }

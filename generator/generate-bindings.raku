@@ -10,7 +10,7 @@ sub generate-bindings {
     my $parsed = $parser.parse($raylib, actions => $actions);
 
     my $file  = open "lib/Raylib/Bindings.rakumod", :w;
-
+    $file.say("unit module Raylib::Bindings:ver<0.0.1>:auth<zef:vushu>;");
     $file.say("use NativeCall;");
     $file.say("constant LIBRAYLIB = '/usr/local/lib/libraylib.so';");
     for $actions.bindings -> $binding {

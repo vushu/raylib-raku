@@ -1,0 +1,9 @@
+use Test;
+
+use lib 'lib';
+
+use Raylib::Bindings;
+
+use-ok "Raylib::Bindings";
+
+done-testing;

@@ -9,7 +9,7 @@
     ],
     "description": "Raylib bindings for raku, using grammar to parse raylib.h and auto generate the bindings",
     "license" : "Artistic-2.0",
-    "name": "Raylib",
+    "name": "Raylib::Bindings",
     "provides": {
       "Raylib::Bindings": "lib/Raylib/Bindings.rakumod"
     },

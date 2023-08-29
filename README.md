@@ -17,6 +17,13 @@ raku generator/generate-bindings.raku
 ```
 raku examples/window.raku
 ```
+### Install from repo
+```
+git clone git@github.com:vushu/raylib-raku.git
+cd raylib-raku
+zef install .
+```
+
 
 #### Missing:
 - raylib callbacks are yet to be implemented.

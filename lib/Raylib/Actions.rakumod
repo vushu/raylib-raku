@@ -71,11 +71,20 @@ class RaylibActions {
     method var-decl($/) {
         my @aaa;
         for $<identifier> -> $ident {
+            my $unsigned = $<modifier>.map: *.made;
             if ($<pointer> && $<type> eq "void") {
                 @aaa.push("   has Pointer[void] \$.$ident;\n");
             }
             else {
-                @aaa.push("   has $($<type>.made) \$.$ident;\n");
+                my $defined-type = $<type> eq 'char' ?? $<type>.made !! "$unsigned$($<type>.made)";
+                if $<pointer>
+                {
+                    @aaa.push("   has Pointer\[$defined-type\] \$.$ident;\n");
+                }
+                else
+                {
+                    @aaa.push("   has $defined-type \$.$ident;\n");
+                }
             }
         }
         for $<array-identifier> -> $arr-ident {
@@ -87,6 +96,15 @@ class RaylibActions {
     method array-identifier($/) {
         my $arr = "\$.$<identifier>";
         make $arr;
+    }
+
+    method modifier($/) {
+        if $<unsigned> {
+            make 'u';
+        }
+        else {
+            make '';
+        }
     }
 
     method function($/) {
@@ -124,7 +142,13 @@ class RaylibActions {
             $tail = ',' ~ ' ' ~ $rest;
         }
 
-        make "$type \$$($<identifier> ?? $<identifier> !! '')$tail";
+        my $u = '';
+        if $<pointer> && $<type> ne 'char' {
+            make "Pointer\[$type\] \$$($<identifier> ?? $<identifier> !! '')$tail";
+        }
+        else {
+            make "$type \$$($<identifier> ?? $<identifier> !! '')$tail";
+        }
     }
 
     method type($/) {
