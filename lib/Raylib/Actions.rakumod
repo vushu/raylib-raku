@@ -14,11 +14,11 @@ class RaylibActions {
     }
 
     method typedef-alias($/) {
-        @.bindings.push("class $<identifier> is $($<type>.made) is repr('CStruct') \{\}");
+        @.bindings.push("class $<identifier> is $($<type>.made) is export is repr('CStruct') \{\}");
     }
 
     method typedef-struct-forward($/){
-        @.bindings.push("class $<identifier> is repr('CStruct') \{  has int32 \$.dummy;\}");
+        @.bindings.push("class $<identifier> is export is repr('CStruct') \{  has int32 \$.dummy;\}");
     }
 
 
@@ -29,7 +29,7 @@ class RaylibActions {
     }
 
     method typedef-struct($/) {
-        my $struct = "class $($<identifier>[0]) is repr('CStruct') ";
+        my $struct = "class $($<identifier>[0]) is export is repr('CStruct') ";
         my $b = $<block>.made;
         @.bindings.push($struct ~ "\{\n" ~ $b ~ '}');
     }

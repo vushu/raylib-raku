@@ -2,7 +2,7 @@ use Test;
 
 use lib 'lib';
 
-use Grammar;
+use Raylib::Grammar;
 
 plan 1;
 my $parser = RaylibGrammar.new;

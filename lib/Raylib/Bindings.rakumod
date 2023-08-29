@@ -1,11 +1,11 @@
 use NativeCall;
 constant LIBRAYLIB = '/usr/local/lib/libraylib.so';
-class Vector2 is repr('CStruct') {
+class Vector2 is export is repr('CStruct') {
    has num32 $.x;
     has num32 $.y;
 }
 class Vector3 is repr('CStruct') {
-   has num32 $.x;
+    has num32 $.x;
     has num32 $.y;
     has num32 $.z;
 }

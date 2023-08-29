@@ -1,5 +1,5 @@
 use lib 'lib';
-use Raylib;
+use Raylib::Bindings;
 
 InitWindow(800, 450, "Hello from Raku!");
 while (!WindowShouldClose()) {

@@ -2,8 +2,8 @@ use Test;
 
 use lib 'lib';
 
-use Grammar;
-use Actions;
+use Raylib::Grammar;
+use Raylib::Actions;
 
 my $code = q:to/END/;
 // Vector2, 2 components
