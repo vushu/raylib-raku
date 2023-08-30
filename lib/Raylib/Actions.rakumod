@@ -14,11 +14,11 @@ class RaylibActions {
     }
 
     method typedef-alias($/) {
-        @.bindings.push("class $<identifier> is $($<type>.made) is export is repr('CStruct') \{\}");
+        @.bindings.push("class $<identifier> is $($<type>.made) is export is repr('CStruct') is rw \{\}");
     }
 
     method typedef-struct-forward($/){
-        @.bindings.push("class $<identifier> is export is repr('CStruct') \{  has int32 \$.dummy;\}");
+        @.bindings.push("class $<identifier> is export is repr('CStruct') is rw \{  has int32 \$.dummy;\}");
     }
 
 
@@ -29,26 +29,26 @@ class RaylibActions {
     }
 
     method typedef-struct($/) {
-        my $struct = "class $($<identifier>[0]) is export is repr('CStruct') ";
+        my $struct = "class $($<identifier>[0]) is export is repr('CStruct') is rw ";
         my $b = $<block>.made;
-        @.bindings.push($struct ~ "\{\n" ~ $b ~ '}');
+        @.bindings.push($struct ~ "\{\n " ~ $b ~ '}');
     }
 
     method typedef-enum($/) {
         my $enum-decl = "enum $<identifier> is export";
         my $b = $<block>.made;
-        @.bindings.push("$enum-decl (\n$b);");
+        @.bindings.push("$enum-decl (\n $b);");
 
     }
 
     method enum-var-decl($/) {
         if ($<value>.elems > 1)
         {
-            make "$($<value>[0]) => $($<value>[1]),\n";
+            make "   $($<value>[0]) => $($<value>[1]),\n";
         }
         else {
             $!incrementer = $!incrementer + 1;
-            make "$($<value>[0]) => $!incrementer,\n";
+            make "   $($<value>[0]) => $!incrementer,\n";
         }
     }
 
@@ -76,7 +76,14 @@ class RaylibActions {
                 @aaa.push("   has Pointer[void] \$.$ident;\n");
             }
             else {
-                my $defined-type = $<type> eq 'char' ?? $<type>.made !! "$unsigned$($<type>.made)";
+
+                my $defined-type;
+                if $unsigned eq 'u' && $<type> eq 'char' {
+                    $defined-type = 'byte';
+                }
+                else {
+                    $defined-type = $<type> eq 'char' ?? $<type>.made !! "$unsigned$($<type>.made)";
+                }
                 if $<pointer>
                 {
                     @aaa.push("   has Pointer\[$defined-type\] \$.$ident;\n");
@@ -116,14 +123,22 @@ class RaylibActions {
     method get-return-type($return-type) {
         my $raku-type = $return-type<identifier> ?? $return-type<identifier>.made !! $return-type.made;
         if ($raku-type ne '') {
-            return " of $raku-type";
+            return " returns $raku-type";
         }
         return ''
     }
 
+    method camelcase-to-kebab(Str $camel-case) {
+        my $kebab = $camel-case.subst(/(<:Lu><:Lu>?<:Ll>|\d+D|<:Lu>+)/, { '-' ~ .Str.lc }, :g);
+        $kebab.=subst(/\-\d+d/, {.substr(1).lc}); # fixing 2d and 3d since kebab casing numbers istn't allowed
+        return $kebab.substr(1);
+
+    }
+
     method gen-function($return-type, $function-name, $parameters) {
         my $raku-type = self.get-return-type($return-type);
-        return "sub $function-name ($parameters)$raku-type is export is native(LIBRAYLIB)\{ * \}";
+        my $kebab-case-name = self.camelcase-to-kebab($function-name.Str);
+        return "our sub $kebab-case-name ($parameters)$raku-type is export is native(LIBRAYLIB) is symbol('$function-name')\{ * \}";
     }
 
     method parameters($/) {
