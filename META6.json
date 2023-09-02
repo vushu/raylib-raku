@@ -11,13 +11,14 @@
     "license" : "Artistic-2.0",
     "name": "Raylib::Bindings",
     "provides": {
-      "Raylib::Bindings": "lib/Raylib/Bindings.rakumod"
+      "Raylib::Bindings": "lib/Raylib/Bindings.rakumod",
+      "Raylib::Helpers": "lib/Raylib/Helpers.rakumod"
     },
     "resources": [
     ],
     "test-depends": [
     ],
     "version": "0.0.1",
-    "source-url": "git://github.com:vushu/raylib-raku.git"
+    "source-url": "https://github.com/vushu/raylib-raku.git"
 
   }

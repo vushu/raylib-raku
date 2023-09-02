@@ -14,11 +14,11 @@ class RaylibActions {
     }
 
     method typedef-alias($/) {
-        @.bindings.push("class $<identifier> is $($<type>.made) is export is repr('CStruct') is rw \{\}");
+        @.bindings.push("class $<identifier> is $($<type>.made) is export is repr('CStruct') \{\}");
     }
 
     method typedef-struct-forward($/){
-        @.bindings.push("class $<identifier> is export is repr('CStruct') is rw \{  has int32 \$.dummy;\}");
+        @.bindings.push("class $<identifier> is export is repr('CStruct') \{  has int32 \$.dummy;\}");
     }
 
 
@@ -29,7 +29,7 @@ class RaylibActions {
     }
 
     method typedef-struct($/) {
-        my $struct = "class $($<identifier>[0]) is export is repr('CStruct') is rw ";
+        my $struct = "class $($<identifier>[0]) is export is repr('CStruct') ";
         my $b = $<block>.made;
         @.bindings.push($struct ~ "\{\n " ~ $b ~ '}');
     }
@@ -79,14 +79,14 @@ class RaylibActions {
 
                 my $defined-type;
                 if $unsigned eq 'u' && $<type> eq 'char' {
-                    $defined-type = 'byte';
+                    $defined-type = 'uint8';
                 }
                 else {
                     $defined-type = $<type> eq 'char' ?? $<type>.made !! "$unsigned$($<type>.made)";
                 }
                 if $<pointer>
                 {
-                    @aaa.push("   has Pointer\[$defined-type\] \$.$ident;\n");
+                    @aaa.push("   has $defined-type \$.$ident is rw;\n");
                 }
                 else
                 {
@@ -95,7 +95,7 @@ class RaylibActions {
             }
         }
         for $<array-identifier> -> $arr-ident {
-            @aaa.push("   has CArray[$($<type>.made)] $($arr-ident.made);\n");
+            @aaa.push("   has CArray[$($<type>.made)] $($arr-ident.made) is rw;\n");
         }
         make @aaa.Str;
     }
@@ -159,7 +159,7 @@ class RaylibActions {
 
         my $u = '';
         if $<pointer> && $<type> ne 'char' {
-            make "Pointer\[$type\] \$$($<identifier> ?? $<identifier> !! '')$tail";
+            make "$type \$$($<identifier> ?? "$<identifier> is rw" !! '')$tail";
         }
         else {
             make "$type \$$($<identifier> ?? $<identifier> !! '')$tail";
