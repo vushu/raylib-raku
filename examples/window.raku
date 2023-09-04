@@ -1,12 +1,16 @@
 use lib 'lib';
 use Raylib::Bindings;
+use Raylib::Helpers;
 
+my $p = init-color(245, 245, 245, 255);
 init-window(800, 450, "Hello from Raku!");
-my $white = Color.new(:r(245), :g(245),:b(245), :a(255));
+set-target-fps(60);
 while (!window-should-close) {
     begin-drawing;
+    clear-background($p);
 
-    draw-fps(100,10);
+    draw-fps(10,10);
     end-drawing;
 }
 close-window;
+free-color($p);

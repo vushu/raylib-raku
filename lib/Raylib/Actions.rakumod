@@ -1,13 +1,18 @@
 class RaylibActions {
     has Str @.bindings;
+    has Str @.pointerized_bindings;
+    has Str @.c_pointerize_bindings;
+    has Str @.c_pointerize_custom_binding;
     has @.type-map = "int" => "int32", "float" => "num32", "double" => "num64", "short" => "int16", "char"  => "Str", "bool" => "bool", "void" => "", "va_list" => "Str";
+    # has @.value-typed-data = "Color" => "uint32";
+    has Bool $!is-value-type = False;
     has Int $!incrementer = 0;
     has @.ignored-functions = "SetTraceLogCallback",
-        "SetLoadFileDataCallback", "SetSaveFileDataCallback",
-        "SetLoadFileTextCallback", "SetSaveFileTextCallback",
-        "SetAudioStreamCallback", "AttachAudioMixedProcessor",
-        "DetachAudioMixedProcessor", "AttachAudioStreamProcessor",
-        "DetachAudioStreamProcessor";
+    "SetLoadFileDataCallback", "SetSaveFileDataCallback",
+    "SetLoadFileTextCallback", "SetSaveFileTextCallback",
+    "SetAudioStreamCallback", "AttachAudioMixedProcessor",
+    "DetachAudioMixedProcessor", "AttachAudioStreamProcessor",
+    "DetachAudioStreamProcessor";
 
 
     method TOP ($/) {
@@ -29,7 +34,7 @@ class RaylibActions {
     }
 
     method typedef-struct($/) {
-        my $struct = "class $($<identifier>[0]) is export is repr('CStruct') ";
+        my $struct = "class $($<identifier>[0]) is export is repr('CStruct') is rw ";
         my $b = $<block>.made;
         @.bindings.push($struct ~ "\{\n " ~ $b ~ '}');
     }
@@ -116,7 +121,92 @@ class RaylibActions {
 
     method function($/) {
         if $<identifier>.made !∈ @.ignored-functions {
-            @.bindings.push(self.gen-function($<type>, $<identifier>, $<parameters>.made));
+            my $func = self.gen-function($<type>, $<identifier>, $<parameters>.made);
+            if ($!is-value-type) {
+                $!is-value-type = False;
+                @.pointerized_bindings.push($func);
+                my @current-identifiers;
+                my $pointerized-params = self.pointerize-parameters($<parameters>, @current-identifiers);
+                my $call-func = self.create-call-func(@current-identifiers, ~$<identifier>);
+                my $normal-type-return = "$<type>" ~ ($<pointer> ?? "*" !! '');
+                my $pointerized-return = self.create-pointerized-return-type($/);
+                my $return-type = $pointerized-return[0];
+                my $is-normal-return = !$pointerized-return[1];
+                my $wrapped_func_call;
+                if ($is-normal-return) {
+                    if ($<type> eq 'void') {
+                        $wrapped_func_call = $return-type ~ ' '~ $<identifier>~ '_pointerized(' ~ $pointerized-params ~ ")\{ $call-func \}";
+                    }
+                    else {
+                        $wrapped_func_call = $return-type ~ ' '~ $<identifier>~ '_pointerized(' ~ $pointerized-params ~ ")\{ return $call-func \}";
+                    }
+                    @.c_pointerize_bindings.push($wrapped_func_call); # say 'CURRENT IDENTIFIERS ',  @current-identifiers;
+                }
+                else {
+                   $wrapped_func_call = $return-type ~ ' '~ $<identifier>~ '_pointerized(' ~ $pointerized-params ~ ")\{\n    $return-type pointer_value = malloc\(sizeof\($<type>\)\);\n    $<type> ret = $call-func \n    *pointer_value = ret; \n    return pointer_value;\n\}";
+                    @.c_pointerize_bindings.push($wrapped_func_call); # say 'CURRENT IDENTIFIERS ',  @current-identifiers;
+                    # @.c_pointerize_custom_binding.push($wrapped_func_call); # say 'CURRENT IDENTIFIERS ',  @current-identifiers;
+                }
+            }
+            else { 
+                @.bindings.push($func);
+            }
+        }
+    }
+
+    method create-pointerized-return-type($function) {
+        if ($function<type><identifier> && $function<pointer>) {
+            #already pointer no change is needed
+            return  ("$function<type>$function<pointer>", False);
+        }
+        elsif $function<type><identifier> && !$function<pointer>  {
+            #value type pointerized
+            return ("$function<type><identifier>" ~ "*", True);
+        }
+        return ("$function<type>$function<pointer>", False);
+
+    }
+
+    method create-call-func(@current-identifiers, $identifier) {
+        my $call-func = $identifier ~ '(';
+        my $idx = 0;
+        for @current-identifiers -> $ident {
+            my $add-comma = $idx gt 0 ?? ', ' !! '';
+            # need to deref True of False?
+            if ($ident[2]) {
+                $call-func ~= ($add-comma ~ "*$ident[1]");
+            }
+            else {
+                $call-func ~= ($add-comma ~ "$ident[1]");
+            }
+            $idx++;
+        }
+        $call-func ~= ");";
+        return $call-func;
+
+    }
+
+    method pointerize-parameters($parameters, @current-identifiers) {
+        my $tail = "";
+        my $rest = $parameters<parameters> ?? $parameters<parameters>.map(-> $p {self.pointerize-parameters($p, @current-identifiers)}) !! "";
+        if $rest {
+            $tail = ',' ~ ' ' ~ $rest;
+        }
+
+
+        if ($parameters<type><identifier> && !$parameters<pointer>) {
+            @current-identifiers.unshift((~$parameters<type>, ~$parameters<identifier>, True));
+            return "$($parameters<type>)* $parameters<identifier>" ~ $tail;
+        }
+        elsif ($parameters<pointer> && $parameters<type>) {
+            @current-identifiers.unshift((~$parameters<type>, ~$parameters<identifier>, False));
+            my $modifier = $<parameters><modifier> ?? $<parameters><modifier> !! '';
+            my $const = $<parameters><const> ?? 'const ' !! '';
+            return "$const$modifier $($parameters<type>)* $parameters<identifier>" ~ $tail;
+        }
+        else {
+            @current-identifiers.unshift((~$parameters<type>, ~$parameters<identifier>, False));
+            return "$($parameters<type>) $parameters<identifier>" ~ $tail;
         }
     }
 
@@ -136,9 +226,11 @@ class RaylibActions {
     }
 
     method gen-function($return-type, $function-name, $parameters) {
+        my $pointerize = $!is-value-type ?? '_pointerized' !! '';
+        my $params = $parameters;
         my $raku-type = self.get-return-type($return-type);
         my $kebab-case-name = self.camelcase-to-kebab($function-name.Str);
-        return "our sub $kebab-case-name ($parameters)$raku-type is export is native(LIBRAYLIB) is symbol('$function-name')\{ * \}";
+        return "our sub $kebab-case-name ($params)$raku-type is export is native(LIBRAYLIB) is symbol('$function-name$pointerize')\{ * \}";
     }
 
     method parameters($/) {
@@ -162,7 +254,16 @@ class RaylibActions {
             make "$type \$$($<identifier> ?? "$<identifier> is rw" !! '')$tail";
         }
         else {
-            make "$type \$$($<identifier> ?? $<identifier> !! '')$tail";
+            # if defined %.value-typed-data{~$type}
+            if $<type><identifier>
+            {
+                $!is-value-type = True;
+                make "$type \$$($<identifier> ?? $<identifier> !! '')$tail";
+            }
+            else
+            {
+                make "$type \$$($<identifier> ?? $<identifier> !! '')$tail";
+            }
         }
     }
 
