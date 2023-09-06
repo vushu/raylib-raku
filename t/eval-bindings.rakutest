@@ -6,6 +6,7 @@ use Raylib::Bindings;
 use Test::META;
 
 use-ok "Raylib::Bindings";
+use-ok "Raylib::Allocations";
 meta-ok();
 
 done-testing;

@@ -1,9 +1,24 @@
+class Pointerized {
+    has Bool $.is-pointerized = False;
+    has Str $.pointer-value = "*";
+    multi method new ($is-pointerized, $pointer-value) { 
+        self.bless(:$is-pointerized, :$pointer-value);
+    }
+
+    method Str() {
+        return $.pointer-value;
+    }
+
+}
+
 class RaylibActions {
     has Str @.bindings;
     has Str @.pointerized_bindings;
+    has Str @.alloc_bindings;
     has Str @.c_pointerize_bindings;
     has Str @.c_pointerize_custom_binding;
-    has @.type-map = "int" => "int32", "float" => "num32", "double" => "num64", "short" => "int16", "char"  => "Str", "bool" => "bool", "void" => "", "va_list" => "Str";
+    has Str @.c_alloc_funtions;
+    has @.type-map = "int" => "int32", "float" => "num32", "double" => "num64", "short" => "int16", "char"  => "Str", "bool" => "bool", "void" => "void", "va_list" => "Str";
     # has @.value-typed-data = "Color" => "uint32";
     has Bool $!is-value-type = False;
     has Int $!incrementer = 0;
@@ -37,6 +52,8 @@ class RaylibActions {
         my $struct = "class $($<identifier>[0]) is export is repr('CStruct') is rw ";
         my $b = $<block>.made;
         @.bindings.push($struct ~ "\{\n " ~ $b ~ '}');
+        @.c_alloc_funtions.push(self.create-malloc-function($/).join);
+        @.c_alloc_funtions.push(self.create-free-function($/).join);
     }
 
     method typedef-enum($/) {
@@ -140,18 +157,92 @@ class RaylibActions {
                     else {
                         $wrapped_func_call = $return-type ~ ' '~ $<identifier>~ '_pointerized(' ~ $pointerized-params ~ ")\{ return $call-func \}";
                     }
-                    @.c_pointerize_bindings.push($wrapped_func_call); # say 'CURRENT IDENTIFIERS ',  @current-identifiers;
+                    @.c_pointerize_bindings.push($wrapped_func_call);
                 }
                 else {
                    $wrapped_func_call = $return-type ~ ' '~ $<identifier>~ '_pointerized(' ~ $pointerized-params ~ ")\{\n    $return-type pointer_value = malloc\(sizeof\($<type>\)\);\n    $<type> ret = $call-func \n    *pointer_value = ret; \n    return pointer_value;\n\}";
-                    @.c_pointerize_bindings.push($wrapped_func_call); # say 'CURRENT IDENTIFIERS ',  @current-identifiers;
-                    # @.c_pointerize_custom_binding.push($wrapped_func_call); # say 'CURRENT IDENTIFIERS ',  @current-identifiers;
+                    @.c_pointerize_bindings.push($wrapped_func_call);
                 }
             }
             else { 
                 @.bindings.push($func);
             }
         }
+    }
+
+    method create-free-function($struct) {
+        my @free_function;
+        @free_function.push("void free_$struct<identifier>[0]\($struct<identifier>[0]* ptr)\{\n");
+        @free_function.push("   free(ptr);\n");
+        @free_function.push("\}");
+        return @free_function;
+
+    }
+    method create-malloc-function($struct) {
+        my @parameters;
+        my @raku-parameters;
+        for $struct<block><statement> -> $x {
+            if $x<var-decl><identifier> {
+                for $x<var-decl><identifier> -> $ident {
+                    @parameters.push(($x<var-decl><modifier>, $x<var-decl><type>, $x<var-decl><pointer>, $ident));
+                    if ($x<var-decl><modifier> eq 'unsigned' && $x<var-decl><type> eq 'char') {
+                        @raku-parameters.push(('uint8', "\$$ident"));
+                    }
+                    else {
+                        @raku-parameters.push(($x<var-decl><type>.made, "\$$ident"));
+                    }
+                }
+            }
+
+            if $x<var-decl><array-identifier> { 
+                # say $x<var-decl><array-identifier><identifier>;
+                @parameters.push(($x<var-decl><modifier>, $x<var-decl><type>, $x<var-decl><pointer>, $x<var-decl><array-identifier>));
+                @raku-parameters.push(('CArray[' ~ $x<var-decl><type>.made ~ ']', "\$$x<var-decl><array-identifier>[0]<identifier>"));
+            }
+        }
+
+        my @pp = self.pointerize-parameter-list(@parameters);
+        my $param-list = @pp.join(',').trim;
+        # say @raku-parameters;
+        my $raku-param-list = @raku-parameters.join(',').trim;
+
+        # print "($param-list)";
+        my @malloc_function;
+        my $struct-name = $struct<identifier>.first.Str;
+        @.alloc_bindings.push("our sub malloc-$struct-name\($raku-param-list\) returns $struct-name is export is native(LIBRAYLIB) is symbol('malloc_$struct-name') \{*\}");
+        @.alloc_bindings.push("our sub free-$struct-name\($struct-name \$ptr) is export is native(LIBRAYLIB) is symbol('free_$struct-name') \{*\}");
+        @malloc_function.push($struct<identifier>.first.Str ~ '* '~ "malloc_" ~ $struct<identifier>.first.Str ~ "($param-list) \{\n");
+        @malloc_function.push("   $struct<identifier>[0]* ptr = malloc(sizeof($struct<identifier>[0]));\n");
+        for @pp -> $pv {
+            my $identifier-name = $pv[3]<array-identifier> ?? $pv[3]<array-identifier><identifier> !! $pv[3];
+            if ($pv[1]<identifier> && $pv[2].is-pointerized) {
+                @malloc_function.push("   ptr->$identifier-name = $pv[2]$identifier-name;\n");
+            }
+            else {
+                @malloc_function.push("   ptr->$identifier-name = $identifier-name;\n");
+            }
+        }
+        @malloc_function.push("   return ptr;\n");
+        @malloc_function.push("\}");
+        return @malloc_function;
+
+
+    }
+
+    method pointerize-parameter-list(@parameters) {
+        my @pointerized-params;
+
+        for @parameters -> $p { 
+            if $p[1]<identifier> && !$p[2] {
+                @pointerized-params.push(($p[0], $p[1], Pointerized.new(True, '*'), $p[3]));
+            }
+            else {
+               my $pointer = $p[2].Str.subst(' ','');
+               @pointerized-params.push(($p[0], $p[1], Pointerized.new(False, $pointer), $p[3]));
+            }
+        }
+        return @pointerized-params;
+
     }
 
     method create-pointerized-return-type($function) {
@@ -212,7 +303,8 @@ class RaylibActions {
 
     method get-return-type($return-type) {
         my $raku-type = $return-type<identifier> ?? $return-type<identifier>.made !! $return-type.made;
-        if ($raku-type ne '') {
+        if ($raku-type ne 'void') {
+            # no returns on void type
             return " returns $raku-type";
         }
         return ''
@@ -220,7 +312,7 @@ class RaylibActions {
 
     method camelcase-to-kebab(Str $camel-case) {
         my $kebab = $camel-case.subst(/(<:Lu><:Lu>?<:Ll>|\d+D|<:Lu>+)/, { '-' ~ .Str.lc }, :g);
-        $kebab.=subst(/\-\d+d/, {.substr(1).lc}); # fixing 2d and 3d since kebab casing numbers istn't allowed
+        $kebab.=subst(/\-\d+d/, {.substr(1).lc}); # fixing 2d and 3d since kebab casing numbers isn't allowed
         return $kebab.substr(1);
 
     }
@@ -239,7 +331,7 @@ class RaylibActions {
             return;
         }
         my $type = ~$<type>.made;
-        if $type eq '' {
+        if $type eq 'void' {
             make "";
             return;
         }

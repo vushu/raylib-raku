@@ -12,11 +12,12 @@
     "name": "Raylib::Bindings",
     "provides": {
       "Raylib::Bindings": "lib/Raylib/Bindings.rakumod",
-      "Raylib::Helpers": "lib/Raylib/Helpers.rakumod"
+      "Raylib::Allocations": "lib/Raylib/Allocations.rakumod"
     },
     "resources": [
     ],
     "test-depends": [
+      "Test::Meta"
     ],
     "version": "0.0.1",
     "source-url": "https://github.com/vushu/raylib-raku.git"

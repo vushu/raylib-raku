@@ -22,6 +22,17 @@ sub generate-bindings {
 
     $file.close;
 
+    my $alloc-file  = open "lib/Raylib/Allocations.rakumod", :w;
+    $alloc-file.say("unit module Raylib::Allocations:ver<0.0.1>:auth<zef:vushu>;");
+    $alloc-file.say("use NativeCall;");
+    $alloc-file.say("use Raylib::Bindings;");
+    $alloc-file.say("constant LIBRAYLIB = './generator/libraylib.so.4.5.0';");
+
+    for $actions.alloc_bindings -> $binding {
+        $alloc-file.say($binding);
+    }
+    $alloc-file.close;
+
 
     my $wrapper_file  = open "generator/raylib_pointerized_wrapper.c", :w;
     $wrapper_file.say("#include <raylib.h>");
@@ -31,6 +42,15 @@ sub generate-bindings {
         $wrapper_file.say($binding);
     }
     $wrapper_file.close;
+
+    my $alloc_file  = open "generator/raylib_allocations.c", :w;
+    $alloc_file.say("#include <raylib.h>");
+    $alloc_file.say("#include <stdlib.h>");
+
+    for $actions.c_alloc_funtions -> $binding {
+        $alloc_file.say($binding);
+    }
+    $alloc_file.close;
     say "Done generating raylib bindings!";
 }
 generate-bindings;
