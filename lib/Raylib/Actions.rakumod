@@ -148,8 +148,9 @@ class RaylibActions {
 
     method function($/) {
         if $<identifier>.made !∈ @.ignored-functions {
-            my $func = self.gen-function($<type>, $<identifier>, $<parameters>.made);
-            if ($!is-value-type) {
+            my $return-is-type-value-type = $<type><identifier> && !$<pointer>;
+            my $func = self.gen-function($<type>, $<identifier>, $<parameters>.made, $return-is-type-value-type);
+            if ($!is-value-type || $return-is-type-value-type) { # checking return type also
                 $!is-value-type = False;
                 @.pointerized_bindings.push($func);
                 my @current-identifiers;
@@ -293,6 +294,9 @@ class RaylibActions {
     }
 
     method pointerize-parameters($parameters, @current-identifiers) {
+        if $parameters eq 'void' {
+            return "";
+        }
         my $tail = "";
         my $rest = $parameters<parameters> ?? $parameters<parameters>.map(-> $p {self.pointerize-parameters($p, @current-identifiers)}) !! "";
         if $rest {
@@ -308,10 +312,10 @@ class RaylibActions {
             @current-identifiers.unshift((~$parameters<type>, ~$parameters<identifier>, False));
             my $modifier = $<parameters><modifier> ?? $<parameters><modifier> !! '';
             my $const = $<parameters><const> ?? 'const ' !! '';
-            return "$const$modifier $($parameters<type>)* $parameters<identifier>" ~ $tail;
+            return "$const$modifier $($parameters<type>) $parameters<pointer> $parameters<identifier>" ~ $tail;
         }
         else {
-            @current-identifiers.unshift((~$parameters<type>, ~$parameters<identifier>, False));
+            @current-identifiers.unshift((~$parameters<type>, $parameters<identifier>, False));
             return "$($parameters<type>) $parameters<identifier>" ~ $tail;
         }
     }
@@ -332,8 +336,8 @@ class RaylibActions {
 
     }
 
-    method gen-function($return-type, $function-name, $parameters) {
-        my $pointerize = $!is-value-type ?? '_pointerized' !! '';
+    method gen-function($return-type, $function-name, $parameters, $return-is-type-value-type) {
+        my $pointerize = ($!is-value-type || $return-is-type-value-type) ?? '_pointerized' !! '';
         my $params = $parameters;
         my $raku-type = self.get-return-type($return-type);
         my $kebab-case-name = self.camelcase-to-kebab($function-name.Str);
