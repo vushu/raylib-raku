@@ -46,6 +46,7 @@ sub generate-bindings {
     my $alloc_file  = open "generator/raylib_allocations.c", :w;
     $alloc_file.say("#include <raylib.h>");
     $alloc_file.say("#include <stdlib.h>");
+    $alloc_file.say("#include <string.h>");
 
     for $actions.c_alloc_funtions -> $binding {
         $alloc_file.say($binding);

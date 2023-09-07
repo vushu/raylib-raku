@@ -1,5 +1,6 @@
 #include <raylib.h>
 #include <stdlib.h>
+#include <string.h>
 Vector2* malloc_Vector2(float  x, float  y) {
    Vector2* ptr = malloc(sizeof(Vector2));
    ptr->x = x;
@@ -215,7 +216,7 @@ Material* malloc_Material(Shader * shader, MaterialMap * maps, float  params[4])
    Material* ptr = malloc(sizeof(Material));
    ptr->shader = *shader;
    ptr->maps = maps;
-   ptr->params[4] = params[4];
+   memcpy(ptr->params, params, 4 * sizeof(float));
    return ptr;
 }
 void free_Material(Material* ptr){
@@ -233,7 +234,7 @@ void free_Transform(Transform* ptr){
 }
 BoneInfo* malloc_BoneInfo(char  name[32], int  parent) {
    BoneInfo* ptr = malloc(sizeof(BoneInfo));
-   ptr->name[32] = name[32];
+   memcpy(ptr->name, name, 32 * sizeof(char));
    ptr->parent = parent;
    return ptr;
 }
@@ -262,7 +263,7 @@ ModelAnimation* malloc_ModelAnimation(int  boneCount, int  frameCount, BoneInfo 
    ptr->frameCount = frameCount;
    ptr->bones = bones;
    ptr->framePoses = framePoses;
-   ptr->name[32] = name[32];
+   memcpy(ptr->name, name, 32 * sizeof(char));
    return ptr;
 }
 void free_ModelAnimation(ModelAnimation* ptr){
@@ -352,8 +353,8 @@ VrDeviceInfo* malloc_VrDeviceInfo(int  hResolution, int  vResolution, float  hSc
    ptr->eyeToScreenDistance = eyeToScreenDistance;
    ptr->lensSeparationDistance = lensSeparationDistance;
    ptr->interpupillaryDistance = interpupillaryDistance;
-   ptr->lensDistortionValues[4] = lensDistortionValues[4];
-   ptr->chromaAbCorrection[4] = chromaAbCorrection[4];
+   memcpy(ptr->lensDistortionValues, lensDistortionValues, 4 * sizeof(float));
+   memcpy(ptr->chromaAbCorrection, chromaAbCorrection, 4 * sizeof(float));
    return ptr;
 }
 void free_VrDeviceInfo(VrDeviceInfo* ptr){
@@ -361,14 +362,14 @@ void free_VrDeviceInfo(VrDeviceInfo* ptr){
 }
 VrStereoConfig* malloc_VrStereoConfig(Matrix * projection[2], Matrix * viewOffset[2], float  leftLensCenter[2], float  rightLensCenter[2], float  leftScreenCenter[2], float  rightScreenCenter[2], float  scale[2], float  scaleIn[2]) {
    VrStereoConfig* ptr = malloc(sizeof(VrStereoConfig));
-   ptr->projection[2] = *projection[2];
-   ptr->viewOffset[2] = *viewOffset[2];
-   ptr->leftLensCenter[2] = leftLensCenter[2];
-   ptr->rightLensCenter[2] = rightLensCenter[2];
-   ptr->leftScreenCenter[2] = leftScreenCenter[2];
-   ptr->rightScreenCenter[2] = rightScreenCenter[2];
-   ptr->scale[2] = scale[2];
-   ptr->scaleIn[2] = scaleIn[2];
+   memcpy(ptr->projection, projection, 2 * sizeof(Matrix));
+   memcpy(ptr->viewOffset, viewOffset, 2 * sizeof(Matrix));
+   memcpy(ptr->leftLensCenter, leftLensCenter, 2 * sizeof(float));
+   memcpy(ptr->rightLensCenter, rightLensCenter, 2 * sizeof(float));
+   memcpy(ptr->leftScreenCenter, leftScreenCenter, 2 * sizeof(float));
+   memcpy(ptr->rightScreenCenter, rightScreenCenter, 2 * sizeof(float));
+   memcpy(ptr->scale, scale, 2 * sizeof(float));
+   memcpy(ptr->scaleIn, scaleIn, 2 * sizeof(float));
    return ptr;
 }
 void free_VrStereoConfig(VrStereoConfig* ptr){

@@ -214,8 +214,13 @@ class RaylibActions {
         @malloc_function.push($struct<identifier>.first.Str ~ '* '~ "malloc_" ~ $struct<identifier>.first.Str ~ "($param-list) \{\n");
         @malloc_function.push("   $struct<identifier>[0]* ptr = malloc(sizeof($struct<identifier>[0]));\n");
         for @pp -> $pv {
-            my $identifier-name = $pv[3]<array-identifier> ?? $pv[3]<array-identifier><identifier> !! $pv[3];
-            if ($pv[1]<identifier> && $pv[2].is-pointerized) {
+            my $identifier-name = $pv[3][0] ?? $pv[3][0]<identifier> !! $pv[3];
+            # checking if it's an array
+            if ($pv[3][0]<identifier>) {
+                #using memcpy
+                @malloc_function.push("   memcpy(ptr->$identifier-name, $identifier-name, $pv[3][0]<index> * sizeof($pv[1]));\n");
+            }
+            elsif ($pv[1]<identifier> && $pv[2].is-pointerized) {
                 @malloc_function.push("   ptr->$identifier-name = $pv[2]$identifier-name;\n");
             }
             else {
