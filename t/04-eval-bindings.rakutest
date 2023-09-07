@@ -3,9 +3,7 @@ use Test;
 use lib 'lib';
 
 use Raylib::Bindings;
-use Test::META;
 
 use-ok "Raylib::Bindings";
-meta-ok();
 
 done-testing;

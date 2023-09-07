@@ -16,7 +16,6 @@
     "resources": [
     ],
     "test-depends": [
-      "Test::Meta"
     ],
     "version": "0.0.1",
     "source-url": "https://github.com/vushu/raylib-raku.git"

@@ -95,7 +95,7 @@ Vector2* GetWorldToScreen2D_pointerized(Vector2* position, Camera2D* camera){
     *pointer_value = ret; 
     return pointer_value;
 }
-char* LoadFileData_pointerized( char * fileName,  int * bytesRead){ return LoadFileData(fileName, bytesRead); }
+char* LoadFileData_pointerized( char * fileName,  int * dataSize){ return LoadFileData(fileName, dataSize); }
 FilePathList* LoadDirectoryFiles_pointerized( char * dirPath){
     FilePathList* pointer_value = malloc(sizeof(FilePathList));
     FilePathList ret = LoadDirectoryFiles(dirPath); 
@@ -223,6 +223,12 @@ Image* LoadImage_pointerized( char * fileName){
 Image* LoadImageRaw_pointerized( char * fileName, int width, int height, int format, int headerSize){
     Image* pointer_value = malloc(sizeof(Image));
     Image ret = LoadImageRaw(fileName, width, height, format, headerSize); 
+    *pointer_value = ret; 
+    return pointer_value;
+}
+Image* LoadImageSvg_pointerized( char * fileNameOrString, int width, int height){
+    Image* pointer_value = malloc(sizeof(Image));
+    Image ret = LoadImageSvg(fileNameOrString, width, height); 
     *pointer_value = ret; 
     return pointer_value;
 }
@@ -494,9 +500,9 @@ Font* LoadFont_pointerized( char * fileName){
     *pointer_value = ret; 
     return pointer_value;
 }
-Font* LoadFontEx_pointerized( char * fileName, int fontSize,  int * fontChars, int glyphCount){
+Font* LoadFontEx_pointerized( char * fileName, int fontSize,  int * codepoints, int codepointCount){
     Font* pointer_value = malloc(sizeof(Font));
-    Font ret = LoadFontEx(fileName, fontSize, fontChars, glyphCount); 
+    Font ret = LoadFontEx(fileName, fontSize, codepoints, codepointCount); 
     *pointer_value = ret; 
     return pointer_value;
 }
@@ -506,16 +512,16 @@ Font* LoadFontFromImage_pointerized(Image* image, Color* key, int firstChar){
     *pointer_value = ret; 
     return pointer_value;
 }
-Font* LoadFontFromMemory_pointerized( char * fileType,  char * fileData, int dataSize, int fontSize,  int * fontChars, int glyphCount){
+Font* LoadFontFromMemory_pointerized( char * fileType,  char * fileData, int dataSize, int fontSize,  int * codepoints, int codepointCount){
     Font* pointer_value = malloc(sizeof(Font));
-    Font ret = LoadFontFromMemory(fileType, fileData, dataSize, fontSize, fontChars, glyphCount); 
+    Font ret = LoadFontFromMemory(fileType, fileData, dataSize, fontSize, codepoints, codepointCount); 
     *pointer_value = ret; 
     return pointer_value;
 }
 bool IsFontReady_pointerized(Font* font){ return IsFontReady(*font); }
-Image* GenImageFontAtlas_pointerized( GlyphInfo * chars,  Rectangle * * recs, int glyphCount, int fontSize, int padding, int packMethod){
+Image* GenImageFontAtlas_pointerized( GlyphInfo * glyphs,  Rectangle * * glyphRecs, int glyphCount, int fontSize, int padding, int packMethod){
     Image* pointer_value = malloc(sizeof(Image));
-    Image ret = GenImageFontAtlas(chars, recs, glyphCount, fontSize, padding, packMethod); 
+    Image ret = GenImageFontAtlas(glyphs, glyphRecs, glyphCount, fontSize, padding, packMethod); 
     *pointer_value = ret; 
     return pointer_value;
 }
@@ -525,7 +531,7 @@ void DrawText_pointerized( char * text, int posX, int posY, int fontSize, Color*
 void DrawTextEx_pointerized(Font* font,  char * text, Vector2* position, float fontSize, float spacing, Color* tint){ DrawTextEx(*font, text, *position, fontSize, spacing, *tint); }
 void DrawTextPro_pointerized(Font* font,  char * text, Vector2* position, Vector2* origin, float rotation, float fontSize, float spacing, Color* tint){ DrawTextPro(*font, text, *position, *origin, rotation, fontSize, spacing, *tint); }
 void DrawTextCodepoint_pointerized(Font* font, int codepoint, Vector2* position, float fontSize, Color* tint){ DrawTextCodepoint(*font, codepoint, *position, fontSize, *tint); }
-void DrawTextCodepoints_pointerized(Font* font,  int * codepoints, int count, Vector2* position, float fontSize, float spacing, Color* tint){ DrawTextCodepoints(*font, codepoints, count, *position, fontSize, spacing, *tint); }
+void DrawTextCodepoints_pointerized(Font* font,  int * codepoints, int codepointCount, Vector2* position, float fontSize, float spacing, Color* tint){ DrawTextCodepoints(*font, codepoints, codepointCount, *position, fontSize, spacing, *tint); }
 Vector2* MeasureTextEx_pointerized(Font* font,  char * text, float fontSize, float spacing){
     Vector2* pointer_value = malloc(sizeof(Vector2));
     Vector2 ret = MeasureTextEx(*font, text, fontSize, spacing); 

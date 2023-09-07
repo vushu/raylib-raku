@@ -1,5 +1,5 @@
 lib/.precomp
 .precomp/
-generator/raylib.h
-generator/*.o
-generator/*.so.*
+raylib-raku-c/raylib.h
+raylib-raku-c/*.o
+raylib-raku-c/*.so
