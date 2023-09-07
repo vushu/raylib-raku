@@ -1,20 +1,48 @@
+# This Raku module is are generated from raylib.h
 unit module Raylib::Bindings:ver<0.0.1>:auth<zef:vushu>;
 use NativeCall;
 constant LIBRAYLIB = './generator/libraylib.so.4.5.0';
 class Vector2 is export is repr('CStruct') is rw {
     has num32 $.x;
     has num32 $.y;
+    method init(num32 $x,num32 $y) returns Vector2 {
+        malloc-Vector2($x,$y);
+    }
+    method free {
+        free-Vector2(self);
+    }
+    submethod DESTROY {
+        free-Vector2(self);
+    }
 }
 class Vector3 is export is repr('CStruct') is rw {
     has num32 $.x;
     has num32 $.y;
     has num32 $.z;
+    method init(num32 $x,num32 $y,num32 $z) returns Vector3 {
+        malloc-Vector3($x,$y,$z);
+    }
+    method free {
+        free-Vector3(self);
+    }
+    submethod DESTROY {
+        free-Vector3(self);
+    }
 }
 class Vector4 is export is repr('CStruct') is rw {
     has num32 $.x;
     has num32 $.y;
     has num32 $.z;
     has num32 $.w;
+    method init(num32 $x,num32 $y,num32 $z,num32 $w) returns Vector4 {
+        malloc-Vector4($x,$y,$z,$w);
+    }
+    method free {
+        free-Vector4(self);
+    }
+    submethod DESTROY {
+        free-Vector4(self);
+    }
 }
 class Quaternion is Vector4 is export is repr('CStruct') {}
 class Matrix is export is repr('CStruct') is rw {
@@ -34,18 +62,45 @@ class Matrix is export is repr('CStruct') is rw {
     has num32 $.m7;
     has num32 $.m11;
     has num32 $.m15;
+    method init(num32 $m0,num32 $m4,num32 $m8,num32 $m12,num32 $m1,num32 $m5,num32 $m9,num32 $m13,num32 $m2,num32 $m6,num32 $m10,num32 $m14,num32 $m3,num32 $m7,num32 $m11,num32 $m15) returns Matrix {
+        malloc-Matrix($m0,$m4,$m8,$m12,$m1,$m5,$m9,$m13,$m2,$m6,$m10,$m14,$m3,$m7,$m11,$m15);
+    }
+    method free {
+        free-Matrix(self);
+    }
+    submethod DESTROY {
+        free-Matrix(self);
+    }
 }
 class Color is export is repr('CStruct') is rw {
     has uint8 $.r;
     has uint8 $.g;
     has uint8 $.b;
     has uint8 $.a;
+    method init(uint8 $r,uint8 $g,uint8 $b,uint8 $a) returns Color {
+        malloc-Color($r,$g,$b,$a);
+    }
+    method free {
+        free-Color(self);
+    }
+    submethod DESTROY {
+        free-Color(self);
+    }
 }
 class Rectangle is export is repr('CStruct') is rw {
     has num32 $.x;
     has num32 $.y;
     has num32 $.width;
     has num32 $.height;
+    method init(num32 $x,num32 $y,num32 $width,num32 $height) returns Rectangle {
+        malloc-Rectangle($x,$y,$width,$height);
+    }
+    method free {
+        free-Rectangle(self);
+    }
+    submethod DESTROY {
+        free-Rectangle(self);
+    }
 }
 class Image is export is repr('CStruct') is rw {
     has Pointer[void] $.data;
@@ -53,6 +108,15 @@ class Image is export is repr('CStruct') is rw {
     has int32 $.height;
     has int32 $.mipmaps;
     has int32 $.format;
+    method init(void $data,int32 $width,int32 $height,int32 $mipmaps,int32 $format) returns Image {
+        malloc-Image($data,$width,$height,$mipmaps,$format);
+    }
+    method free {
+        free-Image(self);
+    }
+    submethod DESTROY {
+        free-Image(self);
+    }
 }
 class Texture is export is repr('CStruct') is rw {
     has uint32 $.id;
@@ -60,6 +124,15 @@ class Texture is export is repr('CStruct') is rw {
     has int32 $.height;
     has int32 $.mipmaps;
     has int32 $.format;
+    method init(int32 $id,int32 $width,int32 $height,int32 $mipmaps,int32 $format) returns Texture {
+        malloc-Texture($id,$width,$height,$mipmaps,$format);
+    }
+    method free {
+        free-Texture(self);
+    }
+    submethod DESTROY {
+        free-Texture(self);
+    }
 }
 class Texture2D is Texture is export is repr('CStruct') {}
 class TextureCubemap is Texture is export is repr('CStruct') {}
@@ -67,6 +140,15 @@ class RenderTexture is export is repr('CStruct') is rw {
     has uint32 $.id;
     has Texture $.texture;
     has Texture $.depth;
+    method init(int32 $id,Texture $texture,Texture $depth) returns RenderTexture {
+        malloc-RenderTexture($id,$texture,$depth);
+    }
+    method free {
+        free-RenderTexture(self);
+    }
+    submethod DESTROY {
+        free-RenderTexture(self);
+    }
 }
 class RenderTexture2D is RenderTexture is export is repr('CStruct') {}
 class NPatchInfo is export is repr('CStruct') is rw {
@@ -76,6 +158,15 @@ class NPatchInfo is export is repr('CStruct') is rw {
     has int32 $.right;
     has int32 $.bottom;
     has int32 $.layout;
+    method init(Rectangle $source,int32 $left,int32 $top,int32 $right,int32 $bottom,int32 $layout) returns NPatchInfo {
+        malloc-NPatchInfo($source,$left,$top,$right,$bottom,$layout);
+    }
+    method free {
+        free-NPatchInfo(self);
+    }
+    submethod DESTROY {
+        free-NPatchInfo(self);
+    }
 }
 class GlyphInfo is export is repr('CStruct') is rw {
     has int32 $.value;
@@ -83,6 +174,15 @@ class GlyphInfo is export is repr('CStruct') is rw {
     has int32 $.offsetY;
     has int32 $.advanceX;
     has Image $.image;
+    method init(int32 $value,int32 $offsetX,int32 $offsetY,int32 $advanceX,Image $image) returns GlyphInfo {
+        malloc-GlyphInfo($value,$offsetX,$offsetY,$advanceX,$image);
+    }
+    method free {
+        free-GlyphInfo(self);
+    }
+    submethod DESTROY {
+        free-GlyphInfo(self);
+    }
 }
 class Font is export is repr('CStruct') is rw {
     has int32 $.baseSize;
@@ -91,6 +191,15 @@ class Font is export is repr('CStruct') is rw {
     has Texture2D $.texture;
     has Rectangle $.recs is rw;
     has GlyphInfo $.glyphs is rw;
+    method init(int32 $baseSize,int32 $glyphCount,int32 $glyphPadding,Texture2D $texture,Rectangle $recs,GlyphInfo $glyphs) returns Font {
+        malloc-Font($baseSize,$glyphCount,$glyphPadding,$texture,$recs,$glyphs);
+    }
+    method free {
+        free-Font(self);
+    }
+    submethod DESTROY {
+        free-Font(self);
+    }
 }
 class Camera3D is export is repr('CStruct') is rw {
     has Vector3 $.position;
@@ -98,6 +207,15 @@ class Camera3D is export is repr('CStruct') is rw {
     has Vector3 $.up;
     has num32 $.fovy;
     has int32 $.projection;
+    method init(Vector3 $position,Vector3 $target,Vector3 $up,num32 $fovy,int32 $projection) returns Camera3D {
+        malloc-Camera3D($position,$target,$up,$fovy,$projection);
+    }
+    method free {
+        free-Camera3D(self);
+    }
+    submethod DESTROY {
+        free-Camera3D(self);
+    }
 }
 class Camera is Camera3D is export is repr('CStruct') {}
 class Camera2D is export is repr('CStruct') is rw {
@@ -105,6 +223,15 @@ class Camera2D is export is repr('CStruct') is rw {
     has Vector2 $.target;
     has num32 $.rotation;
     has num32 $.zoom;
+    method init(Vector2 $offset,Vector2 $target,num32 $rotation,num32 $zoom) returns Camera2D {
+        malloc-Camera2D($offset,$target,$rotation,$zoom);
+    }
+    method free {
+        free-Camera2D(self);
+    }
+    submethod DESTROY {
+        free-Camera2D(self);
+    }
 }
 class Mesh is export is repr('CStruct') is rw {
     has int32 $.vertexCount;
@@ -122,29 +249,83 @@ class Mesh is export is repr('CStruct') is rw {
     has num32 $.boneWeights is rw;
     has uint32 $.vaoId;
     has uint32 $.vboId is rw;
+    method init(int32 $vertexCount,int32 $triangleCount,num32 $vertices,num32 $texcoords,num32 $texcoords2,num32 $normals,num32 $tangents,uint8 $colors,int16 $indices,num32 $animVertices,num32 $animNormals,uint8 $boneIds,num32 $boneWeights,int32 $vaoId,int32 $vboId) returns Mesh {
+        malloc-Mesh($vertexCount,$triangleCount,$vertices,$texcoords,$texcoords2,$normals,$tangents,$colors,$indices,$animVertices,$animNormals,$boneIds,$boneWeights,$vaoId,$vboId);
+    }
+    method free {
+        free-Mesh(self);
+    }
+    submethod DESTROY {
+        free-Mesh(self);
+    }
 }
 class Shader is export is repr('CStruct') is rw {
     has uint32 $.id;
     has int32 $.locs is rw;
+    method init(int32 $id,int32 $locs) returns Shader {
+        malloc-Shader($id,$locs);
+    }
+    method free {
+        free-Shader(self);
+    }
+    submethod DESTROY {
+        free-Shader(self);
+    }
 }
 class MaterialMap is export is repr('CStruct') is rw {
     has Texture2D $.texture;
     has Color $.color;
     has num32 $.value;
+    method init(Texture2D $texture,Color $color,num32 $value) returns MaterialMap {
+        malloc-MaterialMap($texture,$color,$value);
+    }
+    method free {
+        free-MaterialMap(self);
+    }
+    submethod DESTROY {
+        free-MaterialMap(self);
+    }
 }
 class Material is export is repr('CStruct') is rw {
     has Shader $.shader;
     has MaterialMap $.maps is rw;
     has CArray[num32] $.params is rw;
+    method init(Shader $shader,MaterialMap $maps,CArray[num32] $params) returns Material {
+        malloc-Material($shader,$maps,$params);
+    }
+    method free {
+        free-Material(self);
+    }
+    submethod DESTROY {
+        free-Material(self);
+    }
 }
 class Transform is export is repr('CStruct') is rw {
     has Vector3 $.translation;
     has Quaternion $.rotation;
     has Vector3 $.scale;
+    method init(Vector3 $translation,Quaternion $rotation,Vector3 $scale) returns Transform {
+        malloc-Transform($translation,$rotation,$scale);
+    }
+    method free {
+        free-Transform(self);
+    }
+    submethod DESTROY {
+        free-Transform(self);
+    }
 }
 class BoneInfo is export is repr('CStruct') is rw {
     has CArray[Str] $.name is rw;
     has int32 $.parent;
+    method init(CArray[Str] $name,int32 $parent) returns BoneInfo {
+        malloc-BoneInfo($name,$parent);
+    }
+    method free {
+        free-BoneInfo(self);
+    }
+    submethod DESTROY {
+        free-BoneInfo(self);
+    }
 }
 class Model is export is repr('CStruct') is rw {
     has Matrix $.transform;
@@ -156,6 +337,15 @@ class Model is export is repr('CStruct') is rw {
     has int32 $.boneCount;
     has BoneInfo $.bones is rw;
     has Transform $.bindPose is rw;
+    method init(Matrix $transform,int32 $meshCount,int32 $materialCount,Mesh $meshes,Material $materials,int32 $meshMaterial,int32 $boneCount,BoneInfo $bones,Transform $bindPose) returns Model {
+        malloc-Model($transform,$meshCount,$materialCount,$meshes,$materials,$meshMaterial,$boneCount,$bones,$bindPose);
+    }
+    method free {
+        free-Model(self);
+    }
+    submethod DESTROY {
+        free-Model(self);
+    }
 }
 class ModelAnimation is export is repr('CStruct') is rw {
     has int32 $.boneCount;
@@ -163,20 +353,56 @@ class ModelAnimation is export is repr('CStruct') is rw {
     has BoneInfo $.bones is rw;
     has Transform $.framePoses is rw;
     has CArray[Str] $.name is rw;
+    method init(int32 $boneCount,int32 $frameCount,BoneInfo $bones,Transform $framePoses,CArray[Str] $name) returns ModelAnimation {
+        malloc-ModelAnimation($boneCount,$frameCount,$bones,$framePoses,$name);
+    }
+    method free {
+        free-ModelAnimation(self);
+    }
+    submethod DESTROY {
+        free-ModelAnimation(self);
+    }
 }
 class Ray is export is repr('CStruct') is rw {
     has Vector3 $.position;
     has Vector3 $.direction;
+    method init(Vector3 $position,Vector3 $direction) returns Ray {
+        malloc-Ray($position,$direction);
+    }
+    method free {
+        free-Ray(self);
+    }
+    submethod DESTROY {
+        free-Ray(self);
+    }
 }
 class RayCollision is export is repr('CStruct') is rw {
     has bool $.hit;
     has num32 $.distance;
     has Vector3 $.point;
     has Vector3 $.normal;
+    method init(bool $hit,num32 $distance,Vector3 $point,Vector3 $normal) returns RayCollision {
+        malloc-RayCollision($hit,$distance,$point,$normal);
+    }
+    method free {
+        free-RayCollision(self);
+    }
+    submethod DESTROY {
+        free-RayCollision(self);
+    }
 }
 class BoundingBox is export is repr('CStruct') is rw {
     has Vector3 $.min;
     has Vector3 $.max;
+    method init(Vector3 $min,Vector3 $max) returns BoundingBox {
+        malloc-BoundingBox($min,$max);
+    }
+    method free {
+        free-BoundingBox(self);
+    }
+    submethod DESTROY {
+        free-BoundingBox(self);
+    }
 }
 class Wave is export is repr('CStruct') is rw {
     has uint32 $.frameCount;
@@ -184,6 +410,15 @@ class Wave is export is repr('CStruct') is rw {
     has uint32 $.sampleSize;
     has uint32 $.channels;
     has Pointer[void] $.data;
+    method init(int32 $frameCount,int32 $sampleRate,int32 $sampleSize,int32 $channels,void $data) returns Wave {
+        malloc-Wave($frameCount,$sampleRate,$sampleSize,$channels,$data);
+    }
+    method free {
+        free-Wave(self);
+    }
+    submethod DESTROY {
+        free-Wave(self);
+    }
 }
 class rAudioBuffer is export is repr('CStruct') {  has int32 $.dummy;}
 class rAudioProcessor is export is repr('CStruct') {  has int32 $.dummy;}
@@ -193,10 +428,28 @@ class AudioStream is export is repr('CStruct') is rw {
     has uint32 $.sampleRate;
     has uint32 $.sampleSize;
     has uint32 $.channels;
+    method init(rAudioBuffer $buffer,rAudioProcessor $processor,int32 $sampleRate,int32 $sampleSize,int32 $channels) returns AudioStream {
+        malloc-AudioStream($buffer,$processor,$sampleRate,$sampleSize,$channels);
+    }
+    method free {
+        free-AudioStream(self);
+    }
+    submethod DESTROY {
+        free-AudioStream(self);
+    }
 }
 class Sound is export is repr('CStruct') is rw {
     has AudioStream $.stream;
     has uint32 $.frameCount;
+    method init(AudioStream $stream,int32 $frameCount) returns Sound {
+        malloc-Sound($stream,$frameCount);
+    }
+    method free {
+        free-Sound(self);
+    }
+    submethod DESTROY {
+        free-Sound(self);
+    }
 }
 class Music is export is repr('CStruct') is rw {
     has AudioStream $.stream;
@@ -204,6 +457,15 @@ class Music is export is repr('CStruct') is rw {
     has bool $.looping;
     has int32 $.ctxType;
     has Pointer[void] $.ctxData;
+    method init(AudioStream $stream,int32 $frameCount,bool $looping,int32 $ctxType,void $ctxData) returns Music {
+        malloc-Music($stream,$frameCount,$looping,$ctxType,$ctxData);
+    }
+    method free {
+        free-Music(self);
+    }
+    submethod DESTROY {
+        free-Music(self);
+    }
 }
 class VrDeviceInfo is export is repr('CStruct') is rw {
     has int32 $.hResolution;
@@ -216,6 +478,15 @@ class VrDeviceInfo is export is repr('CStruct') is rw {
     has num32 $.interpupillaryDistance;
     has CArray[num32] $.lensDistortionValues is rw;
     has CArray[num32] $.chromaAbCorrection is rw;
+    method init(int32 $hResolution,int32 $vResolution,num32 $hScreenSize,num32 $vScreenSize,num32 $vScreenCenter,num32 $eyeToScreenDistance,num32 $lensSeparationDistance,num32 $interpupillaryDistance,CArray[num32] $lensDistortionValues,CArray[num32] $chromaAbCorrection) returns VrDeviceInfo {
+        malloc-VrDeviceInfo($hResolution,$vResolution,$hScreenSize,$vScreenSize,$vScreenCenter,$eyeToScreenDistance,$lensSeparationDistance,$interpupillaryDistance,$lensDistortionValues,$chromaAbCorrection);
+    }
+    method free {
+        free-VrDeviceInfo(self);
+    }
+    submethod DESTROY {
+        free-VrDeviceInfo(self);
+    }
 }
 class VrStereoConfig is export is repr('CStruct') is rw {
     has CArray[Matrix] $.projection is rw;
@@ -226,11 +497,29 @@ class VrStereoConfig is export is repr('CStruct') is rw {
     has CArray[num32] $.rightScreenCenter is rw;
     has CArray[num32] $.scale is rw;
     has CArray[num32] $.scaleIn is rw;
+    method init(CArray[Matrix] $projection,CArray[Matrix] $viewOffset,CArray[num32] $leftLensCenter,CArray[num32] $rightLensCenter,CArray[num32] $leftScreenCenter,CArray[num32] $rightScreenCenter,CArray[num32] $scale,CArray[num32] $scaleIn) returns VrStereoConfig {
+        malloc-VrStereoConfig($projection,$viewOffset,$leftLensCenter,$rightLensCenter,$leftScreenCenter,$rightScreenCenter,$scale,$scaleIn);
+    }
+    method free {
+        free-VrStereoConfig(self);
+    }
+    submethod DESTROY {
+        free-VrStereoConfig(self);
+    }
 }
 class FilePathList is export is repr('CStruct') is rw {
     has uint32 $.capacity;
     has uint32 $.count;
     has Str $.paths is rw;
+    method init(int32 $capacity,int32 $count,Str $paths) returns FilePathList {
+        malloc-FilePathList($capacity,$count,$paths);
+    }
+    method free {
+        free-FilePathList(self);
+    }
+    submethod DESTROY {
+        free-FilePathList(self);
+    }
 }
 enum ConfigFlags is export (
     FLAG_VSYNC_HINT => 0x00000040,
@@ -829,6 +1118,7 @@ our sub load-music-stream (Str $fileName) returns Music is export is native(LIBR
 our sub load-music-stream-from-memory (Str $fileType, Str $data, int32 $dataSize) returns Music is export is native(LIBRAYLIB) is symbol('LoadMusicStreamFromMemory'){ * }
 our sub load-audio-stream (int32 $sampleRate, int32 $sampleSize, int32 $channels) returns AudioStream is export is native(LIBRAYLIB) is symbol('LoadAudioStream'){ * }
 our sub set-audio-stream-buffer-size-default (int32 $size) is export is native(LIBRAYLIB) is symbol('SetAudioStreamBufferSizeDefault'){ * }
+####### Pointerized functions ########
 our sub set-window-icon (Image $image) is export is native(LIBRAYLIB) is symbol('SetWindowIcon_pointerized'){ * }
 our sub clear-background (Color $color) is export is native(LIBRAYLIB) is symbol('ClearBackground_pointerized'){ * }
 our sub begin-mode2d (Camera2D $camera) is export is native(LIBRAYLIB) is symbol('BeginMode2D_pointerized'){ * }
@@ -1089,3 +1379,68 @@ our sub stop-audio-stream (AudioStream $stream) is export is native(LIBRAYLIB) i
 our sub set-audio-stream-volume (AudioStream $stream, num32 $volume) is export is native(LIBRAYLIB) is symbol('SetAudioStreamVolume_pointerized'){ * }
 our sub set-audio-stream-pitch (AudioStream $stream, num32 $pitch) is export is native(LIBRAYLIB) is symbol('SetAudioStreamPitch_pointerized'){ * }
 our sub set-audio-stream-pan (AudioStream $stream, num32 $pan) is export is native(LIBRAYLIB) is symbol('SetAudioStreamPan_pointerized'){ * }
+####### Allocation functions ########
+our sub malloc-Vector2(num32 $x,num32 $y) returns Vector2 is native(LIBRAYLIB) is symbol('malloc_Vector2') {*}
+our sub free-Vector2(Vector2 $ptr) is native(LIBRAYLIB) is symbol('free_Vector2') {*}
+our sub malloc-Vector3(num32 $x,num32 $y,num32 $z) returns Vector3 is native(LIBRAYLIB) is symbol('malloc_Vector3') {*}
+our sub free-Vector3(Vector3 $ptr) is native(LIBRAYLIB) is symbol('free_Vector3') {*}
+our sub malloc-Vector4(num32 $x,num32 $y,num32 $z,num32 $w) returns Vector4 is native(LIBRAYLIB) is symbol('malloc_Vector4') {*}
+our sub free-Vector4(Vector4 $ptr) is native(LIBRAYLIB) is symbol('free_Vector4') {*}
+our sub malloc-Matrix(num32 $m0,num32 $m4,num32 $m8,num32 $m12,num32 $m1,num32 $m5,num32 $m9,num32 $m13,num32 $m2,num32 $m6,num32 $m10,num32 $m14,num32 $m3,num32 $m7,num32 $m11,num32 $m15) returns Matrix is native(LIBRAYLIB) is symbol('malloc_Matrix') {*}
+our sub free-Matrix(Matrix $ptr) is native(LIBRAYLIB) is symbol('free_Matrix') {*}
+our sub malloc-Color(uint8 $r,uint8 $g,uint8 $b,uint8 $a) returns Color is native(LIBRAYLIB) is symbol('malloc_Color') {*}
+our sub free-Color(Color $ptr) is native(LIBRAYLIB) is symbol('free_Color') {*}
+our sub malloc-Rectangle(num32 $x,num32 $y,num32 $width,num32 $height) returns Rectangle is native(LIBRAYLIB) is symbol('malloc_Rectangle') {*}
+our sub free-Rectangle(Rectangle $ptr) is native(LIBRAYLIB) is symbol('free_Rectangle') {*}
+our sub malloc-Image(void $data,int32 $width,int32 $height,int32 $mipmaps,int32 $format) returns Image is native(LIBRAYLIB) is symbol('malloc_Image') {*}
+our sub free-Image(Image $ptr) is native(LIBRAYLIB) is symbol('free_Image') {*}
+our sub malloc-Texture(int32 $id,int32 $width,int32 $height,int32 $mipmaps,int32 $format) returns Texture is native(LIBRAYLIB) is symbol('malloc_Texture') {*}
+our sub free-Texture(Texture $ptr) is native(LIBRAYLIB) is symbol('free_Texture') {*}
+our sub malloc-RenderTexture(int32 $id,Texture $texture,Texture $depth) returns RenderTexture is native(LIBRAYLIB) is symbol('malloc_RenderTexture') {*}
+our sub free-RenderTexture(RenderTexture $ptr) is native(LIBRAYLIB) is symbol('free_RenderTexture') {*}
+our sub malloc-NPatchInfo(Rectangle $source,int32 $left,int32 $top,int32 $right,int32 $bottom,int32 $layout) returns NPatchInfo is native(LIBRAYLIB) is symbol('malloc_NPatchInfo') {*}
+our sub free-NPatchInfo(NPatchInfo $ptr) is native(LIBRAYLIB) is symbol('free_NPatchInfo') {*}
+our sub malloc-GlyphInfo(int32 $value,int32 $offsetX,int32 $offsetY,int32 $advanceX,Image $image) returns GlyphInfo is native(LIBRAYLIB) is symbol('malloc_GlyphInfo') {*}
+our sub free-GlyphInfo(GlyphInfo $ptr) is native(LIBRAYLIB) is symbol('free_GlyphInfo') {*}
+our sub malloc-Font(int32 $baseSize,int32 $glyphCount,int32 $glyphPadding,Texture2D $texture,Rectangle $recs,GlyphInfo $glyphs) returns Font is native(LIBRAYLIB) is symbol('malloc_Font') {*}
+our sub free-Font(Font $ptr) is native(LIBRAYLIB) is symbol('free_Font') {*}
+our sub malloc-Camera3D(Vector3 $position,Vector3 $target,Vector3 $up,num32 $fovy,int32 $projection) returns Camera3D is native(LIBRAYLIB) is symbol('malloc_Camera3D') {*}
+our sub free-Camera3D(Camera3D $ptr) is native(LIBRAYLIB) is symbol('free_Camera3D') {*}
+our sub malloc-Camera2D(Vector2 $offset,Vector2 $target,num32 $rotation,num32 $zoom) returns Camera2D is native(LIBRAYLIB) is symbol('malloc_Camera2D') {*}
+our sub free-Camera2D(Camera2D $ptr) is native(LIBRAYLIB) is symbol('free_Camera2D') {*}
+our sub malloc-Mesh(int32 $vertexCount,int32 $triangleCount,num32 $vertices,num32 $texcoords,num32 $texcoords2,num32 $normals,num32 $tangents,uint8 $colors,int16 $indices,num32 $animVertices,num32 $animNormals,uint8 $boneIds,num32 $boneWeights,int32 $vaoId,int32 $vboId) returns Mesh is native(LIBRAYLIB) is symbol('malloc_Mesh') {*}
+our sub free-Mesh(Mesh $ptr) is native(LIBRAYLIB) is symbol('free_Mesh') {*}
+our sub malloc-Shader(int32 $id,int32 $locs) returns Shader is native(LIBRAYLIB) is symbol('malloc_Shader') {*}
+our sub free-Shader(Shader $ptr) is native(LIBRAYLIB) is symbol('free_Shader') {*}
+our sub malloc-MaterialMap(Texture2D $texture,Color $color,num32 $value) returns MaterialMap is native(LIBRAYLIB) is symbol('malloc_MaterialMap') {*}
+our sub free-MaterialMap(MaterialMap $ptr) is native(LIBRAYLIB) is symbol('free_MaterialMap') {*}
+our sub malloc-Material(Shader $shader,MaterialMap $maps,CArray[num32] $params) returns Material is native(LIBRAYLIB) is symbol('malloc_Material') {*}
+our sub free-Material(Material $ptr) is native(LIBRAYLIB) is symbol('free_Material') {*}
+our sub malloc-Transform(Vector3 $translation,Quaternion $rotation,Vector3 $scale) returns Transform is native(LIBRAYLIB) is symbol('malloc_Transform') {*}
+our sub free-Transform(Transform $ptr) is native(LIBRAYLIB) is symbol('free_Transform') {*}
+our sub malloc-BoneInfo(CArray[Str] $name,int32 $parent) returns BoneInfo is native(LIBRAYLIB) is symbol('malloc_BoneInfo') {*}
+our sub free-BoneInfo(BoneInfo $ptr) is native(LIBRAYLIB) is symbol('free_BoneInfo') {*}
+our sub malloc-Model(Matrix $transform,int32 $meshCount,int32 $materialCount,Mesh $meshes,Material $materials,int32 $meshMaterial,int32 $boneCount,BoneInfo $bones,Transform $bindPose) returns Model is native(LIBRAYLIB) is symbol('malloc_Model') {*}
+our sub free-Model(Model $ptr) is native(LIBRAYLIB) is symbol('free_Model') {*}
+our sub malloc-ModelAnimation(int32 $boneCount,int32 $frameCount,BoneInfo $bones,Transform $framePoses,CArray[Str] $name) returns ModelAnimation is native(LIBRAYLIB) is symbol('malloc_ModelAnimation') {*}
+our sub free-ModelAnimation(ModelAnimation $ptr) is native(LIBRAYLIB) is symbol('free_ModelAnimation') {*}
+our sub malloc-Ray(Vector3 $position,Vector3 $direction) returns Ray is native(LIBRAYLIB) is symbol('malloc_Ray') {*}
+our sub free-Ray(Ray $ptr) is native(LIBRAYLIB) is symbol('free_Ray') {*}
+our sub malloc-RayCollision(bool $hit,num32 $distance,Vector3 $point,Vector3 $normal) returns RayCollision is native(LIBRAYLIB) is symbol('malloc_RayCollision') {*}
+our sub free-RayCollision(RayCollision $ptr) is native(LIBRAYLIB) is symbol('free_RayCollision') {*}
+our sub malloc-BoundingBox(Vector3 $min,Vector3 $max) returns BoundingBox is native(LIBRAYLIB) is symbol('malloc_BoundingBox') {*}
+our sub free-BoundingBox(BoundingBox $ptr) is native(LIBRAYLIB) is symbol('free_BoundingBox') {*}
+our sub malloc-Wave(int32 $frameCount,int32 $sampleRate,int32 $sampleSize,int32 $channels,void $data) returns Wave is native(LIBRAYLIB) is symbol('malloc_Wave') {*}
+our sub free-Wave(Wave $ptr) is native(LIBRAYLIB) is symbol('free_Wave') {*}
+our sub malloc-AudioStream(rAudioBuffer $buffer,rAudioProcessor $processor,int32 $sampleRate,int32 $sampleSize,int32 $channels) returns AudioStream is native(LIBRAYLIB) is symbol('malloc_AudioStream') {*}
+our sub free-AudioStream(AudioStream $ptr) is native(LIBRAYLIB) is symbol('free_AudioStream') {*}
+our sub malloc-Sound(AudioStream $stream,int32 $frameCount) returns Sound is native(LIBRAYLIB) is symbol('malloc_Sound') {*}
+our sub free-Sound(Sound $ptr) is native(LIBRAYLIB) is symbol('free_Sound') {*}
+our sub malloc-Music(AudioStream $stream,int32 $frameCount,bool $looping,int32 $ctxType,void $ctxData) returns Music is native(LIBRAYLIB) is symbol('malloc_Music') {*}
+our sub free-Music(Music $ptr) is native(LIBRAYLIB) is symbol('free_Music') {*}
+our sub malloc-VrDeviceInfo(int32 $hResolution,int32 $vResolution,num32 $hScreenSize,num32 $vScreenSize,num32 $vScreenCenter,num32 $eyeToScreenDistance,num32 $lensSeparationDistance,num32 $interpupillaryDistance,CArray[num32] $lensDistortionValues,CArray[num32] $chromaAbCorrection) returns VrDeviceInfo is native(LIBRAYLIB) is symbol('malloc_VrDeviceInfo') {*}
+our sub free-VrDeviceInfo(VrDeviceInfo $ptr) is native(LIBRAYLIB) is symbol('free_VrDeviceInfo') {*}
+our sub malloc-VrStereoConfig(CArray[Matrix] $projection,CArray[Matrix] $viewOffset,CArray[num32] $leftLensCenter,CArray[num32] $rightLensCenter,CArray[num32] $leftScreenCenter,CArray[num32] $rightScreenCenter,CArray[num32] $scale,CArray[num32] $scaleIn) returns VrStereoConfig is native(LIBRAYLIB) is symbol('malloc_VrStereoConfig') {*}
+our sub free-VrStereoConfig(VrStereoConfig $ptr) is native(LIBRAYLIB) is symbol('free_VrStereoConfig') {*}
+our sub malloc-FilePathList(int32 $capacity,int32 $count,Str $paths) returns FilePathList is native(LIBRAYLIB) is symbol('malloc_FilePathList') {*}
+our sub free-FilePathList(FilePathList $ptr) is native(LIBRAYLIB) is symbol('free_FilePathList') {*}

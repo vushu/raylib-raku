@@ -49,10 +49,20 @@ class RaylibActions {
     }
 
     method typedef-struct($/) {
+        my $struct-name = $<identifier>[0];
         my $struct = "class $($<identifier>[0]) is export is repr('CStruct') is rw ";
         my $b = $<block>.made;
-        @.bindings.push($struct ~ "\{\n " ~ $b ~ '}');
-        @.c_alloc_funtions.push(self.create-malloc-function($/).join);
+        my @func-bundle = self.create-malloc-function($/);
+        @.c_alloc_funtions.push(@func-bundle[0].join);
+        my $raku-params = @func-bundle[1].join(',');
+        # Extracting identifiers
+        my $raku-identifiers = @func-bundle[1].map(-> $x {$x[1]}).join(',');
+
+        my $malloc-func = "    method init\($raku-params\) returns $struct-name \{\n        malloc-$struct-name\($raku-identifiers\);\n    }";
+        my $free-func = "    method free \{\n        free-$struct-name\(self\);\n    }";
+        my $gc-auto-free-func = "    submethod DESTROY \{\n        free-$struct-name\(self\);\n    }";
+
+        @.bindings.push($struct ~ "\{\n " ~ $b ~ $malloc-func ~"\n"~ $free-func ~ "\n" ~ $gc-auto-free-func ~"\n\}");
         @.c_alloc_funtions.push(self.create-free-function($/).join);
     }
 
@@ -209,8 +219,8 @@ class RaylibActions {
         # print "($param-list)";
         my @malloc_function;
         my $struct-name = $struct<identifier>.first.Str;
-        @.alloc_bindings.push("our sub malloc-$struct-name\($raku-param-list\) returns $struct-name is export is native(LIBRAYLIB) is symbol('malloc_$struct-name') \{*\}");
-        @.alloc_bindings.push("our sub free-$struct-name\($struct-name \$ptr) is export is native(LIBRAYLIB) is symbol('free_$struct-name') \{*\}");
+        @.alloc_bindings.push("our sub malloc-$struct-name\($raku-param-list\) returns $struct-name is native(LIBRAYLIB) is symbol('malloc_$struct-name') \{*\}");
+        @.alloc_bindings.push("our sub free-$struct-name\($struct-name \$ptr) is native(LIBRAYLIB) is symbol('free_$struct-name') \{*\}");
         @malloc_function.push($struct<identifier>.first.Str ~ '* '~ "malloc_" ~ $struct<identifier>.first.Str ~ "($param-list) \{\n");
         @malloc_function.push("   $struct<identifier>[0]* ptr = malloc(sizeof($struct<identifier>[0]));\n");
         for @pp -> $pv {
@@ -229,7 +239,7 @@ class RaylibActions {
         }
         @malloc_function.push("   return ptr;\n");
         @malloc_function.push("\}");
-        return @malloc_function;
+        return @malloc_function, @raku-parameters;
 
 
     }

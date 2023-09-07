@@ -11,8 +11,7 @@
     "license" : "Artistic-2.0",
     "name": "Raylib::Bindings",
     "provides": {
-      "Raylib::Bindings": "lib/Raylib/Bindings.rakumod",
-      "Raylib::Allocations": "lib/Raylib/Allocations.rakumod"
+      "Raylib::Bindings": "lib/Raylib/Bindings.rakumod"
     },
     "resources": [
     ],
