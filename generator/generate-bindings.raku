@@ -2,7 +2,7 @@ use lib 'lib';
 use Raylib::Grammar;
 use Raylib::Actions;
 
-constant generation-message = "# This Raku module is are generated from raylib.h";
+constant generation-message = "# This Raku module is generated from raylib.h";
 
 sub generate-bindings {
     say "Generating raylib bindings...";

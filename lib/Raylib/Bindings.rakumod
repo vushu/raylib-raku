@@ -1,4 +1,4 @@
-# This Raku module is are generated from raylib.h
+# This Raku module is generated from raylib.h
 unit module Raylib::Bindings:ver<0.0.1>:auth<zef:vushu>;
 use NativeCall;
 constant LIBRAYLIB = './generator/libraylib.so.4.5.0';
@@ -7,9 +7,6 @@ class Vector2 is export is repr('CStruct') is rw {
     has num32 $.y;
     method init(num32 $x,num32 $y) returns Vector2 {
         malloc-Vector2($x,$y);
-    }
-    method free {
-        free-Vector2(self);
     }
     submethod DESTROY {
         free-Vector2(self);
@@ -22,9 +19,6 @@ class Vector3 is export is repr('CStruct') is rw {
     method init(num32 $x,num32 $y,num32 $z) returns Vector3 {
         malloc-Vector3($x,$y,$z);
     }
-    method free {
-        free-Vector3(self);
-    }
     submethod DESTROY {
         free-Vector3(self);
     }
@@ -36,9 +30,6 @@ class Vector4 is export is repr('CStruct') is rw {
     has num32 $.w;
     method init(num32 $x,num32 $y,num32 $z,num32 $w) returns Vector4 {
         malloc-Vector4($x,$y,$z,$w);
-    }
-    method free {
-        free-Vector4(self);
     }
     submethod DESTROY {
         free-Vector4(self);
@@ -65,9 +56,6 @@ class Matrix is export is repr('CStruct') is rw {
     method init(num32 $m0,num32 $m4,num32 $m8,num32 $m12,num32 $m1,num32 $m5,num32 $m9,num32 $m13,num32 $m2,num32 $m6,num32 $m10,num32 $m14,num32 $m3,num32 $m7,num32 $m11,num32 $m15) returns Matrix {
         malloc-Matrix($m0,$m4,$m8,$m12,$m1,$m5,$m9,$m13,$m2,$m6,$m10,$m14,$m3,$m7,$m11,$m15);
     }
-    method free {
-        free-Matrix(self);
-    }
     submethod DESTROY {
         free-Matrix(self);
     }
@@ -80,9 +68,6 @@ class Color is export is repr('CStruct') is rw {
     method init(uint8 $r,uint8 $g,uint8 $b,uint8 $a) returns Color {
         malloc-Color($r,$g,$b,$a);
     }
-    method free {
-        free-Color(self);
-    }
     submethod DESTROY {
         free-Color(self);
     }
@@ -94,9 +79,6 @@ class Rectangle is export is repr('CStruct') is rw {
     has num32 $.height;
     method init(num32 $x,num32 $y,num32 $width,num32 $height) returns Rectangle {
         malloc-Rectangle($x,$y,$width,$height);
-    }
-    method free {
-        free-Rectangle(self);
     }
     submethod DESTROY {
         free-Rectangle(self);
@@ -111,9 +93,6 @@ class Image is export is repr('CStruct') is rw {
     method init(void $data,int32 $width,int32 $height,int32 $mipmaps,int32 $format) returns Image {
         malloc-Image($data,$width,$height,$mipmaps,$format);
     }
-    method free {
-        free-Image(self);
-    }
     submethod DESTROY {
         free-Image(self);
     }
@@ -127,9 +106,6 @@ class Texture is export is repr('CStruct') is rw {
     method init(int32 $id,int32 $width,int32 $height,int32 $mipmaps,int32 $format) returns Texture {
         malloc-Texture($id,$width,$height,$mipmaps,$format);
     }
-    method free {
-        free-Texture(self);
-    }
     submethod DESTROY {
         free-Texture(self);
     }
@@ -142,9 +118,6 @@ class RenderTexture is export is repr('CStruct') is rw {
     has Texture $.depth;
     method init(int32 $id,Texture $texture,Texture $depth) returns RenderTexture {
         malloc-RenderTexture($id,$texture,$depth);
-    }
-    method free {
-        free-RenderTexture(self);
     }
     submethod DESTROY {
         free-RenderTexture(self);
@@ -161,9 +134,6 @@ class NPatchInfo is export is repr('CStruct') is rw {
     method init(Rectangle $source,int32 $left,int32 $top,int32 $right,int32 $bottom,int32 $layout) returns NPatchInfo {
         malloc-NPatchInfo($source,$left,$top,$right,$bottom,$layout);
     }
-    method free {
-        free-NPatchInfo(self);
-    }
     submethod DESTROY {
         free-NPatchInfo(self);
     }
@@ -176,9 +146,6 @@ class GlyphInfo is export is repr('CStruct') is rw {
     has Image $.image;
     method init(int32 $value,int32 $offsetX,int32 $offsetY,int32 $advanceX,Image $image) returns GlyphInfo {
         malloc-GlyphInfo($value,$offsetX,$offsetY,$advanceX,$image);
-    }
-    method free {
-        free-GlyphInfo(self);
     }
     submethod DESTROY {
         free-GlyphInfo(self);
@@ -194,9 +161,6 @@ class Font is export is repr('CStruct') is rw {
     method init(int32 $baseSize,int32 $glyphCount,int32 $glyphPadding,Texture2D $texture,Rectangle $recs,GlyphInfo $glyphs) returns Font {
         malloc-Font($baseSize,$glyphCount,$glyphPadding,$texture,$recs,$glyphs);
     }
-    method free {
-        free-Font(self);
-    }
     submethod DESTROY {
         free-Font(self);
     }
@@ -210,9 +174,6 @@ class Camera3D is export is repr('CStruct') is rw {
     method init(Vector3 $position,Vector3 $target,Vector3 $up,num32 $fovy,int32 $projection) returns Camera3D {
         malloc-Camera3D($position,$target,$up,$fovy,$projection);
     }
-    method free {
-        free-Camera3D(self);
-    }
     submethod DESTROY {
         free-Camera3D(self);
     }
@@ -225,9 +186,6 @@ class Camera2D is export is repr('CStruct') is rw {
     has num32 $.zoom;
     method init(Vector2 $offset,Vector2 $target,num32 $rotation,num32 $zoom) returns Camera2D {
         malloc-Camera2D($offset,$target,$rotation,$zoom);
-    }
-    method free {
-        free-Camera2D(self);
     }
     submethod DESTROY {
         free-Camera2D(self);
@@ -252,9 +210,6 @@ class Mesh is export is repr('CStruct') is rw {
     method init(int32 $vertexCount,int32 $triangleCount,num32 $vertices,num32 $texcoords,num32 $texcoords2,num32 $normals,num32 $tangents,uint8 $colors,int16 $indices,num32 $animVertices,num32 $animNormals,uint8 $boneIds,num32 $boneWeights,int32 $vaoId,int32 $vboId) returns Mesh {
         malloc-Mesh($vertexCount,$triangleCount,$vertices,$texcoords,$texcoords2,$normals,$tangents,$colors,$indices,$animVertices,$animNormals,$boneIds,$boneWeights,$vaoId,$vboId);
     }
-    method free {
-        free-Mesh(self);
-    }
     submethod DESTROY {
         free-Mesh(self);
     }
@@ -264,9 +219,6 @@ class Shader is export is repr('CStruct') is rw {
     has int32 $.locs is rw;
     method init(int32 $id,int32 $locs) returns Shader {
         malloc-Shader($id,$locs);
-    }
-    method free {
-        free-Shader(self);
     }
     submethod DESTROY {
         free-Shader(self);
@@ -279,9 +231,6 @@ class MaterialMap is export is repr('CStruct') is rw {
     method init(Texture2D $texture,Color $color,num32 $value) returns MaterialMap {
         malloc-MaterialMap($texture,$color,$value);
     }
-    method free {
-        free-MaterialMap(self);
-    }
     submethod DESTROY {
         free-MaterialMap(self);
     }
@@ -292,9 +241,6 @@ class Material is export is repr('CStruct') is rw {
     has CArray[num32] $.params is rw;
     method init(Shader $shader,MaterialMap $maps,CArray[num32] $params) returns Material {
         malloc-Material($shader,$maps,$params);
-    }
-    method free {
-        free-Material(self);
     }
     submethod DESTROY {
         free-Material(self);
@@ -307,9 +253,6 @@ class Transform is export is repr('CStruct') is rw {
     method init(Vector3 $translation,Quaternion $rotation,Vector3 $scale) returns Transform {
         malloc-Transform($translation,$rotation,$scale);
     }
-    method free {
-        free-Transform(self);
-    }
     submethod DESTROY {
         free-Transform(self);
     }
@@ -319,9 +262,6 @@ class BoneInfo is export is repr('CStruct') is rw {
     has int32 $.parent;
     method init(CArray[Str] $name,int32 $parent) returns BoneInfo {
         malloc-BoneInfo($name,$parent);
-    }
-    method free {
-        free-BoneInfo(self);
     }
     submethod DESTROY {
         free-BoneInfo(self);
@@ -340,9 +280,6 @@ class Model is export is repr('CStruct') is rw {
     method init(Matrix $transform,int32 $meshCount,int32 $materialCount,Mesh $meshes,Material $materials,int32 $meshMaterial,int32 $boneCount,BoneInfo $bones,Transform $bindPose) returns Model {
         malloc-Model($transform,$meshCount,$materialCount,$meshes,$materials,$meshMaterial,$boneCount,$bones,$bindPose);
     }
-    method free {
-        free-Model(self);
-    }
     submethod DESTROY {
         free-Model(self);
     }
@@ -356,9 +293,6 @@ class ModelAnimation is export is repr('CStruct') is rw {
     method init(int32 $boneCount,int32 $frameCount,BoneInfo $bones,Transform $framePoses,CArray[Str] $name) returns ModelAnimation {
         malloc-ModelAnimation($boneCount,$frameCount,$bones,$framePoses,$name);
     }
-    method free {
-        free-ModelAnimation(self);
-    }
     submethod DESTROY {
         free-ModelAnimation(self);
     }
@@ -368,9 +302,6 @@ class Ray is export is repr('CStruct') is rw {
     has Vector3 $.direction;
     method init(Vector3 $position,Vector3 $direction) returns Ray {
         malloc-Ray($position,$direction);
-    }
-    method free {
-        free-Ray(self);
     }
     submethod DESTROY {
         free-Ray(self);
@@ -384,9 +315,6 @@ class RayCollision is export is repr('CStruct') is rw {
     method init(bool $hit,num32 $distance,Vector3 $point,Vector3 $normal) returns RayCollision {
         malloc-RayCollision($hit,$distance,$point,$normal);
     }
-    method free {
-        free-RayCollision(self);
-    }
     submethod DESTROY {
         free-RayCollision(self);
     }
@@ -396,9 +324,6 @@ class BoundingBox is export is repr('CStruct') is rw {
     has Vector3 $.max;
     method init(Vector3 $min,Vector3 $max) returns BoundingBox {
         malloc-BoundingBox($min,$max);
-    }
-    method free {
-        free-BoundingBox(self);
     }
     submethod DESTROY {
         free-BoundingBox(self);
@@ -412,9 +337,6 @@ class Wave is export is repr('CStruct') is rw {
     has Pointer[void] $.data;
     method init(int32 $frameCount,int32 $sampleRate,int32 $sampleSize,int32 $channels,void $data) returns Wave {
         malloc-Wave($frameCount,$sampleRate,$sampleSize,$channels,$data);
-    }
-    method free {
-        free-Wave(self);
     }
     submethod DESTROY {
         free-Wave(self);
@@ -431,9 +353,6 @@ class AudioStream is export is repr('CStruct') is rw {
     method init(rAudioBuffer $buffer,rAudioProcessor $processor,int32 $sampleRate,int32 $sampleSize,int32 $channels) returns AudioStream {
         malloc-AudioStream($buffer,$processor,$sampleRate,$sampleSize,$channels);
     }
-    method free {
-        free-AudioStream(self);
-    }
     submethod DESTROY {
         free-AudioStream(self);
     }
@@ -443,9 +362,6 @@ class Sound is export is repr('CStruct') is rw {
     has uint32 $.frameCount;
     method init(AudioStream $stream,int32 $frameCount) returns Sound {
         malloc-Sound($stream,$frameCount);
-    }
-    method free {
-        free-Sound(self);
     }
     submethod DESTROY {
         free-Sound(self);
@@ -459,9 +375,6 @@ class Music is export is repr('CStruct') is rw {
     has Pointer[void] $.ctxData;
     method init(AudioStream $stream,int32 $frameCount,bool $looping,int32 $ctxType,void $ctxData) returns Music {
         malloc-Music($stream,$frameCount,$looping,$ctxType,$ctxData);
-    }
-    method free {
-        free-Music(self);
     }
     submethod DESTROY {
         free-Music(self);
@@ -481,9 +394,6 @@ class VrDeviceInfo is export is repr('CStruct') is rw {
     method init(int32 $hResolution,int32 $vResolution,num32 $hScreenSize,num32 $vScreenSize,num32 $vScreenCenter,num32 $eyeToScreenDistance,num32 $lensSeparationDistance,num32 $interpupillaryDistance,CArray[num32] $lensDistortionValues,CArray[num32] $chromaAbCorrection) returns VrDeviceInfo {
         malloc-VrDeviceInfo($hResolution,$vResolution,$hScreenSize,$vScreenSize,$vScreenCenter,$eyeToScreenDistance,$lensSeparationDistance,$interpupillaryDistance,$lensDistortionValues,$chromaAbCorrection);
     }
-    method free {
-        free-VrDeviceInfo(self);
-    }
     submethod DESTROY {
         free-VrDeviceInfo(self);
     }
@@ -500,9 +410,6 @@ class VrStereoConfig is export is repr('CStruct') is rw {
     method init(CArray[Matrix] $projection,CArray[Matrix] $viewOffset,CArray[num32] $leftLensCenter,CArray[num32] $rightLensCenter,CArray[num32] $leftScreenCenter,CArray[num32] $rightScreenCenter,CArray[num32] $scale,CArray[num32] $scaleIn) returns VrStereoConfig {
         malloc-VrStereoConfig($projection,$viewOffset,$leftLensCenter,$rightLensCenter,$leftScreenCenter,$rightScreenCenter,$scale,$scaleIn);
     }
-    method free {
-        free-VrStereoConfig(self);
-    }
     submethod DESTROY {
         free-VrStereoConfig(self);
     }
@@ -513,9 +420,6 @@ class FilePathList is export is repr('CStruct') is rw {
     has Str $.paths is rw;
     method init(int32 $capacity,int32 $count,Str $paths) returns FilePathList {
         malloc-FilePathList($capacity,$count,$paths);
-    }
-    method free {
-        free-FilePathList(self);
     }
     submethod DESTROY {
         free-FilePathList(self);

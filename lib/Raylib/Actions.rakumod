@@ -62,7 +62,7 @@ class RaylibActions {
         my $free-func = "    method free \{\n        free-$struct-name\(self\);\n    }";
         my $gc-auto-free-func = "    submethod DESTROY \{\n        free-$struct-name\(self\);\n    }";
 
-        @.bindings.push($struct ~ "\{\n " ~ $b ~ $malloc-func ~"\n"~ $free-func ~ "\n" ~ $gc-auto-free-func ~"\n\}");
+        @.bindings.push($struct ~ "\{\n " ~ $b ~ $malloc-func ~"\n"~ $gc-auto-free-func ~"\n\}");
         @.c_alloc_funtions.push(self.create-free-function($/).join);
     }
 
