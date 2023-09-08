@@ -171,7 +171,7 @@ class RaylibActions {
                     @.c_pointerize_bindings.push($wrapped_func_call);
                 }
                 else {
-                   $wrapped_func_call = $return-type ~ ' '~ $<identifier>~ '_pointerized(' ~ $pointerized-params ~ ")\{\n    $return-type pointer_value = malloc\(sizeof\($<type>\)\);\n    $<type> ret = $call-func \n    *pointer_value = ret; \n    return pointer_value;\n\}";
+                   $wrapped_func_call = $return-type ~ ' '~ $<identifier>~ '_pointerized(' ~ $pointerized-params ~ ")\{\n    $return-type ptr = malloc\(sizeof\($<type>\)\);\n    $<type> ret = $call-func \n    *ptr = ret; \n    return ptr;\n\}";
                     @.c_pointerize_bindings.push($wrapped_func_call);
                 }
             }

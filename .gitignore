@@ -1,5 +1,4 @@
 lib/.precomp
 .precomp/
-raylib-raku-c/raylib.h
-raylib-raku-c/*.o
-raylib-raku-c/*.so
+raylib-raku/
+lib/Raylib/Bindings.rakumod
