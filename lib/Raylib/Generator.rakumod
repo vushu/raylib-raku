@@ -12,7 +12,7 @@ sub generate-bindings($raylib-h-file, $output-dir) is export {
 
     my $file  = open "lib/Raylib/Bindings.rakumod", :w;
     $file.say(generation-message);
-    $file.say("unit module Raylib::Bindings:ver<0.0.1>:auth<zef:vushu>;");
+    $file.say("unit module Raylib::Bindings:ver<0.0.2>:auth<zef:vushu>;");
     $file.say("use NativeCall;");
     $file.say("constant LIBRAYLIB = '$output-dir/libraylib.so';");
     for $actions.bindings -> $binding {
