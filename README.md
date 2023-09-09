@@ -27,7 +27,6 @@ raku examples/rotating-butterfly.raku
 
 #### Missing:
 - raylib callbacks are yet to be implemented.
-- raylib predefined colors.
 - support for other platforms other than linux.
 
 

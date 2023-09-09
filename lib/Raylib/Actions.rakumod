@@ -13,6 +13,7 @@ class Pointerized {
 
 class RaylibActions {
     has Str @.bindings;
+    has Str @.predifined-colors;
     has Str @.pointerized_bindings;
     has Str @.alloc_bindings;
     has Str @.c_pointerize_bindings;
@@ -48,6 +49,14 @@ class RaylibActions {
         #@.bindings.push($sub);
     }
 
+
+    method define-decl($/) {
+        my $m-func = $<macro-function>.tail;
+        if $m-func && $m-func<macro-arguments> && $m-func<macro-arguments> eq 'Color' {
+            my $color = "sub init-$($<macro-function>.head.lc) is export \{ Color.init(" ~ $<macro-function>.tail<block><statement>.Str~');} # creating a new instance of Color';
+            @.predifined-colors.push($color);
+        }
+    }
     method typedef-struct($/) {
         my $struct-name = $<identifier>[0];
         my $struct = "class $($<identifier>[0]) is export is repr('CStruct') is rw ";

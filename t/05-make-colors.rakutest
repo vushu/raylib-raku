@@ -1,0 +1,25 @@
+use v6.d;
+use Test;
+
+use lib 'lib';
+
+use Raylib::Grammar;
+use Raylib::Actions;
+
+my $code = q:to/END/;
+#define LIGHTGRAY  CLITERAL(Color){ 200, 200, 200, 255 }   // Light Gray
+#define GRAY       CLITERAL(Color){ 130, 130, 130, 255 }   // Gray
+#define DARKGRAY   CLITERAL(Color){ 80, 80, 80, 255 }      // Dark Gray
+#define YELLOW     CLITERAL(Color){ 253, 249, 0, 255 }     // Yellow
+#define GOLD       CLITERAL(Color){ 255, 203, 0, 255 }     // Gold
+#define ORANGE     CLITERAL(Color){ 255, 161, 0, 255 }     // Orange
+#define PINK       CLITERAL(Color){ 255, 109, 194, 255 }   // Pink
+#define RED        CLITERAL(Color){ 230, 41, 55, 255 }     // Red
+END
+my $parser = RaylibGrammar.new;
+my $actions = RaylibActions.new;
+
+$parser.parse($code, actions => $actions);
+
+ok True;
+done-testing;

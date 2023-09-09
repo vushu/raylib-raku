@@ -2,3 +2,5 @@ lib/.precomp
 .precomp/
 raylib-raku/
 lib/Raylib/Bindings.rakumod
+raylib-raku.iml
+.idea/

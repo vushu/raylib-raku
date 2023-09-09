@@ -13,9 +13,9 @@ method build($srcdir) {
     mkdir($output-dir);
     generate-bindings($raylib-h-file, $output-dir);
 
-    say "compiling raylib-raku-c library ...";
-    die "Failed to compile raylib-raku-c files " if shell("cd $output-dir && gcc -c -fPIC $output-dir/raylib_pointerized_wrapper.c $output-dir/raylib_allocations.c").exitcode == 1;
+    say "Compiling raylib-raku library ...";
+    die "Failed to compile raylib-raku files " if shell("cd $output-dir && gcc -c -fPIC $output-dir/raylib_pointerized_wrapper.c $output-dir/raylib_allocations.c").exitcode == 1;
     die "Failed to compile libraylib.so file " if shell("cd $output-dir && gcc -shared -o $output-dir/libraylib.so $output-dir/raylib_allocations.o $output-dir/raylib_pointerized_wrapper.o -lraylib").exitcode == 1;
-    say "All done 👌";
+    say "Done compiling raylib-raku 👌";
 
 }
