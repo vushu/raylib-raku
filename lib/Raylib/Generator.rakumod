@@ -14,7 +14,7 @@ sub generate-bindings($raylib-h-file, $output-dir) is export {
     $file.say(generation-message);
     $file.say("unit module Raylib::Bindings:ver<0.0.3>:auth<zef:vushu>;");
     $file.say("use NativeCall;");
-    $file.say("constant LIBRAYLIB = '$output-dir/libraylib.so';");
+    $file.say("constant LIBRAYLIB = '$output-dir/raylib';");
     for $actions.bindings -> $binding {
         $file.say($binding);
     }
@@ -57,4 +57,10 @@ sub generate-bindings($raylib-h-file, $output-dir) is export {
     }
     $alloc_file.close;
     say "Done generating raylib bindings!";
+}
+
+
+
+sub MAIN {
+    generate-bindings($*CWD);
 }

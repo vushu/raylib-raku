@@ -8,7 +8,7 @@ method build($srcdir) {
     my $failed = $exitcode == 1;
     die "raylib is isn't installed, please install it" if $failed;
 
-    my $output-dir="$srcdir/raylib-raku/lib";
+    my $output-dir="$srcdir/resources";
     my $raylib-h-file = "/usr/local/include/raylib.h";
     mkdir($output-dir);
     generate-bindings($raylib-h-file, $output-dir);
