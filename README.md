@@ -27,6 +27,13 @@ raku examples/flying-butterfly.raku
 raku examples/rotating-butterfly.raku
 raku examples/3d-camera.raku
 ```
+
+#### More examples at
+https://www.raylib.com/examples.html
+
+#### cheatsheet
+https://www.raylib.com/cheatsheet/cheatsheet.html
+
 ---
 ### Screenshots
 
