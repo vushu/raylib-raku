@@ -1,24 +1,49 @@
 {
-    "auth": "zef:vushu",
-    "authors": [
-        "Dan Vu (vushu)"
-    ],
-    "build-depends": [
-    ],
-    "depends": [
-    ],
-    "description": "Raylib bindings for raku, using grammar to parse raylib.h and auto generate the bindings",
-    "license" : "Artistic-2.0",
-    "name": "Raylib::Bindings",
-    "provides": {
-      "Raylib::Bindings": "lib/Raylib/Bindings.rakumod"
+  "auth": "zef:vushu",
+  "authors": [
+    "Dan Vu (vushu)"
+  ],
+  "build-depends": [],
+  "depends": {
+    "build": {
+      "requires": [
+        "Distribution::Builder::MakeFromJSON",
+        {
+          "from": "bin",
+          "name": "raku"
+        }
+      ]
     },
-    "resources": [
-      "libraylib.so"
-    ],
-    "test-depends": [
-    ],
-    "version": "0.0.3",
-    "source-url": "https://github.com/vushu/raylib-raku.git"
-
+    "runtime": {
+      "requires": [
+        {
+          "from": "bin",
+          "name": "raku"
+        }
+      ]
+    }
+  },
+  "description": "Raylib bindings for raku, using grammar to parse raylib.h and auto generate the bindings",
+  "license": "Artistic-2.0",
+  "name": "Raylib::Bindings",
+  "provides": {
+    "Raylib::Bindings": "lib/Raylib/Bindings.rakumod"
+  },
+  "resources": [
+    "libraries/raylib"
+  ],
+  "test-depends": [],
+  "version": "0.0.4",
+  "source-url": "https://github.com/vushu/raylib-raku.git",
+  "builder": "Distribution::Builder::MakeFromJSON",
+  "build": {
+    "makefile-variables": {
+      "rakuopts": {
+        "run": [
+          "raku",
+          "configure.raku"
+        ]
+      }
+    }
   }
+}

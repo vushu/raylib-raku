@@ -1,0 +1,11 @@
+.PHONY: clean test
+CC = %CC%
+RAKU = %EXECUTABLE%
+
+all: raylib-raku
+
+raylib-raku:
+	$(CC) -g -fPIC resources/raylib_allocations.c resources/raylib_pointerized_wrapper.c -shared -lraylib -o resources/libraries/libraylib.so
+
+install:
+	$(RAKU) configure.raku --install
