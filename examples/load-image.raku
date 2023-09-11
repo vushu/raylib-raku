@@ -1,6 +1,4 @@
-use lib 'lib';
 use Raylib::Bindings;
-use NativeCall;
 
 constant $screen-width = 800;
 constant $screen-height = 450;

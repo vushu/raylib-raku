@@ -1,8 +1,6 @@
-use lib 'lib';
 use Raylib::Bindings;
-use NativeCall;
 
-constant $screen-width = 800.Int;
+constant $screen-width = 1024.Int;
 constant $screen-height = 450.Int;
 my $white = Color.init(245, 245, 245, 255);
 init-window($screen-width, $screen-height, "raylib-raku");
