@@ -20,7 +20,6 @@ class RaylibActions {
     has Str @.c_pointerize_custom_binding;
     has Str @.c_alloc_funtions;
     has @.type-map = "int" => "int32", "float" => "num32", "double" => "num64", "short" => "int16", "char"  => "Str", "bool" => "bool", "void" => "void", "va_list" => "Str";
-    # has @.value-typed-data = "Color" => "uint32";
     has Bool $!is-value-type = False;
     has Int $!incrementer = 0;
     has @.ignored-functions = "SetTraceLogCallback",
