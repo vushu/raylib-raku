@@ -22,12 +22,15 @@ class RaylibActions {
     has @.type-map = "int" => "int32", "float" => "num32", "double" => "num64", "short" => "int16", "char"  => "Str", "bool" => "bool", "void" => "void", "va_list" => "Str";
     has Bool $!is-value-type = False;
     has Int $!incrementer = 0;
-    has @.ignored-functions = "SetTraceLogCallback",
-    "SetLoadFileDataCallback", "SetSaveFileDataCallback",
-    "SetLoadFileTextCallback", "SetSaveFileTextCallback",
-    "SetAudioStreamCallback", "AttachAudioMixedProcessor",
-    "DetachAudioMixedProcessor", "AttachAudioStreamProcessor",
-    "DetachAudioStreamProcessor";
+    has %!callbacks;
+    has @.ignored-functions = 
+    # "SetTraceLogCallback",
+    # "SetLoadFileDataCallback", "SetSaveFileDataCallback",
+    # "SetLoadFileTextCallback", "SetSaveFileTextCallback",
+    # "SetAudioStreamCallback", 
+    # "AttachAudioMixedProcessor",
+    # "DetachAudioMixedProcessor", "AttachAudioStreamProcessor",
+    # "DetachAudioStreamProcessor";
 
 
     method TOP ($/) {
@@ -42,10 +45,14 @@ class RaylibActions {
     }
 
 
-    method typedef-callback($/) {
-        #my $params = $<parameters>.made;
-        #my $sub = "sub " ~ $<identifier>.made ~ "($params) is native(LIBRAYLIB)\{*\}";
-        #@.bindings.push($sub);
+    multi method typedef-callback($/ where $<type> eq 'void') {
+
+        my $callback-func = "&{self.camelcase-to-kebab($<identifier>.made)} ({$<parameters>.made})";
+        %!callbacks{$<identifier>.made} = $callback-func;
+    }
+    multi method typedef-callback($/) {
+        my $callback-func = "&{self.camelcase-to-kebab($<identifier>.made)} ({$<parameters>.made} --> {$<type>.made})";
+        %!callbacks{$<identifier>.made} = $callback-func;
     }
 
 
@@ -157,13 +164,16 @@ class RaylibActions {
     method function($/) {
         if $<identifier>.made !∈ @.ignored-functions {
             my $return-is-type-value-type = $<type><identifier> && !$<pointer>;
+            my $made-parameters = $<parameters>.made;
             my $func = self.gen-function($<type>, $<identifier>, $<parameters>.made, $return-is-type-value-type);
             if ($!is-value-type || $return-is-type-value-type) { # checking return type also
                 $!is-value-type = False;
                 @.pointerized_bindings.push($func);
                 my @current-identifiers;
                 my $pointerized-params = self.pointerize-parameters($<parameters>, @current-identifiers);
+                #creating call func for pointerize
                 my $call-func = self.create-call-func(@current-identifiers, ~$<identifier>);
+
                 my $normal-type-return = "$<type>" ~ ($<pointer> ?? "*" !! '');
                 my $pointerized-return = self.create-pointerized-return-type($/);
                 my $return-type = $pointerized-return[0];
@@ -214,7 +224,6 @@ class RaylibActions {
             }
 
             if $x<var-decl><array-identifier> { 
-                # say $x<var-decl><array-identifier><identifier>;
                 @parameters.push(($x<var-decl><modifier>, $x<var-decl><type>, $x<var-decl><pointer>, $x<var-decl><array-identifier>));
                 @raku-parameters.push(('CArray[' ~ $x<var-decl><type>.made ~ ']', "\$$x<var-decl><array-identifier>[0]<identifier>"));
             }
@@ -284,8 +293,7 @@ class RaylibActions {
 
     method create-call-func(@current-identifiers, $identifier) {
         my $call-func = $identifier ~ '(';
-        my $idx = 0;
-        for @current-identifiers -> $ident {
+        for @current-identifiers.kv -> $idx, $ident {
             my $add-comma = $idx gt 0 ?? ', ' !! '';
             # need to deref True of False?
             if ($ident[2]) {
@@ -294,7 +302,6 @@ class RaylibActions {
             else {
                 $call-func ~= ($add-comma ~ "$ident[1]");
             }
-            $idx++;
         }
         $call-func ~= ");";
         return $call-func;
@@ -313,8 +320,16 @@ class RaylibActions {
 
 
         if ($parameters<type><identifier> && !$parameters<pointer>) {
-            @current-identifiers.unshift((~$parameters<type>, ~$parameters<identifier>, True));
-            return "$($parameters<type>)* $parameters<identifier>" ~ $tail;
+            #get pointerized to true since no pointer
+            my $should-pointerize = True;
+            my $star = "*";
+            if (%!callbacks{$parameters<type><identifier>}:exists) {
+                # We don't poiterize since  this is a callback which is a pointer
+                $should-pointerize = False;
+                $star = ''; #erasing star
+            }
+            @current-identifiers.unshift((~$parameters<type>, ~$parameters<identifier>, $should-pointerize));
+            return "$($parameters<type>)$star $parameters<identifier>" ~ $tail;
         }
         elsif ($parameters<pointer> && $parameters<type>) {
             @current-identifiers.unshift((~$parameters<type>, ~$parameters<identifier>, False));
@@ -352,7 +367,12 @@ class RaylibActions {
         return "our sub $kebab-case-name ($params)$raku-type is export is native(LIBRAYLIB) is symbol('$function-name$pointerize')\{ * \}";
     }
 
-    method parameters($/) {
+    # void pointer
+    multi method parameters($/ where $<pointer> && $<type> eq 'void') {
+        make "Pointer[void] \$$<identifier>, {$<parameters>.map: *.made.join(',')}";
+    }
+
+    multi method parameters($/) {
         if (!$<type>) {
             make '';
             return;
@@ -376,8 +396,16 @@ class RaylibActions {
             # if defined %.value-typed-data{~$type}
             if $<type><identifier>
             {
-                $!is-value-type = True;
-                make "$type \$$($<identifier> ?? $<identifier> !! '')$tail";
+                my $call-func = %!callbacks{$type};
+                if $call-func {
+                    say "Damn this is  call back yo, ", $type;
+                    make "$call-func$tail";
+                }
+                else
+                {
+                    $!is-value-type = True;
+                    make "$type \$$($<identifier> ?? $<identifier> !! '')$tail";
+                }
             }
             else
             {

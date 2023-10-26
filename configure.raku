@@ -16,7 +16,7 @@ sub configure{
 }
 
 sub install {
-    say "instlling yo";
+    say "Installing Raylib::Bindings";
     my $repo = %*ENV<DESTREPO>
         ?? CompUnit::RepositoryRegistry.repository-for-name(%*ENV<DESTREPO>)
         !! (

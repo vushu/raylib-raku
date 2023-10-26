@@ -72,9 +72,16 @@ https://github.com/raysan5/raylib/wiki
 ---
 
 #### Missing:
-- raylib callbacks are yet to be implemented.
 - code comments needs to be included.
 - support for other platforms other than linux.
 
+### Problem on some callbacks 
+example for `set-audio-stream-callback`:
+the following happens:  
+```
+MoarVM panic: native callback ran on thread (some-thread-id) unknown to MoarVM
+```
+
+Solution yet to be found.
 
 ***help is appreciated!***

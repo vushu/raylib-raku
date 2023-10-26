@@ -55,6 +55,14 @@ typedef struct Rectangle {
 } Rectangle;
 
 
+typedef void (*AudioCallback)(void *bufferData, unsigned int frames);
+typedef void (*TraceLogCallback)(int logLevel, const char *text, va_list args);  // Logging: Redirect trace log messages
+typedef unsigned char *(*LoadFileDataCallback)(const char *fileName, unsigned int *bytesRead);      // FileIO: Load binary data
+typedef bool (*SaveFileDataCallback)(const char *fileName, void *data, unsigned int bytesToWrite);  // FileIO: Save binary data
+typedef char *(*LoadFileTextCallback)(const char *fileName);            // FileIO: Load text data
+typedef bool (*SaveFileTextCallback)(const char *fileName, char *text); // FileIO: Save text data
+
+
 // Window-related functions
 RLAPI void InitWindow(int width, int height, const char *title);  // Initialize window and OpenGL context
 RLAPI bool WindowShouldClose(void);                               // Check if KEY_ESCAPE pressed or Close icon pressed
@@ -103,70 +111,41 @@ RLAPI void SetClipboardText(const char *text);                    // Set clipboa
 RLAPI const char *GetClipboardText(void);                         // Get clipboard text content
 RLAPI void EnableEventWaiting(void);                              // Enable waiting for events on EndDrawing(), no automatic event polling
 RLAPI void DisableEventWaiting(void);                             // Disable waiting for events on EndDrawing(), automatic events polling
+RLAPI void SetAudioStreamCallback(AudioStream stream, AudioCallback callback);  // Audio thread callback to request new data
+RLAPI void SetTraceLogCallback(TraceLogCallback callback);         // Set custom trace log
+RLAPI void SetLoadFileDataCallback(LoadFileDataCallback callback); // Set custom file binary data loader
+RLAPI void SetSaveFileDataCallback(SaveFileDataCallback callback); // Set custom file binary data saver
+RLAPI void SetLoadFileTextCallback(LoadFileTextCallback callback); // Set custom file text data loader
+RLAPI void SetSaveFileTextCallback(SaveFileTextCallback callback); // Set custom file text data saver
+
 
 END
 
 my $parser = RaylibGrammar.new;
 my $actions = RaylibActions.new;
 
-my $raylib = slurp "t/raylib.h";
 $parser.parse($code, actions => $actions);
 
-$code= q:to/END/;
-//typedef Vector4 Quaternion;
-//typedef struct rAudioBuffer rAudioBuffer;
-//typedef struct rAudioProcessor rAudioProcessor;
+# my $code2 = q:to/END/;
+# typedef void (*TraceLogCallback)(int logLevel, const char *text, va_list args);  // Logging: Redirect trace log messages
+# typedef char *(*LoadFileTextCallback)(const char *fileName);            // FileIO: Load text data
+# typedef bool (*SaveFileTextCallback)(const char *fileName, char *text, int ffff, const char* hello); // FileIO: Save text data
+# RLAPI void SetAudioStreamCallback(AudioStream stream, AudioCallback callback);  // Audio thread callback to request new data
+# END
 
-typedef struct VrStereoConfig {
-    Matrix projection[2];           // VR projection matrices (per eye)
-    Matrix viewOffset[2];           // VR view offset matrices (per eye)
-    float leftLensCenter[2];        // VR left lens center
-    float rightLensCenter[2];       // VR right lens center
-    float leftScreenCenter[2];      // VR left screen center
-    float rightScreenCenter[2];     // VR right screen center
-    float scale[2];                 // VR distortion scale
-    float scaleIn[2];               // VR distortion scale in
-} VrStereoConfig;
+# my $parsed = $parser.parse($code2, actions => $actions);
 
-
-typedef void (*TraceLogCallback)(int logLevel, const char *text, va_list args);  // Logging: Redirect trace log messages
-typedef char *(*LoadFileTextCallback)(const char *fileName);            // FileIO: Load text data
-typedef bool (*SaveFileTextCallback)(const char *fileName, char *text); // FileIO: Save text data
-typedef enum {
-    GESTURE_NONE        = 0,        // No gesture
-    GESTURE_TAP         = 1,        // Tap gesture
-    GESTURE_DOUBLETAP   = 2,        // Double tap gesture
-    GESTURE_HOLD        = 4,        // Hold gesture
-    GESTURE_DRAG        = 8,        // Drag gesture
-    GESTURE_SWIPE_RIGHT = 16,       // Swipe right gesture
-    GESTURE_SWIPE_LEFT  = 32,       // Swipe left gesture
-    GESTURE_SWIPE_UP    = 64,       // Swipe up gesture
-    GESTURE_SWIPE_DOWN  = 128,      // Swipe down gesture
-    GESTURE_PINCH_IN    = 256,      // Pinch in gesture
-    GESTURE_PINCH_OUT   = 512       // Pinch out gesture
-} Gesture;
-// Color blending modes (pre-defined)
-typedef enum {
-    BLEND_ALPHA = 0,                // Blend textures considering alpha (default)
-    BLEND_ADDITIVE,                 // Blend textures adding colors
-    BLEND_MULTIPLIED,               // Blend textures multiplying colors
-    BLEND_ADD_COLORS,               // Blend textures adding colors (alternative)
-    BLEND_SUBTRACT_COLORS,          // Blend textures subtracting colors (alternative)
-    BLEND_ALPHA_PREMULTIPLY,        // Blend premultiplied textures considering alpha
-    BLEND_CUSTOM,                   // Blend textures using custom src/dst factors (use rlSetBlendFactors())
-    BLEND_CUSTOM_SEPARATE           // Blend textures using custom rgb/alpha separate src/dst factors (use rlSetBlendFactorsSeparate())
-} BlendMode;
-
-
-
-END
-
-my $parsed = $parser.parse($code, actions => $actions);
-
-say "use NativeCall;";
+# # say "use NativeCall;";
 say "constant LIBRAYLIB = '/usr/local/lib/libraylib.so';";
 for $actions.bindings -> $binding {
     say $binding;
 }
+ for $actions.pointerized_bindings -> $binding {
+        say $binding;
+}
+ for $actions.c_pointerize_bindings -> $binding {
+        say $binding;
+}
+
 ok True;
 done-testing;
