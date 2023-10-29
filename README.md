@@ -17,7 +17,7 @@ Raylib::Bindings comes with support for malloc-ing Raylib structs,
 Example the code below will allocate Color as a pointer.  
 `my $white = Color.init(245, 245, 245, 255);`  
 
-All struct/class in Raylib::Bindings are equipped with an `init` function,  
+Almost all struct/class in Raylib::Bindings are equipped with an `init` function,  
 which  mallocs.  
 Manually calling `free` isn't necessary, since every struct/class are also equipped with a `free` on destroy mechanism and gets handled by the GC.
 Here is the `DESTROY` method of `Color`

@@ -23,6 +23,7 @@ class RaylibActions {
     has Bool $!is-value-type = False;
     has Int $!incrementer = 0;
     has %!callbacks;
+    has @.ignore-alloc-structs = ["AudioStream"];
     has @.ignored-functions = 
     # "SetTraceLogCallback",
     # "SetLoadFileDataCallback", "SetSaveFileDataCallback",
@@ -72,10 +73,16 @@ class RaylibActions {
         my $raku-params = @func-bundle[1].join(',');
         # Extracting identifiers
         my $raku-identifiers = @func-bundle[1].map(-> $x {$x[1]}).join(',');
+        my $malloc-func = '';
+        my $free-func = '';
+        my $gc-auto-free-func = '';
 
-        my $malloc-func = "    method init\($raku-params\) returns $struct-name \{\n        malloc-$struct-name\($raku-identifiers\);\n    }";
-        my $free-func = "    method free \{\n        free-$struct-name\(self\);\n    }";
-        my $gc-auto-free-func = "    submethod DESTROY \{\n        free-$struct-name\(self\);\n    }";
+        say $struct-name,"IS INS ignore: ", $struct-name.Str !∈ @.ignore-alloc-structs;
+        if $struct-name.Str !∈ @.ignore-alloc-structs {
+            $malloc-func = "    method init\($raku-params\) returns $struct-name \{\n        malloc-$struct-name\($raku-identifiers\);\n    }";
+            $free-func = "    method free \{\n        free-$struct-name\(self\);\n    }";
+            $gc-auto-free-func = "    submethod DESTROY \{\n        free-$struct-name\(self\);\n    }";
+        }
 
         @.bindings.push($struct ~ "\{\n " ~ $b ~ $malloc-func ~"\n"~ $gc-auto-free-func ~"\n\}");
         @.c_alloc_funtions.push(self.create-free-function($/).join);
@@ -201,9 +208,11 @@ class RaylibActions {
 
     method create-free-function($struct) {
         my @free_function;
-        @free_function.push("void free_$struct<identifier>[0]\($struct<identifier>[0]* ptr)\{\n");
-        @free_function.push("   free(ptr);\n");
-        @free_function.push("\}");
+        if $struct<identifier>[0].Str !∈ @.ignore-alloc-structs {
+            @free_function.push("void free_$struct<identifier>[0]\($struct<identifier>[0]* ptr)\{\n");
+            @free_function.push("   free(ptr);\n");
+            @free_function.push("\}");
+        }
         return @free_function;
 
     }
@@ -237,26 +246,28 @@ class RaylibActions {
         # print "($param-list)";
         my @malloc_function;
         my $struct-name = $struct<identifier>.first.Str;
-        @.alloc_bindings.push("our sub malloc-$struct-name\($raku-param-list\) returns $struct-name is native(LIBRAYLIB) is symbol('malloc_$struct-name') \{*\}");
-        @.alloc_bindings.push("our sub free-$struct-name\($struct-name \$ptr) is native(LIBRAYLIB) is symbol('free_$struct-name') \{*\}");
-        @malloc_function.push($struct<identifier>.first.Str ~ '* '~ "malloc_" ~ $struct<identifier>.first.Str ~ "($param-list) \{\n");
-        @malloc_function.push("   $struct<identifier>[0]* ptr = malloc(sizeof($struct<identifier>[0]));\n");
-        for @pp -> $pv {
-            my $identifier-name = $pv[3][0] ?? $pv[3][0]<identifier> !! $pv[3];
-            # checking if it's an array
-            if ($pv[3][0]<identifier>) {
-                #using memcpy
-                @malloc_function.push("   memcpy(ptr->$identifier-name, $identifier-name, $pv[3][0]<index> * sizeof($pv[1]));\n");
+        if $struct-name !∈ @.ignore-alloc-structs {
+            @.alloc_bindings.push("our sub malloc-$struct-name\($raku-param-list\) returns $struct-name is native(LIBRAYLIB) is symbol('malloc_$struct-name') \{*\}");
+            @.alloc_bindings.push("our sub free-$struct-name\($struct-name \$ptr) is native(LIBRAYLIB) is symbol('free_$struct-name') \{*\}");
+            @malloc_function.push($struct<identifier>.first.Str ~ '* '~ "malloc_" ~ $struct<identifier>.first.Str ~ "($param-list) \{\n");
+            @malloc_function.push("   $struct<identifier>[0]* ptr = malloc(sizeof($struct<identifier>[0]));\n");
+            for @pp -> $pv {
+                my $identifier-name = $pv[3][0] ?? $pv[3][0]<identifier> !! $pv[3];
+                # checking if it's an array
+                if ($pv[3][0]<identifier>) {
+                    #using memcpy
+                    @malloc_function.push("   memcpy(ptr->$identifier-name, $identifier-name, $pv[3][0]<index> * sizeof($pv[1]));\n");
+                }
+                elsif ($pv[1]<identifier> && $pv[2].is-pointerized) {
+                    @malloc_function.push("   ptr->$identifier-name = $pv[2]$identifier-name;\n");
+                }
+                else {
+                    @malloc_function.push("   ptr->$identifier-name = $identifier-name;\n");
+                }
             }
-            elsif ($pv[1]<identifier> && $pv[2].is-pointerized) {
-                @malloc_function.push("   ptr->$identifier-name = $pv[2]$identifier-name;\n");
-            }
-            else {
-                @malloc_function.push("   ptr->$identifier-name = $identifier-name;\n");
-            }
+            @malloc_function.push("   return ptr;\n");
+            @malloc_function.push("\}");
         }
-        @malloc_function.push("   return ptr;\n");
-        @malloc_function.push("\}");
         return @malloc_function, @raku-parameters;
 
 
