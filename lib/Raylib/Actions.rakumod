@@ -377,6 +377,7 @@ class RaylibActions {
             make '';
             return;
         }
+        my $unsigned = $<unsigned> ?? 'u' !! '';
         my $type = ~$<type>.made;
         if $type eq 'void' {
             make "";
@@ -390,7 +391,10 @@ class RaylibActions {
 
         my $u = '';
         if $<pointer> && $<type> ne 'char' {
-            make "$type \$$($<identifier> ?? "$<identifier> is rw" !! '')$tail";
+            make "$unsigned$type \$$($<identifier> ?? "$<identifier> is rw" !! '')$tail";
+        }
+        elsif $<pointer> && $<type> eq 'char' && $<unsigned> {
+            make "uint8 \$$($<identifier> ?? "$<identifier> is rw" !! '')$tail";
         }
         else {
             # if defined %.value-typed-data{~$type}
@@ -398,18 +402,17 @@ class RaylibActions {
             {
                 my $call-func = %!callbacks{$type};
                 if $call-func {
-                    say "Damn this is  call back yo, ", $type;
                     make "$call-func$tail";
                 }
                 else
                 {
                     $!is-value-type = True;
-                    make "$type \$$($<identifier> ?? $<identifier> !! '')$tail";
+                    make "$unsigned$type \$$($<identifier> ?? $<identifier> !! '')$tail";
                 }
             }
             else
             {
-                make "$type \$$($<identifier> ?? $<identifier> !! '')$tail";
+                make "$unsigned$type \$$($<identifier> ?? $<identifier> !! '')$tail";
             }
         }
     }
