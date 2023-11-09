@@ -1,7 +1,7 @@
 use Raylib::Bindings;
 
-constant $screen-width = 1024.Int;
-constant $screen-height = 450.Int;
+constant $screen-width = 1024;
+constant $screen-height = 450;
 my $white = init-white;
 my $background = init-skyblue;
 init-window($screen-width, $screen-height, "raylib-raku");
@@ -11,7 +11,7 @@ my $camelia = load-image($string);
 my $texture = load-texture-from-image($camelia);
 unload-image($camelia);
 
-my $img-pos = Vector2.init(185.Num, ($screen-height/2.Num) - $texture.height/2 - 10);
+my $img-pos = Vector2.init(185e0, ($screen-height/2e0) - $texture.height/2 - 10);
 
 set-target-fps(60);
 while (!window-should-close) {
