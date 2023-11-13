@@ -60,7 +60,7 @@ class RaylibActions {
     method define-decl($/) {
         my $m-func = $<macro-function>.tail;
         if $m-func && $m-func<macro-arguments> && $m-func<macro-arguments> eq 'Color' {
-            my $color = "sub init-$($<macro-function>.head.lc) is export \{ Color.init(" ~ $<macro-function>.tail<block><statement>.Str~');} # creating a new instance of Color';
+            my $color = "sub term:<init-$($<macro-function>.head.lc)> is export \{ Color.init(" ~ $<macro-function>.tail<block><statement>.Str~');} # creating a new instance of Color';
             @.predifined-colors.push($color);
         }
     }
@@ -375,7 +375,9 @@ class RaylibActions {
         my $params = $parameters;
         my $raku-type = self.get-return-type($return-type);
         my $kebab-case-name = self.camelcase-to-kebab($function-name.Str);
-        return "our sub $kebab-case-name ($params)$raku-type is export is native(LIBRAYLIB) is symbol('$function-name$pointerize')\{ * \}";
+        return $params 
+            ?? "our sub $kebab-case-name ($params)$raku-type is export is native(LIBRAYLIB) is symbol('$function-name$pointerize')\{ * \}" 
+            !! "our sub term:<$kebab-case-name> ()$raku-type is export is native(LIBRAYLIB) is symbol('$function-name$pointerize')\{ * \}";
     }
 
     # void pointer

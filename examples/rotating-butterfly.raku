@@ -20,7 +20,7 @@ my $gray = Color.init(130, 130, 130, 255);
 my $rotation = 0;
 
 set-target-fps(60);
-while (!window-should-close) {
+while !window-should-close {
     $rotation++;
     begin-drawing;
     clear-background($white);

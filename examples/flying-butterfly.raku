@@ -14,9 +14,9 @@ unload-image($camelia);
 my $img-pos = Vector2.init(185e0, ($screen-height/2e0) - $texture.height/2 - 10);
 
 set-target-fps(60);
-while (!window-should-close) {
-    $img-pos.y += sin(get-time() * 10) * 5;
-    $img-pos.x += (sin(get-time() * 1.5) + cos(get-time() * 1.5)) * 6;
+while !window-should-close {
+    $img-pos.y += sin(get-time * 10) * 5;
+    $img-pos.x += (sin(get-time * 1.5) + cos(get-time * 1.5)) * 6;
 
     begin-drawing;
     clear-background($background);
