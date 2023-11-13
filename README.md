@@ -73,7 +73,7 @@ https://github.com/raysan5/raylib/wiki
 
 #### Missing:
 - code comments needs to be included.
-- support for other platforms other than linux.
+- support for windows.
 
 ### Problem on some callbacks 
 example for `set-audio-stream-callback`:
