@@ -2,15 +2,42 @@
 use lib 'lib';
 use Raylib::Generator;
 
-sub configure{
+sub check-if-installed {
     my $library_name = 'raylib';
     my $exitcode = shell("pkg-config --exists $library_name").exitcode;
     my $failed = $exitcode == 1;
     die "raylib is isn't installed, please install it" if $failed;
 
+}
+
+sub get-name-from-pkg-config($library_name) {
+    my $proc = shell("pkg-config --cflags $library_name", :out);
+    my $res = $proc.out.slurp: :close;
+    my $raylib-h-file = $res.trim.substr(2);
+    $raylib-h-file ~= "/$library_name.h";
+    return $raylib-h-file;
+}
+
+sub configure{
+    my $raylib-h-file = "/usr/local/include/raylib.h";
+    my $library_name = 'raylib';
+    if $*DISTRO.name ~~ /window/ {
+        die "Windows is unsupported for now";
+    }
+    elsif $*DISTRO.name ~~ /macos/ {
+        say "Is using MACOS";
+        check-if-installed;
+        $raylib-h-file = get-name-from-pkg-config($library_name);
+    }
+    else {
+        say "Is using linux";
+        check-if-installed;
+        $raylib-h-file = get-name-from-pkg-config($library_name);
+
+    }
+    say $raylib-h-file;
     my $srcdir = $*CWD;
     my $output-dir="$srcdir/resources";
-    my $raylib-h-file = "/usr/local/include/raylib.h";
     mkdir($output-dir);
     generate-bindings($raylib-h-file, $output-dir);
 }
