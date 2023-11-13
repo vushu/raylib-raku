@@ -10,7 +10,7 @@ sub check-if-installed {
 
 }
 
-sub get-name-from-pkg-config($library_name) {
+sub get-header-from-pkg-config($library_name) {
     my $proc = shell("pkg-config --cflags $library_name", :out);
     my $res = $proc.out.slurp: :close;
     my $raylib-h-file = $res.trim.substr(2);
@@ -27,12 +27,12 @@ sub configure{
     elsif $*DISTRO.name ~~ /macos/ {
         say "Is using MACOS";
         check-if-installed;
-        $raylib-h-file = get-name-from-pkg-config($library_name);
+        $raylib-h-file = get-header-from-pkg-config($library_name);
     }
     else {
         say "Is using linux";
         check-if-installed;
-        $raylib-h-file = get-name-from-pkg-config($library_name);
+        $raylib-h-file = get-header-from-pkg-config($library_name);
 
     }
     say $raylib-h-file;

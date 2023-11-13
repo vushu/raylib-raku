@@ -77,7 +77,6 @@ class RaylibActions {
         my $free-func = '';
         my $gc-auto-free-func = '';
 
-        say $struct-name,"IS INS ignore: ", $struct-name.Str !∈ @.ignore-alloc-structs;
         if $struct-name.Str !∈ @.ignore-alloc-structs {
             $malloc-func = "    method init\($raku-params\) returns $struct-name \{\n        malloc-$struct-name\($raku-identifiers\);\n    }";
             $free-func = "    method free \{\n        free-$struct-name\(self\);\n    }";
@@ -383,6 +382,10 @@ class RaylibActions {
     # void pointer
     multi method parameters($/ where $<pointer> && $<type> eq 'void') {
         make "Pointer[void] \$$<identifier>, {$<parameters>.map: *.made.join(',')}";
+    }
+
+    multi method parameters($/ where $<pointer> && $<type> eq 'int') {
+        make "Pointer[int32] \$$<identifier>, {$<parameters>.map: *.made.join(',')}";
     }
 
     multi method parameters($/) {
