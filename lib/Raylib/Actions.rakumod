@@ -381,11 +381,11 @@ class RaylibActions {
 
     # void pointer
     multi method parameters($/ where $<pointer> && $<type> eq 'void') {
-        make "Pointer[void] \$$<identifier> is rw, {$<parameters>.map: *.made.join(',')}";
+        make "Pointer[void] \$$<identifier>, {$<parameters>.map: *.made.join(',')}";
     }
 
     multi method parameters($/ where $<pointer> && $<type> eq 'int') {
-        make "Pointer[int32] \$$<identifier> is rw, {$<parameters>.map: *.made.join(',')}";
+        make "Pointer[int32] \$$<identifier>, {$<parameters>.map: *.made.join(',')}";
     }
 
     multi method parameters($/) {
