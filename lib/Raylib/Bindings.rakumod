@@ -835,17 +835,17 @@ our sub set-config-flags (uint32 $flags) is export is native(LIBRAYLIB) is symbo
 our sub trace-log (int32 $logLevel, Str $text, ) is export is native(LIBRAYLIB) is symbol('TraceLog'){ * }
 our sub set-trace-log-level (int32 $logLevel) is export is native(LIBRAYLIB) is symbol('SetTraceLogLevel'){ * }
 our sub mem-alloc (uint32 $size) is export is native(LIBRAYLIB) is symbol('MemAlloc'){ * }
-our sub mem-realloc (Pointer[void] $ptr, uint32 $size) is export is native(LIBRAYLIB) is symbol('MemRealloc'){ * }
-our sub mem-free (Pointer[void] $ptr, ) is export is native(LIBRAYLIB) is symbol('MemFree'){ * }
+our sub mem-realloc (Pointer[void] $ptr is rw, uint32 $size) is export is native(LIBRAYLIB) is symbol('MemRealloc'){ * }
+our sub mem-free (Pointer[void] $ptr is rw, ) is export is native(LIBRAYLIB) is symbol('MemFree'){ * }
 our sub open-url (Str $url) is export is native(LIBRAYLIB) is symbol('OpenURL'){ * }
 our sub set-trace-log-callback (&trace-log-callback (int32 $logLevel, Str $text, Str $args)) is export is native(LIBRAYLIB) is symbol('SetTraceLogCallback'){ * }
-our sub set-load-file-data-callback (&load-file-data-callback (Str $fileName, Pointer[int32] $bytesRead,  --> Str)) is export is native(LIBRAYLIB) is symbol('SetLoadFileDataCallback'){ * }
-our sub set-save-file-data-callback (&save-file-data-callback (Str $fileName, Pointer[void] $data, uint32 $bytesToWrite --> bool)) is export is native(LIBRAYLIB) is symbol('SetSaveFileDataCallback'){ * }
+our sub set-load-file-data-callback (&load-file-data-callback (Str $fileName, Pointer[int32] $bytesRead is rw,  --> Str)) is export is native(LIBRAYLIB) is symbol('SetLoadFileDataCallback'){ * }
+our sub set-save-file-data-callback (&save-file-data-callback (Str $fileName, Pointer[void] $data is rw, uint32 $bytesToWrite --> bool)) is export is native(LIBRAYLIB) is symbol('SetSaveFileDataCallback'){ * }
 our sub set-load-file-text-callback (&load-file-text-callback (Str $fileName --> Str)) is export is native(LIBRAYLIB) is symbol('SetLoadFileTextCallback'){ * }
 our sub set-save-file-text-callback (&save-file-text-callback (Str $fileName, Str $text --> bool)) is export is native(LIBRAYLIB) is symbol('SetSaveFileTextCallback'){ * }
-our sub load-file-data (Str $fileName, Pointer[int32] $bytesRead, ) returns Str is export is native(LIBRAYLIB) is symbol('LoadFileData'){ * }
+our sub load-file-data (Str $fileName, Pointer[int32] $bytesRead is rw, ) returns Str is export is native(LIBRAYLIB) is symbol('LoadFileData'){ * }
 our sub unload-file-data (uint8 $data is rw) is export is native(LIBRAYLIB) is symbol('UnloadFileData'){ * }
-our sub save-file-data (Str $fileName, Pointer[void] $data, uint32 $bytesToWrite) returns bool is export is native(LIBRAYLIB) is symbol('SaveFileData'){ * }
+our sub save-file-data (Str $fileName, Pointer[void] $data is rw, uint32 $bytesToWrite) returns bool is export is native(LIBRAYLIB) is symbol('SaveFileData'){ * }
 our sub export-data-as-code (uint8 $data is rw, uint32 $size, Str $fileName) returns bool is export is native(LIBRAYLIB) is symbol('ExportDataAsCode'){ * }
 our sub load-file-text (Str $fileName) returns Str is export is native(LIBRAYLIB) is symbol('LoadFileText'){ * }
 our sub unload-file-text (Str $text) is export is native(LIBRAYLIB) is symbol('UnloadFileText'){ * }
@@ -864,10 +864,10 @@ our sub term:<get-application-directory> () returns Str is export is native(LIBR
 our sub change-directory (Str $dir) returns bool is export is native(LIBRAYLIB) is symbol('ChangeDirectory'){ * }
 our sub is-path-file (Str $path) returns bool is export is native(LIBRAYLIB) is symbol('IsPathFile'){ * }
 our sub term:<is-file-dropped> () returns bool is export is native(LIBRAYLIB) is symbol('IsFileDropped'){ * }
-our sub compress-data (uint8 $data is rw, int32 $dataSize, Pointer[int32] $compDataSize, ) returns Str is export is native(LIBRAYLIB) is symbol('CompressData'){ * }
-our sub decompress-data (uint8 $compData is rw, int32 $compDataSize, Pointer[int32] $dataSize, ) returns Str is export is native(LIBRAYLIB) is symbol('DecompressData'){ * }
-our sub encode-data-base64 (uint8 $data is rw, int32 $dataSize, Pointer[int32] $outputSize, ) returns Str is export is native(LIBRAYLIB) is symbol('EncodeDataBase64'){ * }
-our sub decode-data-base64 (uint8 $data is rw, Pointer[int32] $outputSize, ) returns Str is export is native(LIBRAYLIB) is symbol('DecodeDataBase64'){ * }
+our sub compress-data (uint8 $data is rw, int32 $dataSize, Pointer[int32] $compDataSize is rw, ) returns Str is export is native(LIBRAYLIB) is symbol('CompressData'){ * }
+our sub decompress-data (uint8 $compData is rw, int32 $compDataSize, Pointer[int32] $dataSize is rw, ) returns Str is export is native(LIBRAYLIB) is symbol('DecompressData'){ * }
+our sub encode-data-base64 (uint8 $data is rw, int32 $dataSize, Pointer[int32] $outputSize is rw, ) returns Str is export is native(LIBRAYLIB) is symbol('EncodeDataBase64'){ * }
+our sub decode-data-base64 (uint8 $data is rw, Pointer[int32] $outputSize is rw, ) returns Str is export is native(LIBRAYLIB) is symbol('DecodeDataBase64'){ * }
 our sub is-key-pressed (int32 $key) returns bool is export is native(LIBRAYLIB) is symbol('IsKeyPressed'){ * }
 our sub is-key-pressed-repeat (int32 $key) returns bool is export is native(LIBRAYLIB) is symbol('IsKeyPressedRepeat'){ * }
 our sub is-key-down (int32 $key) returns bool is export is native(LIBRAYLIB) is symbol('IsKeyDown'){ * }
@@ -929,20 +929,20 @@ our sub unload-image-colors (Color $colors is rw) is export is native(LIBRAYLIB)
 our sub unload-image-palette (Color $colors is rw) is export is native(LIBRAYLIB) is symbol('UnloadImagePalette'){ * }
 our sub gen-texture-mipmaps (Texture2D $texture is rw) is export is native(LIBRAYLIB) is symbol('GenTextureMipmaps'){ * }
 our sub get-pixel-data-size (int32 $width, int32 $height, int32 $format) returns int32 is export is native(LIBRAYLIB) is symbol('GetPixelDataSize'){ * }
-our sub load-font-data (uint8 $fileData is rw, int32 $dataSize, int32 $fontSize, Pointer[int32] $fontChars, int32 $glyphCount, int32 $type) returns GlyphInfo is export is native(LIBRAYLIB) is symbol('LoadFontData'){ * }
+our sub load-font-data (uint8 $fileData is rw, int32 $dataSize, int32 $fontSize, Pointer[int32] $fontChars is rw, int32 $glyphCount, int32 $type) returns GlyphInfo is export is native(LIBRAYLIB) is symbol('LoadFontData'){ * }
 our sub unload-font-data (GlyphInfo $chars is rw, int32 $glyphCount) is export is native(LIBRAYLIB) is symbol('UnloadFontData'){ * }
 our sub draw-fps (int32 $posX, int32 $posY) is export is native(LIBRAYLIB) is symbol('DrawFPS'){ * }
 our sub set-text-line-spacing (int32 $spacing) is export is native(LIBRAYLIB) is symbol('SetTextLineSpacing'){ * }
 our sub measure-text (Str $text, int32 $fontSize) returns int32 is export is native(LIBRAYLIB) is symbol('MeasureText'){ * }
-our sub load-utf8 (Pointer[int32] $codepoints, int32 $length) returns Str is export is native(LIBRAYLIB) is symbol('LoadUTF8'){ * }
+our sub load-utf8 (Pointer[int32] $codepoints is rw, int32 $length) returns Str is export is native(LIBRAYLIB) is symbol('LoadUTF8'){ * }
 our sub unload-utf8 (Str $text) is export is native(LIBRAYLIB) is symbol('UnloadUTF8'){ * }
-our sub load-codepoints (Str $text, Pointer[int32] $count, ) returns int32 is export is native(LIBRAYLIB) is symbol('LoadCodepoints'){ * }
-our sub unload-codepoints (Pointer[int32] $codepoints, ) is export is native(LIBRAYLIB) is symbol('UnloadCodepoints'){ * }
+our sub load-codepoints (Str $text, Pointer[int32] $count is rw, ) returns int32 is export is native(LIBRAYLIB) is symbol('LoadCodepoints'){ * }
+our sub unload-codepoints (Pointer[int32] $codepoints is rw, ) is export is native(LIBRAYLIB) is symbol('UnloadCodepoints'){ * }
 our sub get-codepoint-count (Str $text) returns int32 is export is native(LIBRAYLIB) is symbol('GetCodepointCount'){ * }
-our sub get-codepoint (Str $text, Pointer[int32] $codepointSize, ) returns int32 is export is native(LIBRAYLIB) is symbol('GetCodepoint'){ * }
-our sub get-codepoint-next (Str $text, Pointer[int32] $codepointSize, ) returns int32 is export is native(LIBRAYLIB) is symbol('GetCodepointNext'){ * }
-our sub get-codepoint-previous (Str $text, Pointer[int32] $codepointSize, ) returns int32 is export is native(LIBRAYLIB) is symbol('GetCodepointPrevious'){ * }
-our sub codepoint-to-utf8 (int32 $codepoint, Pointer[int32] $utf8Size, ) returns Str is export is native(LIBRAYLIB) is symbol('CodepointToUTF8'){ * }
+our sub get-codepoint (Str $text, Pointer[int32] $codepointSize is rw, ) returns int32 is export is native(LIBRAYLIB) is symbol('GetCodepoint'){ * }
+our sub get-codepoint-next (Str $text, Pointer[int32] $codepointSize is rw, ) returns int32 is export is native(LIBRAYLIB) is symbol('GetCodepointNext'){ * }
+our sub get-codepoint-previous (Str $text, Pointer[int32] $codepointSize is rw, ) returns int32 is export is native(LIBRAYLIB) is symbol('GetCodepointPrevious'){ * }
+our sub codepoint-to-utf8 (int32 $codepoint, Pointer[int32] $utf8Size is rw, ) returns Str is export is native(LIBRAYLIB) is symbol('CodepointToUTF8'){ * }
 our sub text-copy (Str $dst, Str $src) returns int32 is export is native(LIBRAYLIB) is symbol('TextCopy'){ * }
 our sub text-is-equal (Str $text1, Str $text2) returns bool is export is native(LIBRAYLIB) is symbol('TextIsEqual'){ * }
 our sub text-length (Str $text) returns int32 is export is native(LIBRAYLIB) is symbol('TextLength'){ * }
@@ -951,8 +951,8 @@ our sub text-subtext (Str $text, int32 $position, int32 $length) returns Str is 
 our sub text-replace (Str $text, Str $replace, Str $by) returns Str is export is native(LIBRAYLIB) is symbol('TextReplace'){ * }
 our sub text-insert (Str $text, Str $insert, int32 $position) returns Str is export is native(LIBRAYLIB) is symbol('TextInsert'){ * }
 our sub text-join (Str $textList, int32 $count, Str $delimiter) returns Str is export is native(LIBRAYLIB) is symbol('TextJoin'){ * }
-our sub text-split (Str $text, Str $delimiter, Pointer[int32] $count, ) returns Str is export is native(LIBRAYLIB) is symbol('TextSplit'){ * }
-our sub text-append (Str $text, Str $append, Pointer[int32] $position, ) is export is native(LIBRAYLIB) is symbol('TextAppend'){ * }
+our sub text-split (Str $text, Str $delimiter, Pointer[int32] $count is rw, ) returns Str is export is native(LIBRAYLIB) is symbol('TextSplit'){ * }
+our sub text-append (Str $text, Str $append, Pointer[int32] $position is rw, ) is export is native(LIBRAYLIB) is symbol('TextAppend'){ * }
 our sub text-find-index (Str $text, Str $find) returns int32 is export is native(LIBRAYLIB) is symbol('TextFindIndex'){ * }
 our sub text-to-upper (Str $text) returns Str is export is native(LIBRAYLIB) is symbol('TextToUpper'){ * }
 our sub text-to-lower (Str $text) returns Str is export is native(LIBRAYLIB) is symbol('TextToLower'){ * }
@@ -961,9 +961,9 @@ our sub text-to-integer (Str $text) returns int32 is export is native(LIBRAYLIB)
 our sub draw-grid (int32 $slices, num32 $spacing) is export is native(LIBRAYLIB) is symbol('DrawGrid'){ * }
 our sub upload-mesh (Mesh $mesh is rw, bool $dynamic) is export is native(LIBRAYLIB) is symbol('UploadMesh'){ * }
 our sub gen-mesh-tangents (Mesh $mesh is rw) is export is native(LIBRAYLIB) is symbol('GenMeshTangents'){ * }
-our sub load-materials (Str $fileName, Pointer[int32] $materialCount, ) returns Material is export is native(LIBRAYLIB) is symbol('LoadMaterials'){ * }
+our sub load-materials (Str $fileName, Pointer[int32] $materialCount is rw, ) returns Material is export is native(LIBRAYLIB) is symbol('LoadMaterials'){ * }
 our sub set-model-mesh-material (Model $model is rw, int32 $meshId, int32 $materialId) is export is native(LIBRAYLIB) is symbol('SetModelMeshMaterial'){ * }
-our sub load-model-animations (Str $fileName, Pointer[int32] $animCount, ) returns ModelAnimation is export is native(LIBRAYLIB) is symbol('LoadModelAnimations'){ * }
+our sub load-model-animations (Str $fileName, Pointer[int32] $animCount is rw, ) returns ModelAnimation is export is native(LIBRAYLIB) is symbol('LoadModelAnimations'){ * }
 our sub unload-model-animations (ModelAnimation $animations is rw, uint32 $count) is export is native(LIBRAYLIB) is symbol('UnloadModelAnimations'){ * }
 our sub term:<init-audio-device> () is export is native(LIBRAYLIB) is symbol('InitAudioDevice'){ * }
 our sub term:<close-audio-device> () is export is native(LIBRAYLIB) is symbol('CloseAudioDevice'){ * }
@@ -973,8 +973,8 @@ our sub wave-crop (Wave $wave is rw, int32 $initSample, int32 $finalSample) is e
 our sub wave-format (Wave $wave is rw, int32 $sampleRate, int32 $sampleSize, int32 $channels) is export is native(LIBRAYLIB) is symbol('WaveFormat'){ * }
 our sub unload-wave-samples (num32 $samples is rw) is export is native(LIBRAYLIB) is symbol('UnloadWaveSamples'){ * }
 our sub set-audio-stream-buffer-size-default (int32 $size) is export is native(LIBRAYLIB) is symbol('SetAudioStreamBufferSizeDefault'){ * }
-our sub attach-audio-mixed-processor (&audio-callback (Pointer[void] $bufferData, uint32 $frames)) is export is native(LIBRAYLIB) is symbol('AttachAudioMixedProcessor'){ * }
-our sub detach-audio-mixed-processor (&audio-callback (Pointer[void] $bufferData, uint32 $frames)) is export is native(LIBRAYLIB) is symbol('DetachAudioMixedProcessor'){ * }
+our sub attach-audio-mixed-processor (&audio-callback (Pointer[void] $bufferData is rw, uint32 $frames)) is export is native(LIBRAYLIB) is symbol('AttachAudioMixedProcessor'){ * }
+our sub detach-audio-mixed-processor (&audio-callback (Pointer[void] $bufferData is rw, uint32 $frames)) is export is native(LIBRAYLIB) is symbol('DetachAudioMixedProcessor'){ * }
 ####### Predefined colors ########
 sub term:<init-lightgray  > is export { Color.init(200,  200,  200,  255 );} # creating a new instance of Color
 sub term:<init-gray       > is export { Color.init(130,  130,  130,  255 );} # creating a new instance of Color
@@ -1020,8 +1020,8 @@ our sub load-shader-from-memory (Str $vsCode, Str $fsCode) returns Shader is exp
 our sub is-shader-ready (Shader $shader) returns bool is export is native(LIBRAYLIB) is symbol('IsShaderReady_pointerized'){ * }
 our sub get-shader-location (Shader $shader, Str $uniformName) returns int32 is export is native(LIBRAYLIB) is symbol('GetShaderLocation_pointerized'){ * }
 our sub get-shader-location-attrib (Shader $shader, Str $attribName) returns int32 is export is native(LIBRAYLIB) is symbol('GetShaderLocationAttrib_pointerized'){ * }
-our sub set-shader-value (Shader $shader, int32 $locIndex, Pointer[void] $value, int32 $uniformType) is export is native(LIBRAYLIB) is symbol('SetShaderValue_pointerized'){ * }
-our sub set-shader-value-v (Shader $shader, int32 $locIndex, Pointer[void] $value, int32 $uniformType, int32 $count) is export is native(LIBRAYLIB) is symbol('SetShaderValueV_pointerized'){ * }
+our sub set-shader-value (Shader $shader, int32 $locIndex, Pointer[void] $value is rw, int32 $uniformType) is export is native(LIBRAYLIB) is symbol('SetShaderValue_pointerized'){ * }
+our sub set-shader-value-v (Shader $shader, int32 $locIndex, Pointer[void] $value is rw, int32 $uniformType, int32 $count) is export is native(LIBRAYLIB) is symbol('SetShaderValueV_pointerized'){ * }
 our sub set-shader-value-matrix (Shader $shader, int32 $locIndex, Matrix $mat) is export is native(LIBRAYLIB) is symbol('SetShaderValueMatrix_pointerized'){ * }
 our sub set-shader-value-texture (Shader $shader, int32 $locIndex, Texture2D $texture) is export is native(LIBRAYLIB) is symbol('SetShaderValueTexture_pointerized'){ * }
 our sub unload-shader (Shader $shader) is export is native(LIBRAYLIB) is symbol('UnloadShader_pointerized'){ * }
@@ -1097,14 +1097,14 @@ our sub check-collision-point-line (Vector2 $point, Vector2 $p1, Vector2 $p2, in
 our sub get-collision-rec (Rectangle $rec1, Rectangle $rec2) returns Rectangle is export is native(LIBRAYLIB) is symbol('GetCollisionRec_pointerized'){ * }
 our sub load-image (Str $fileName) returns Image is export is native(LIBRAYLIB) is symbol('LoadImage_pointerized'){ * }
 our sub load-image-raw (Str $fileName, int32 $width, int32 $height, int32 $format, int32 $headerSize) returns Image is export is native(LIBRAYLIB) is symbol('LoadImageRaw_pointerized'){ * }
-our sub load-image-anim (Str $fileName, Pointer[int32] $frames, ) returns Image is export is native(LIBRAYLIB) is symbol('LoadImageAnim_pointerized'){ * }
+our sub load-image-anim (Str $fileName, Pointer[int32] $frames is rw, ) returns Image is export is native(LIBRAYLIB) is symbol('LoadImageAnim_pointerized'){ * }
 our sub load-image-from-memory (Str $fileType, uint8 $fileData is rw, int32 $dataSize) returns Image is export is native(LIBRAYLIB) is symbol('LoadImageFromMemory_pointerized'){ * }
 our sub load-image-from-texture (Texture2D $texture) returns Image is export is native(LIBRAYLIB) is symbol('LoadImageFromTexture_pointerized'){ * }
 our sub term:<load-image-from-screen> () returns Image is export is native(LIBRAYLIB) is symbol('LoadImageFromScreen_pointerized'){ * }
 our sub is-image-ready (Image $image) returns bool is export is native(LIBRAYLIB) is symbol('IsImageReady_pointerized'){ * }
 our sub unload-image (Image $image) is export is native(LIBRAYLIB) is symbol('UnloadImage_pointerized'){ * }
 our sub export-image (Image $image, Str $fileName) returns bool is export is native(LIBRAYLIB) is symbol('ExportImage_pointerized'){ * }
-our sub export-image-to-memory (Image $image, Str $fileType, Pointer[int32] $fileSize, ) returns Str is export is native(LIBRAYLIB) is symbol('ExportImageToMemory_pointerized'){ * }
+our sub export-image-to-memory (Image $image, Str $fileType, Pointer[int32] $fileSize is rw, ) returns Str is export is native(LIBRAYLIB) is symbol('ExportImageToMemory_pointerized'){ * }
 our sub export-image-as-code (Image $image, Str $fileName) returns bool is export is native(LIBRAYLIB) is symbol('ExportImageAsCode_pointerized'){ * }
 our sub gen-image-color (int32 $width, int32 $height, Color $color) returns Image is export is native(LIBRAYLIB) is symbol('GenImageColor_pointerized'){ * }
 our sub gen-image-gradient-linear (int32 $width, int32 $height, int32 $direction, Color $start, Color $end) returns Image is export is native(LIBRAYLIB) is symbol('GenImageGradientLinear_pointerized'){ * }
@@ -1127,7 +1127,7 @@ our sub image-resize-canvas (Image $image is rw, int32 $newWidth, int32 $newHeig
 our sub image-color-tint (Image $image is rw, Color $color) is export is native(LIBRAYLIB) is symbol('ImageColorTint_pointerized'){ * }
 our sub image-color-replace (Image $image is rw, Color $color, Color $replace) is export is native(LIBRAYLIB) is symbol('ImageColorReplace_pointerized'){ * }
 our sub load-image-colors (Image $image) returns Color is export is native(LIBRAYLIB) is symbol('LoadImageColors_pointerized'){ * }
-our sub load-image-palette (Image $image, int32 $maxPaletteSize, Pointer[int32] $colorCount, ) returns Color is export is native(LIBRAYLIB) is symbol('LoadImagePalette_pointerized'){ * }
+our sub load-image-palette (Image $image, int32 $maxPaletteSize, Pointer[int32] $colorCount is rw, ) returns Color is export is native(LIBRAYLIB) is symbol('LoadImagePalette_pointerized'){ * }
 our sub get-image-alpha-border (Image $image, num32 $threshold) returns Rectangle is export is native(LIBRAYLIB) is symbol('GetImageAlphaBorder_pointerized'){ * }
 our sub get-image-color (Image $image, int32 $x, int32 $y) returns Color is export is native(LIBRAYLIB) is symbol('GetImageColor_pointerized'){ * }
 our sub image-clear-background (Image $dst is rw, Color $color) is export is native(LIBRAYLIB) is symbol('ImageClearBackground_pointerized'){ * }
@@ -1154,8 +1154,8 @@ our sub is-texture-ready (Texture2D $texture) returns bool is export is native(L
 our sub unload-texture (Texture2D $texture) is export is native(LIBRAYLIB) is symbol('UnloadTexture_pointerized'){ * }
 our sub is-render-texture-ready (RenderTexture2D $target) returns bool is export is native(LIBRAYLIB) is symbol('IsRenderTextureReady_pointerized'){ * }
 our sub unload-render-texture (RenderTexture2D $target) is export is native(LIBRAYLIB) is symbol('UnloadRenderTexture_pointerized'){ * }
-our sub update-texture (Texture2D $texture, Pointer[void] $pixels, ) is export is native(LIBRAYLIB) is symbol('UpdateTexture_pointerized'){ * }
-our sub update-texture-rec (Texture2D $texture, Rectangle $rec, Pointer[void] $pixels, ) is export is native(LIBRAYLIB) is symbol('UpdateTextureRec_pointerized'){ * }
+our sub update-texture (Texture2D $texture, Pointer[void] $pixels is rw, ) is export is native(LIBRAYLIB) is symbol('UpdateTexture_pointerized'){ * }
+our sub update-texture-rec (Texture2D $texture, Rectangle $rec, Pointer[void] $pixels is rw, ) is export is native(LIBRAYLIB) is symbol('UpdateTextureRec_pointerized'){ * }
 our sub set-texture-filter (Texture2D $texture, int32 $filter) is export is native(LIBRAYLIB) is symbol('SetTextureFilter_pointerized'){ * }
 our sub set-texture-wrap (Texture2D $texture, int32 $wrap) is export is native(LIBRAYLIB) is symbol('SetTextureWrap_pointerized'){ * }
 our sub draw-texture (Texture2D $texture, int32 $posX, int32 $posY, Color $tint) is export is native(LIBRAYLIB) is symbol('DrawTexture_pointerized'){ * }
@@ -1176,13 +1176,13 @@ our sub color-contrast (Color $color, num32 $contrast) returns Color is export i
 our sub color-alpha (Color $color, num32 $alpha) returns Color is export is native(LIBRAYLIB) is symbol('ColorAlpha_pointerized'){ * }
 our sub color-alpha-blend (Color $dst, Color $src, Color $tint) returns Color is export is native(LIBRAYLIB) is symbol('ColorAlphaBlend_pointerized'){ * }
 our sub get-color (uint32 $hexValue) returns Color is export is native(LIBRAYLIB) is symbol('GetColor_pointerized'){ * }
-our sub get-pixel-color (Pointer[void] $srcPtr, int32 $format) returns Color is export is native(LIBRAYLIB) is symbol('GetPixelColor_pointerized'){ * }
-our sub set-pixel-color (Pointer[void] $dstPtr, Color $color, int32 $format) is export is native(LIBRAYLIB) is symbol('SetPixelColor_pointerized'){ * }
+our sub get-pixel-color (Pointer[void] $srcPtr is rw, int32 $format) returns Color is export is native(LIBRAYLIB) is symbol('GetPixelColor_pointerized'){ * }
+our sub set-pixel-color (Pointer[void] $dstPtr is rw, Color $color, int32 $format) is export is native(LIBRAYLIB) is symbol('SetPixelColor_pointerized'){ * }
 our sub term:<get-font-default> () returns Font is export is native(LIBRAYLIB) is symbol('GetFontDefault_pointerized'){ * }
 our sub load-font (Str $fileName) returns Font is export is native(LIBRAYLIB) is symbol('LoadFont_pointerized'){ * }
-our sub load-font-ex (Str $fileName, int32 $fontSize, Pointer[int32] $fontChars, int32 $glyphCount) returns Font is export is native(LIBRAYLIB) is symbol('LoadFontEx_pointerized'){ * }
+our sub load-font-ex (Str $fileName, int32 $fontSize, Pointer[int32] $fontChars is rw, int32 $glyphCount) returns Font is export is native(LIBRAYLIB) is symbol('LoadFontEx_pointerized'){ * }
 our sub load-font-from-image (Image $image, Color $key, int32 $firstChar) returns Font is export is native(LIBRAYLIB) is symbol('LoadFontFromImage_pointerized'){ * }
-our sub load-font-from-memory (Str $fileType, uint8 $fileData is rw, int32 $dataSize, int32 $fontSize, Pointer[int32] $fontChars, int32 $glyphCount) returns Font is export is native(LIBRAYLIB) is symbol('LoadFontFromMemory_pointerized'){ * }
+our sub load-font-from-memory (Str $fileType, uint8 $fileData is rw, int32 $dataSize, int32 $fontSize, Pointer[int32] $fontChars is rw, int32 $glyphCount) returns Font is export is native(LIBRAYLIB) is symbol('LoadFontFromMemory_pointerized'){ * }
 our sub is-font-ready (Font $font) returns bool is export is native(LIBRAYLIB) is symbol('IsFontReady_pointerized'){ * }
 our sub gen-image-font-atlas (GlyphInfo $chars is rw, Rectangle $recs is rw, int32 $glyphCount, int32 $fontSize, int32 $padding, int32 $packMethod) returns Image is export is native(LIBRAYLIB) is symbol('GenImageFontAtlas_pointerized'){ * }
 our sub unload-font (Font $font) is export is native(LIBRAYLIB) is symbol('UnloadFont_pointerized'){ * }
@@ -1191,7 +1191,7 @@ our sub draw-text (Str $text, int32 $posX, int32 $posY, int32 $fontSize, Color $
 our sub draw-text-ex (Font $font, Str $text, Vector2 $position, num32 $fontSize, num32 $spacing, Color $tint) is export is native(LIBRAYLIB) is symbol('DrawTextEx_pointerized'){ * }
 our sub draw-text-pro (Font $font, Str $text, Vector2 $position, Vector2 $origin, num32 $rotation, num32 $fontSize, num32 $spacing, Color $tint) is export is native(LIBRAYLIB) is symbol('DrawTextPro_pointerized'){ * }
 our sub draw-text-codepoint (Font $font, int32 $codepoint, Vector2 $position, num32 $fontSize, Color $tint) is export is native(LIBRAYLIB) is symbol('DrawTextCodepoint_pointerized'){ * }
-our sub draw-text-codepoints (Font $font, Pointer[int32] $codepoints, int32 $count, Vector2 $position, num32 $fontSize, num32 $spacing, Color $tint) is export is native(LIBRAYLIB) is symbol('DrawTextCodepoints_pointerized'){ * }
+our sub draw-text-codepoints (Font $font, Pointer[int32] $codepoints is rw, int32 $count, Vector2 $position, num32 $fontSize, num32 $spacing, Color $tint) is export is native(LIBRAYLIB) is symbol('DrawTextCodepoints_pointerized'){ * }
 our sub measure-text-ex (Font $font, Str $text, num32 $fontSize, num32 $spacing) returns Vector2 is export is native(LIBRAYLIB) is symbol('MeasureTextEx_pointerized'){ * }
 our sub get-glyph-index (Font $font, int32 $codepoint) returns int32 is export is native(LIBRAYLIB) is symbol('GetGlyphIndex_pointerized'){ * }
 our sub get-glyph-info (Font $font, int32 $codepoint) returns GlyphInfo is export is native(LIBRAYLIB) is symbol('GetGlyphInfo_pointerized'){ * }
@@ -1229,7 +1229,7 @@ our sub draw-bounding-box (BoundingBox $box, Color $color) is export is native(L
 our sub draw-billboard (Camera $camera, Texture2D $texture, Vector3 $position, num32 $size, Color $tint) is export is native(LIBRAYLIB) is symbol('DrawBillboard_pointerized'){ * }
 our sub draw-billboard-rec (Camera $camera, Texture2D $texture, Rectangle $source, Vector3 $position, Vector2 $size, Color $tint) is export is native(LIBRAYLIB) is symbol('DrawBillboardRec_pointerized'){ * }
 our sub draw-billboard-pro (Camera $camera, Texture2D $texture, Rectangle $source, Vector3 $position, Vector3 $up, Vector2 $size, Vector2 $origin, num32 $rotation, Color $tint) is export is native(LIBRAYLIB) is symbol('DrawBillboardPro_pointerized'){ * }
-our sub update-mesh-buffer (Mesh $mesh, int32 $index, Pointer[void] $data, int32 $dataSize, int32 $offset) is export is native(LIBRAYLIB) is symbol('UpdateMeshBuffer_pointerized'){ * }
+our sub update-mesh-buffer (Mesh $mesh, int32 $index, Pointer[void] $data is rw, int32 $dataSize, int32 $offset) is export is native(LIBRAYLIB) is symbol('UpdateMeshBuffer_pointerized'){ * }
 our sub unload-mesh (Mesh $mesh) is export is native(LIBRAYLIB) is symbol('UnloadMesh_pointerized'){ * }
 our sub draw-mesh (Mesh $mesh, Material $material, Matrix $transform) is export is native(LIBRAYLIB) is symbol('DrawMesh_pointerized'){ * }
 our sub draw-mesh-instanced (Mesh $mesh, Material $material, Matrix $transforms is rw, int32 $instances) is export is native(LIBRAYLIB) is symbol('DrawMeshInstanced_pointerized'){ * }
@@ -1268,7 +1268,7 @@ our sub load-sound (Str $fileName) returns Sound is export is native(LIBRAYLIB) 
 our sub load-sound-from-wave (Wave $wave) returns Sound is export is native(LIBRAYLIB) is symbol('LoadSoundFromWave_pointerized'){ * }
 our sub load-sound-alias (Sound $source) returns Sound is export is native(LIBRAYLIB) is symbol('LoadSoundAlias_pointerized'){ * }
 our sub is-sound-ready (Sound $sound) returns bool is export is native(LIBRAYLIB) is symbol('IsSoundReady_pointerized'){ * }
-our sub update-sound (Sound $sound, Pointer[void] $data, int32 $sampleCount) is export is native(LIBRAYLIB) is symbol('UpdateSound_pointerized'){ * }
+our sub update-sound (Sound $sound, Pointer[void] $data is rw, int32 $sampleCount) is export is native(LIBRAYLIB) is symbol('UpdateSound_pointerized'){ * }
 our sub unload-wave (Wave $wave) is export is native(LIBRAYLIB) is symbol('UnloadWave_pointerized'){ * }
 our sub unload-sound (Sound $sound) is export is native(LIBRAYLIB) is symbol('UnloadSound_pointerized'){ * }
 our sub unload-sound-alias (Sound $alias) is export is native(LIBRAYLIB) is symbol('UnloadSoundAlias_pointerized'){ * }
@@ -1303,7 +1303,7 @@ our sub get-music-time-played (Music $music) returns num32 is export is native(L
 our sub load-audio-stream (uint32 $sampleRate, uint32 $sampleSize, uint32 $channels) returns AudioStream is export is native(LIBRAYLIB) is symbol('LoadAudioStream_pointerized'){ * }
 our sub is-audio-stream-ready (AudioStream $stream) returns bool is export is native(LIBRAYLIB) is symbol('IsAudioStreamReady_pointerized'){ * }
 our sub unload-audio-stream (AudioStream $stream) is export is native(LIBRAYLIB) is symbol('UnloadAudioStream_pointerized'){ * }
-our sub update-audio-stream (AudioStream $stream, Pointer[void] $data, int32 $frameCount) is export is native(LIBRAYLIB) is symbol('UpdateAudioStream_pointerized'){ * }
+our sub update-audio-stream (AudioStream $stream, Pointer[void] $data is rw, int32 $frameCount) is export is native(LIBRAYLIB) is symbol('UpdateAudioStream_pointerized'){ * }
 our sub is-audio-stream-processed (AudioStream $stream) returns bool is export is native(LIBRAYLIB) is symbol('IsAudioStreamProcessed_pointerized'){ * }
 our sub play-audio-stream (AudioStream $stream) is export is native(LIBRAYLIB) is symbol('PlayAudioStream_pointerized'){ * }
 our sub pause-audio-stream (AudioStream $stream) is export is native(LIBRAYLIB) is symbol('PauseAudioStream_pointerized'){ * }
@@ -1313,9 +1313,9 @@ our sub stop-audio-stream (AudioStream $stream) is export is native(LIBRAYLIB) i
 our sub set-audio-stream-volume (AudioStream $stream, num32 $volume) is export is native(LIBRAYLIB) is symbol('SetAudioStreamVolume_pointerized'){ * }
 our sub set-audio-stream-pitch (AudioStream $stream, num32 $pitch) is export is native(LIBRAYLIB) is symbol('SetAudioStreamPitch_pointerized'){ * }
 our sub set-audio-stream-pan (AudioStream $stream, num32 $pan) is export is native(LIBRAYLIB) is symbol('SetAudioStreamPan_pointerized'){ * }
-our sub set-audio-stream-callback (AudioStream $stream, &audio-callback (Pointer[void] $bufferData, uint32 $frames)) is export is native(LIBRAYLIB) is symbol('SetAudioStreamCallback_pointerized'){ * }
-our sub attach-audio-stream-processor (AudioStream $stream, &audio-callback (Pointer[void] $bufferData, uint32 $frames)) is export is native(LIBRAYLIB) is symbol('AttachAudioStreamProcessor_pointerized'){ * }
-our sub detach-audio-stream-processor (AudioStream $stream, &audio-callback (Pointer[void] $bufferData, uint32 $frames)) is export is native(LIBRAYLIB) is symbol('DetachAudioStreamProcessor_pointerized'){ * }
+our sub set-audio-stream-callback (AudioStream $stream, &audio-callback (Pointer[void] $bufferData is rw, uint32 $frames)) is export is native(LIBRAYLIB) is symbol('SetAudioStreamCallback_pointerized'){ * }
+our sub attach-audio-stream-processor (AudioStream $stream, &audio-callback (Pointer[void] $bufferData is rw, uint32 $frames)) is export is native(LIBRAYLIB) is symbol('AttachAudioStreamProcessor_pointerized'){ * }
+our sub detach-audio-stream-processor (AudioStream $stream, &audio-callback (Pointer[void] $bufferData is rw, uint32 $frames)) is export is native(LIBRAYLIB) is symbol('DetachAudioStreamProcessor_pointerized'){ * }
 ####### Allocation functions ########
 our sub malloc-Vector2(num32 $x,num32 $y) returns Vector2 is native(LIBRAYLIB) is symbol('malloc_Vector2') {*}
 our sub free-Vector2(Vector2 $ptr) is native(LIBRAYLIB) is symbol('free_Vector2') {*}
