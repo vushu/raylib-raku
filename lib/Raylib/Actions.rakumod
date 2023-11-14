@@ -171,7 +171,7 @@ class RaylibActions {
         if $<identifier>.made !∈ @.ignored-functions {
             my $return-is-type-value-type = $<type><identifier> && !$<pointer>;
             my $made-parameters = $<parameters>.made;
-            my $func = self.gen-function($<type>, $<identifier>, $<parameters>.made, $return-is-type-value-type);
+            my $func = self.gen-function($<type>, $<pointer>,  $<identifier>, $<parameters>.made, $return-is-type-value-type);
             if ($!is-value-type || $return-is-type-value-type) { # checking return type also
                 $!is-value-type = False;
                 @.pointerized_bindings.push($func);
@@ -353,8 +353,18 @@ class RaylibActions {
         }
     }
 
-    method get-return-type($return-type) {
-        my $raku-type = $return-type<identifier> ?? $return-type<identifier>.made !! $return-type.made;
+    method get-return-type($return-type, $pointer) {
+        my $raku-type = $return-type.made;
+        my $is-identifier = False;
+        if ($return-type<identifier>) {
+            $is-identifier = True;
+            $raku-type = $return-type<identifier>.made;
+        }
+
+        if ($pointer && $raku-type ne 'Str' && !$is-identifier) {
+            return " returns Pointer[$raku-type]";
+        }
+
         if ($raku-type ne 'void') {
             # no returns on void type
             return " returns $raku-type";
@@ -369,10 +379,10 @@ class RaylibActions {
 
     }
 
-    method gen-function($return-type, $function-name, $parameters, $return-is-type-value-type) {
+    method gen-function($return-type, $pointer,  $function-name, $parameters, $return-is-type-value-type) {
         my $pointerize = ($!is-value-type || $return-is-type-value-type) ?? '_pointerized' !! '';
         my $params = $parameters;
-        my $raku-type = self.get-return-type($return-type);
+        my $raku-type = self.get-return-type($return-type, $pointer);
         my $kebab-case-name = self.camelcase-to-kebab($function-name.Str);
         return $params 
             ?? "our sub $kebab-case-name ($params)$raku-type is export is native(LIBRAYLIB) is symbol('$function-name$pointerize')\{ * \}" 
