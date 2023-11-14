@@ -787,7 +787,7 @@ our sub set-window-min-size (int32 $width, int32 $height) is export is native(LI
 our sub set-window-size (int32 $width, int32 $height) is export is native(LIBRAYLIB) is symbol('SetWindowSize'){ * }
 our sub set-window-opacity (num32 $opacity) is export is native(LIBRAYLIB) is symbol('SetWindowOpacity'){ * }
 our sub term:<set-window-focused> () is export is native(LIBRAYLIB) is symbol('SetWindowFocused'){ * }
-our sub term:<get-window-handle> () is export is native(LIBRAYLIB) is symbol('GetWindowHandle'){ * }
+our sub term:<get-window-handle> () returns Pointer[void] is export is native(LIBRAYLIB) is symbol('GetWindowHandle'){ * }
 our sub term:<get-screen-width> () returns int32 is export is native(LIBRAYLIB) is symbol('GetScreenWidth'){ * }
 our sub term:<get-screen-height> () returns int32 is export is native(LIBRAYLIB) is symbol('GetScreenHeight'){ * }
 our sub term:<get-render-width> () returns int32 is export is native(LIBRAYLIB) is symbol('GetRenderWidth'){ * }
@@ -834,8 +834,8 @@ our sub take-screenshot (Str $fileName) is export is native(LIBRAYLIB) is symbol
 our sub set-config-flags (uint32 $flags) is export is native(LIBRAYLIB) is symbol('SetConfigFlags'){ * }
 our sub trace-log (int32 $logLevel, Str $text, ) is export is native(LIBRAYLIB) is symbol('TraceLog'){ * }
 our sub set-trace-log-level (int32 $logLevel) is export is native(LIBRAYLIB) is symbol('SetTraceLogLevel'){ * }
-our sub mem-alloc (uint32 $size) is export is native(LIBRAYLIB) is symbol('MemAlloc'){ * }
-our sub mem-realloc (Pointer[void] $ptr, uint32 $size) is export is native(LIBRAYLIB) is symbol('MemRealloc'){ * }
+our sub mem-alloc (uint32 $size) returns Pointer[void] is export is native(LIBRAYLIB) is symbol('MemAlloc'){ * }
+our sub mem-realloc (Pointer[void] $ptr, uint32 $size) returns Pointer[void] is export is native(LIBRAYLIB) is symbol('MemRealloc'){ * }
 our sub mem-free (Pointer[void] $ptr, ) is export is native(LIBRAYLIB) is symbol('MemFree'){ * }
 our sub open-url (Str $url) is export is native(LIBRAYLIB) is symbol('OpenURL'){ * }
 our sub set-trace-log-callback (&trace-log-callback (int32 $logLevel, Str $text, Str $args)) is export is native(LIBRAYLIB) is symbol('SetTraceLogCallback'){ * }
@@ -936,7 +936,7 @@ our sub set-text-line-spacing (int32 $spacing) is export is native(LIBRAYLIB) is
 our sub measure-text (Str $text, int32 $fontSize) returns int32 is export is native(LIBRAYLIB) is symbol('MeasureText'){ * }
 our sub load-utf8 (Pointer[int32] $codepoints, int32 $length) returns Str is export is native(LIBRAYLIB) is symbol('LoadUTF8'){ * }
 our sub unload-utf8 (Str $text) is export is native(LIBRAYLIB) is symbol('UnloadUTF8'){ * }
-our sub load-codepoints (Str $text, Pointer[int32] $count, ) returns int32 is export is native(LIBRAYLIB) is symbol('LoadCodepoints'){ * }
+our sub load-codepoints (Str $text, Pointer[int32] $count, ) returns Pointer[int32] is export is native(LIBRAYLIB) is symbol('LoadCodepoints'){ * }
 our sub unload-codepoints (Pointer[int32] $codepoints, ) is export is native(LIBRAYLIB) is symbol('UnloadCodepoints'){ * }
 our sub get-codepoint-count (Str $text) returns int32 is export is native(LIBRAYLIB) is symbol('GetCodepointCount'){ * }
 our sub get-codepoint (Str $text, Pointer[int32] $codepointSize, ) returns int32 is export is native(LIBRAYLIB) is symbol('GetCodepoint'){ * }
@@ -1283,7 +1283,7 @@ our sub set-sound-volume (Sound $sound, num32 $volume) is export is native(LIBRA
 our sub set-sound-pitch (Sound $sound, num32 $pitch) is export is native(LIBRAYLIB) is symbol('SetSoundPitch_pointerized'){ * }
 our sub set-sound-pan (Sound $sound, num32 $pan) is export is native(LIBRAYLIB) is symbol('SetSoundPan_pointerized'){ * }
 our sub wave-copy (Wave $wave) returns Wave is export is native(LIBRAYLIB) is symbol('WaveCopy_pointerized'){ * }
-our sub load-wave-samples (Wave $wave) returns num32 is export is native(LIBRAYLIB) is symbol('LoadWaveSamples_pointerized'){ * }
+our sub load-wave-samples (Wave $wave) returns Pointer[num32] is export is native(LIBRAYLIB) is symbol('LoadWaveSamples_pointerized'){ * }
 our sub load-music-stream (Str $fileName) returns Music is export is native(LIBRAYLIB) is symbol('LoadMusicStream_pointerized'){ * }
 our sub load-music-stream-from-memory (Str $fileType, uint8 $data is rw, int32 $dataSize) returns Music is export is native(LIBRAYLIB) is symbol('LoadMusicStreamFromMemory_pointerized'){ * }
 our sub is-music-ready (Music $music) returns bool is export is native(LIBRAYLIB) is symbol('IsMusicReady_pointerized'){ * }
