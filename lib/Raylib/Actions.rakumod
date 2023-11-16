@@ -361,10 +361,6 @@ class RaylibActions {
             $raku-type = $return-type<identifier>.made;
         }
 
-        if ($pointer && $raku-type ne 'Str' && !$is-identifier) {
-            return " returns Pointer[$raku-type]";
-        }
-
         if ($raku-type ne 'void') {
             # no returns on void type
             return " returns $raku-type";
@@ -395,7 +391,7 @@ class RaylibActions {
     }
 
     multi method parameters($/ where $<pointer> && $<type> eq 'int') {
-        make "Pointer[int32] \$$<identifier>, {$<parameters>.map: *.made.join(',')}";
+        make "int32 \$$<identifier> is rw, {$<parameters>.map: *.made.join(',')}";
     }
 
     multi method parameters($/) {
