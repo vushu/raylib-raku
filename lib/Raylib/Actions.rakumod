@@ -97,6 +97,7 @@ class RaylibActions {
     method enum-var-decl($/) {
         if ($<value>.elems > 1)
         {
+            $!incrementer = +$<value>[1] if $<value>[1].Numeric;
             make "   $($<value>[0]) => $($<value>[1]),\n";
         }
         else {
