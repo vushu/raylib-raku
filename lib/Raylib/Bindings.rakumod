@@ -1,5 +1,5 @@
 # This Raku module is generated from raylib.h
-unit module Raylib::Bindings:ver<0.0.13>:auth<zef:vushu>;
+unit module Raylib::Bindings:ver<0.0.14>:auth<zef:vushu>;
 use NativeCall;
 constant LIBRAYLIB = %?RESOURCES<libraries/raylib>;
 class Vector2 is export is repr('CStruct') is rw {
@@ -842,14 +842,14 @@ our sub set-trace-log-callback (&trace-log-callback (int32 $logLevel, Str $text,
 our sub set-load-file-data-callback (&load-file-data-callback (Str $fileName, int32 $bytesRead is rw,  --> Str)) is export is native(LIBRAYLIB) is symbol('SetLoadFileDataCallback'){ * }
 our sub set-save-file-data-callback (&save-file-data-callback (Str $fileName, Pointer[void] $data, uint32 $bytesToWrite --> bool)) is export is native(LIBRAYLIB) is symbol('SetSaveFileDataCallback'){ * }
 our sub set-load-file-text-callback (&load-file-text-callback (Str $fileName --> Str)) is export is native(LIBRAYLIB) is symbol('SetLoadFileTextCallback'){ * }
-our sub set-save-file-text-callback (&save-file-text-callback (Str $fileName, Str $text --> bool)) is export is native(LIBRAYLIB) is symbol('SetSaveFileTextCallback'){ * }
+our sub set-save-file-text-callback (&save-file-text-callback (Str $fileName, CArray[uint8] $text,  --> bool)) is export is native(LIBRAYLIB) is symbol('SetSaveFileTextCallback'){ * }
 our sub load-file-data (Str $fileName, int32 $bytesRead is rw, ) returns Str is export is native(LIBRAYLIB) is symbol('LoadFileData'){ * }
-our sub unload-file-data (uint8 $data is rw) is export is native(LIBRAYLIB) is symbol('UnloadFileData'){ * }
+our sub unload-file-data (CArray[uint8] $data, ) is export is native(LIBRAYLIB) is symbol('UnloadFileData'){ * }
 our sub save-file-data (Str $fileName, Pointer[void] $data, uint32 $bytesToWrite) returns bool is export is native(LIBRAYLIB) is symbol('SaveFileData'){ * }
 our sub export-data-as-code (uint8 $data is rw, uint32 $size, Str $fileName) returns bool is export is native(LIBRAYLIB) is symbol('ExportDataAsCode'){ * }
 our sub load-file-text (Str $fileName) returns Str is export is native(LIBRAYLIB) is symbol('LoadFileText'){ * }
-our sub unload-file-text (Str $text) is export is native(LIBRAYLIB) is symbol('UnloadFileText'){ * }
-our sub save-file-text (Str $fileName, Str $text) returns bool is export is native(LIBRAYLIB) is symbol('SaveFileText'){ * }
+our sub unload-file-text (CArray[uint8] $text, ) is export is native(LIBRAYLIB) is symbol('UnloadFileText'){ * }
+our sub save-file-text (Str $fileName, CArray[uint8] $text, ) returns bool is export is native(LIBRAYLIB) is symbol('SaveFileText'){ * }
 our sub file-exists (Str $fileName) returns bool is export is native(LIBRAYLIB) is symbol('FileExists'){ * }
 our sub directory-exists (Str $dirPath) returns bool is export is native(LIBRAYLIB) is symbol('DirectoryExists'){ * }
 our sub is-file-extension (Str $fileName, Str $ext) returns bool is export is native(LIBRAYLIB) is symbol('IsFileExtension'){ * }
@@ -935,7 +935,7 @@ our sub draw-fps (int32 $posX, int32 $posY) is export is native(LIBRAYLIB) is sy
 our sub set-text-line-spacing (int32 $spacing) is export is native(LIBRAYLIB) is symbol('SetTextLineSpacing'){ * }
 our sub measure-text (Str $text, int32 $fontSize) returns int32 is export is native(LIBRAYLIB) is symbol('MeasureText'){ * }
 our sub load-utf8 (int32 $codepoints is rw, int32 $length) returns Str is export is native(LIBRAYLIB) is symbol('LoadUTF8'){ * }
-our sub unload-utf8 (Str $text) is export is native(LIBRAYLIB) is symbol('UnloadUTF8'){ * }
+our sub unload-utf8 (CArray[uint8] $text, ) is export is native(LIBRAYLIB) is symbol('UnloadUTF8'){ * }
 our sub load-codepoints (Str $text, int32 $count is rw, ) returns int32 is export is native(LIBRAYLIB) is symbol('LoadCodepoints'){ * }
 our sub unload-codepoints (int32 $codepoints is rw, ) is export is native(LIBRAYLIB) is symbol('UnloadCodepoints'){ * }
 our sub get-codepoint-count (Str $text) returns int32 is export is native(LIBRAYLIB) is symbol('GetCodepointCount'){ * }
@@ -943,16 +943,16 @@ our sub get-codepoint (Str $text, int32 $codepointSize is rw, ) returns int32 is
 our sub get-codepoint-next (Str $text, int32 $codepointSize is rw, ) returns int32 is export is native(LIBRAYLIB) is symbol('GetCodepointNext'){ * }
 our sub get-codepoint-previous (Str $text, int32 $codepointSize is rw, ) returns int32 is export is native(LIBRAYLIB) is symbol('GetCodepointPrevious'){ * }
 our sub codepoint-to-utf8 (int32 $codepoint, int32 $utf8Size is rw, ) returns Str is export is native(LIBRAYLIB) is symbol('CodepointToUTF8'){ * }
-our sub text-copy (Str $dst, Str $src) returns int32 is export is native(LIBRAYLIB) is symbol('TextCopy'){ * }
+our sub text-copy (CArray[uint8] $dst, Str $src) returns int32 is export is native(LIBRAYLIB) is symbol('TextCopy'){ * }
 our sub text-is-equal (Str $text1, Str $text2) returns bool is export is native(LIBRAYLIB) is symbol('TextIsEqual'){ * }
 our sub text-length (Str $text) returns int32 is export is native(LIBRAYLIB) is symbol('TextLength'){ * }
 our sub text-format (Str $text, ) returns Str is export is native(LIBRAYLIB) is symbol('TextFormat'){ * }
 our sub text-subtext (Str $text, int32 $position, int32 $length) returns Str is export is native(LIBRAYLIB) is symbol('TextSubtext'){ * }
-our sub text-replace (Str $text, Str $replace, Str $by) returns Str is export is native(LIBRAYLIB) is symbol('TextReplace'){ * }
+our sub text-replace (CArray[uint8] $text, Str $replace, Str $by) returns Str is export is native(LIBRAYLIB) is symbol('TextReplace'){ * }
 our sub text-insert (Str $text, Str $insert, int32 $position) returns Str is export is native(LIBRAYLIB) is symbol('TextInsert'){ * }
 our sub text-join (Str $textList, int32 $count, Str $delimiter) returns Str is export is native(LIBRAYLIB) is symbol('TextJoin'){ * }
 our sub text-split (Str $text, Str $delimiter, int32 $count is rw, ) returns Str is export is native(LIBRAYLIB) is symbol('TextSplit'){ * }
-our sub text-append (Str $text, Str $append, int32 $position is rw, ) is export is native(LIBRAYLIB) is symbol('TextAppend'){ * }
+our sub text-append (CArray[uint8] $text, Str $append, int32 $position is rw, ) is export is native(LIBRAYLIB) is symbol('TextAppend'){ * }
 our sub text-find-index (Str $text, Str $find) returns int32 is export is native(LIBRAYLIB) is symbol('TextFindIndex'){ * }
 our sub text-to-upper (Str $text) returns Str is export is native(LIBRAYLIB) is symbol('TextToUpper'){ * }
 our sub text-to-lower (Str $text) returns Str is export is native(LIBRAYLIB) is symbol('TextToLower'){ * }

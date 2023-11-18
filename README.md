@@ -52,6 +52,16 @@ raku examples/rotating-butterfly.raku
 raku examples/3d-camera.raku
 ```
 
+### Mutable strings
+To parse mutable string use CArray[uint8] important to encode it as `utf-8`
+Example:
+```
+# .encode takes care of UTF-8 encoding. If $array is used 
+# as a string by the native function, don't forget to append the 
+# NULL byte that terminates a C string: ---------v 
+my $array = CArray[uint8].new("Foo".encode.list, 0);
+```
+
 #### More examples at
 https://www.raylib.com/examples.html
 
