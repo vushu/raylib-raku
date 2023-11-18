@@ -395,6 +395,11 @@ class RaylibActions {
         make "int32 \$$<identifier> is rw, {$<parameters>.map: *.made.join(',')}";
     }
 
+    multi method parameters($/ where $<pointer> && $<type> eq 'char' && !$<const>) {
+        make "CArray[uint8] \$$<identifier>, {$<parameters>.map: *.made.join(',')}";
+    }
+
+
     multi method parameters($/) {
         if (!$<type>) {
             make '';
