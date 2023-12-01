@@ -113,6 +113,10 @@ grammar RaylibGrammar {
         <api-decl>? <type> <pointer>* <identifier> '(' ~ ')' <parameters>? ';'
     }
 
+    rule function-call {
+        <identifier> '(' ~ ')' <value>
+    }
+
     rule macro-identifier {
         | '__'<identifier>
         | '__'<identifier>'__'
@@ -204,6 +208,7 @@ grammar RaylibGrammar {
         | <number>
         | <string>
         | <group>
+        | <function-call>
         | <hex-number>
         | <identifier>
         | <boolean>
