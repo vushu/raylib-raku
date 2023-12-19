@@ -45,7 +45,6 @@ class RaylibActions {
         @.bindings.push("class $<identifier> is export is repr('CStruct') \{  has int32 \$.dummy;\}");
     }
 
-
     multi method typedef-callback($/ where $<type> eq 'void') {
 
         my $callback-func = "&{self.camelcase-to-kebab($<identifier>.made)} ({$<parameters>.made})";
@@ -138,7 +137,20 @@ class RaylibActions {
                 else {
                     $defined-type = $<type> eq 'char' ?? $<type>.made !! "$unsigned$($<type>.made)";
                 }
-                if $<pointer>
+                # IF VALUE TYPE
+                if !$<pointer> && $<type><identifier>
+                {
+                    @aaa.push("   HAS $defined-type \$.$ident;\n");
+                }
+                elsif $<pointer>.elems eq 1 && $<type><identifier>
+                {
+                    @aaa.push("   has Pointer[$defined-type] \$.$ident;\n");
+                }
+                elsif $<pointer>.elems eq 2 && $<type><identifier>
+                {
+                    @aaa.push("   has Pointer \$.$ident;\n");
+                }
+                elsif $<pointer>
                 {
                     @aaa.push("   has $defined-type \$.$ident is rw;\n");
                 }
@@ -149,7 +161,13 @@ class RaylibActions {
             }
         }
         for $<array-identifier> -> $arr-ident {
-            @aaa.push("   has CArray[$($<type>.made)] $($arr-ident.made) is rw;\n");
+            if $<type> eq 'char' {
+                my $name = $arr-ident.made();
+                @aaa.push("   has uint8 @.$arr-ident is CArray;\n");
+            }
+            else  {
+                @aaa.push("   has CArray[$($<type>.made)] $($arr-ident.made) is rw;\n");
+            }
         }
         make @aaa.Str;
     }
@@ -226,6 +244,14 @@ class RaylibActions {
                     if ($x<var-decl><modifier> eq 'unsigned' && $x<var-decl><type> eq 'char') {
                         @raku-parameters.push(('uint8', "\$$ident"));
                     }
+                    elsif $x<var-decl><type><identifier> && $x<var-decl><pointer>.elems > 1 {
+                        my $type = $x<var-decl><type>.made;
+                        @raku-parameters.push(("Pointer", "\$$ident"));
+                    }
+                    elsif $x<var-decl><type><identifier> && $x<var-decl><pointer> {
+                        my $type = $x<var-decl><type>.made;
+                        @raku-parameters.push(("Pointer[$type]", "\$$ident"));
+                    }
                     else {
                         @raku-parameters.push(($x<var-decl><type>.made, "\$$ident"));
                     }
@@ -233,8 +259,15 @@ class RaylibActions {
             }
 
             if $x<var-decl><array-identifier> { 
-                @parameters.push(($x<var-decl><modifier>, $x<var-decl><type>, $x<var-decl><pointer>, $x<var-decl><array-identifier>));
-                @raku-parameters.push(('CArray[' ~ $x<var-decl><type>.made ~ ']', "\$$x<var-decl><array-identifier>[0]<identifier>"));
+                if $x<var-decl><type> eq 'char' {
+                    @parameters.push(($x<var-decl><modifier>, $x<var-decl><type>, $x<var-decl><pointer>, $x<var-decl><array-identifier>));
+                    @raku-parameters.push(($x<var-decl><type>.made, "\$$x<var-decl><array-identifier>[0]<identifier>"));
+
+                }
+                else {
+                    @parameters.push(($x<var-decl><modifier>, $x<var-decl><type>, $x<var-decl><pointer>, $x<var-decl><array-identifier>));
+                    @raku-parameters.push(('CArray[' ~ $x<var-decl><type>.made ~ ']', "\$$x<var-decl><array-identifier>[0]<identifier>"));
+                }
             }
         }
 

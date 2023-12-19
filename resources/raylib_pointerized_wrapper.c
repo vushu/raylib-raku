@@ -121,6 +121,14 @@ long* GetFileModTime_pointerized( char * fileName){
     *ptr = ret; 
     return ptr;
 }
+AutomationEventList* LoadAutomationEventList_pointerized( char * fileName){
+    AutomationEventList* ptr = malloc(sizeof(AutomationEventList));
+    AutomationEventList ret = LoadAutomationEventList(fileName); 
+    *ptr = ret; 
+    return ptr;
+}
+bool ExportAutomationEventList_pointerized(AutomationEventList* list,  char * fileName){ return ExportAutomationEventList(*list, fileName); }
+void PlayAutomationEvent_pointerized(AutomationEvent* event){ PlayAutomationEvent(*event); }
 Vector2* GetMousePosition_pointerized(){
     Vector2* ptr = malloc(sizeof(Vector2));
     Vector2 ret = GetMousePosition(); 
@@ -164,18 +172,15 @@ void DrawPixelV_pointerized(Vector2* position, Color* color){ DrawPixelV(*positi
 void DrawLine_pointerized(int startPosX, int startPosY, int endPosX, int endPosY, Color* color){ DrawLine(startPosX, startPosY, endPosX, endPosY, *color); }
 void DrawLineV_pointerized(Vector2* startPos, Vector2* endPos, Color* color){ DrawLineV(*startPos, *endPos, *color); }
 void DrawLineEx_pointerized(Vector2* startPos, Vector2* endPos, float thick, Color* color){ DrawLineEx(*startPos, *endPos, thick, *color); }
-void DrawLineBezier_pointerized(Vector2* startPos, Vector2* endPos, float thick, Color* color){ DrawLineBezier(*startPos, *endPos, thick, *color); }
-void DrawLineBezierQuad_pointerized(Vector2* startPos, Vector2* endPos, Vector2* controlPos, float thick, Color* color){ DrawLineBezierQuad(*startPos, *endPos, *controlPos, thick, *color); }
-void DrawLineBezierCubic_pointerized(Vector2* startPos, Vector2* endPos, Vector2* startControlPos, Vector2* endControlPos, float thick, Color* color){ DrawLineBezierCubic(*startPos, *endPos, *startControlPos, *endControlPos, thick, *color); }
-void DrawLineBSpline_pointerized( Vector2 * points, int pointCount, float thick, Color* color){ DrawLineBSpline(points, pointCount, thick, *color); }
-void DrawLineCatmullRom_pointerized( Vector2 * points, int pointCount, float thick, Color* color){ DrawLineCatmullRom(points, pointCount, thick, *color); }
 void DrawLineStrip_pointerized( Vector2 * points, int pointCount, Color* color){ DrawLineStrip(points, pointCount, *color); }
+void DrawLineBezier_pointerized(Vector2* startPos, Vector2* endPos, float thick, Color* color){ DrawLineBezier(*startPos, *endPos, thick, *color); }
 void DrawCircle_pointerized(int centerX, int centerY, float radius, Color* color){ DrawCircle(centerX, centerY, radius, *color); }
 void DrawCircleSector_pointerized(Vector2* center, float radius, float startAngle, float endAngle, int segments, Color* color){ DrawCircleSector(*center, radius, startAngle, endAngle, segments, *color); }
 void DrawCircleSectorLines_pointerized(Vector2* center, float radius, float startAngle, float endAngle, int segments, Color* color){ DrawCircleSectorLines(*center, radius, startAngle, endAngle, segments, *color); }
 void DrawCircleGradient_pointerized(int centerX, int centerY, float radius, Color* color1, Color* color2){ DrawCircleGradient(centerX, centerY, radius, *color1, *color2); }
 void DrawCircleV_pointerized(Vector2* center, float radius, Color* color){ DrawCircleV(*center, radius, *color); }
 void DrawCircleLines_pointerized(int centerX, int centerY, float radius, Color* color){ DrawCircleLines(centerX, centerY, radius, *color); }
+void DrawCircleLinesV_pointerized(Vector2* center, float radius, Color* color){ DrawCircleLinesV(*center, radius, *color); }
 void DrawEllipse_pointerized(int centerX, int centerY, float radiusH, float radiusV, Color* color){ DrawEllipse(centerX, centerY, radiusH, radiusV, *color); }
 void DrawEllipseLines_pointerized(int centerX, int centerY, float radiusH, float radiusV, Color* color){ DrawEllipseLines(centerX, centerY, radiusH, radiusV, *color); }
 void DrawRing_pointerized(Vector2* center, float innerRadius, float outerRadius, float startAngle, float endAngle, int segments, Color* color){ DrawRing(*center, innerRadius, outerRadius, startAngle, endAngle, segments, *color); }
@@ -198,6 +203,46 @@ void DrawTriangleStrip_pointerized( Vector2 * points, int pointCount, Color* col
 void DrawPoly_pointerized(Vector2* center, int sides, float radius, float rotation, Color* color){ DrawPoly(*center, sides, radius, rotation, *color); }
 void DrawPolyLines_pointerized(Vector2* center, int sides, float radius, float rotation, Color* color){ DrawPolyLines(*center, sides, radius, rotation, *color); }
 void DrawPolyLinesEx_pointerized(Vector2* center, int sides, float radius, float rotation, float lineThick, Color* color){ DrawPolyLinesEx(*center, sides, radius, rotation, lineThick, *color); }
+void DrawSplineLinear_pointerized( Vector2 * points, int pointCount, float thick, Color* color){ DrawSplineLinear(points, pointCount, thick, *color); }
+void DrawSplineBasis_pointerized( Vector2 * points, int pointCount, float thick, Color* color){ DrawSplineBasis(points, pointCount, thick, *color); }
+void DrawSplineCatmullRom_pointerized( Vector2 * points, int pointCount, float thick, Color* color){ DrawSplineCatmullRom(points, pointCount, thick, *color); }
+void DrawSplineBezierQuadratic_pointerized( Vector2 * points, int pointCount, float thick, Color* color){ DrawSplineBezierQuadratic(points, pointCount, thick, *color); }
+void DrawSplineBezierCubic_pointerized( Vector2 * points, int pointCount, float thick, Color* color){ DrawSplineBezierCubic(points, pointCount, thick, *color); }
+void DrawSplineSegmentLinear_pointerized(Vector2* p1, Vector2* p2, float thick, Color* color){ DrawSplineSegmentLinear(*p1, *p2, thick, *color); }
+void DrawSplineSegmentBasis_pointerized(Vector2* p1, Vector2* p2, Vector2* p3, Vector2* p4, float thick, Color* color){ DrawSplineSegmentBasis(*p1, *p2, *p3, *p4, thick, *color); }
+void DrawSplineSegmentCatmullRom_pointerized(Vector2* p1, Vector2* p2, Vector2* p3, Vector2* p4, float thick, Color* color){ DrawSplineSegmentCatmullRom(*p1, *p2, *p3, *p4, thick, *color); }
+void DrawSplineSegmentBezierQuadratic_pointerized(Vector2* p1, Vector2* c2, Vector2* p3, float thick, Color* color){ DrawSplineSegmentBezierQuadratic(*p1, *c2, *p3, thick, *color); }
+void DrawSplineSegmentBezierCubic_pointerized(Vector2* p1, Vector2* c2, Vector2* c3, Vector2* p4, float thick, Color* color){ DrawSplineSegmentBezierCubic(*p1, *c2, *c3, *p4, thick, *color); }
+Vector2* GetSplinePointLinear_pointerized(Vector2* startPos, Vector2* endPos, float t){
+    Vector2* ptr = malloc(sizeof(Vector2));
+    Vector2 ret = GetSplinePointLinear(*startPos, *endPos, t); 
+    *ptr = ret; 
+    return ptr;
+}
+Vector2* GetSplinePointBasis_pointerized(Vector2* p1, Vector2* p2, Vector2* p3, Vector2* p4, float t){
+    Vector2* ptr = malloc(sizeof(Vector2));
+    Vector2 ret = GetSplinePointBasis(*p1, *p2, *p3, *p4, t); 
+    *ptr = ret; 
+    return ptr;
+}
+Vector2* GetSplinePointCatmullRom_pointerized(Vector2* p1, Vector2* p2, Vector2* p3, Vector2* p4, float t){
+    Vector2* ptr = malloc(sizeof(Vector2));
+    Vector2 ret = GetSplinePointCatmullRom(*p1, *p2, *p3, *p4, t); 
+    *ptr = ret; 
+    return ptr;
+}
+Vector2* GetSplinePointBezierQuad_pointerized(Vector2* p1, Vector2* c2, Vector2* p3, float t){
+    Vector2* ptr = malloc(sizeof(Vector2));
+    Vector2 ret = GetSplinePointBezierQuad(*p1, *c2, *p3, t); 
+    *ptr = ret; 
+    return ptr;
+}
+Vector2* GetSplinePointBezierCubic_pointerized(Vector2* p1, Vector2* c2, Vector2* c3, Vector2* p4, float t){
+    Vector2* ptr = malloc(sizeof(Vector2));
+    Vector2 ret = GetSplinePointBezierCubic(*p1, *c2, *c3, *p4, t); 
+    *ptr = ret; 
+    return ptr;
+}
 bool CheckCollisionRecs_pointerized(Rectangle* rec1, Rectangle* rec2){ return CheckCollisionRecs(*rec1, *rec2); }
 bool CheckCollisionCircles_pointerized(Vector2* center1, float radius1, Vector2* center2, float radius2){ return CheckCollisionCircles(*center1, radius1, *center2, radius2); }
 bool CheckCollisionCircleRec_pointerized(Vector2* center, float radius, Rectangle* rec){ return CheckCollisionCircleRec(*center, radius, *rec); }
@@ -222,6 +267,12 @@ Image* LoadImage_pointerized( char * fileName){
 Image* LoadImageRaw_pointerized( char * fileName, int width, int height, int format, int headerSize){
     Image* ptr = malloc(sizeof(Image));
     Image ret = LoadImageRaw(fileName, width, height, format, headerSize); 
+    *ptr = ret; 
+    return ptr;
+}
+Image* LoadImageSvg_pointerized( char * fileNameOrString, int width, int height){
+    Image* ptr = malloc(sizeof(Image));
+    Image ret = LoadImageSvg(fileNameOrString, width, height); 
     *ptr = ret; 
     return ptr;
 }
@@ -493,9 +544,9 @@ Font* LoadFont_pointerized( char * fileName){
     *ptr = ret; 
     return ptr;
 }
-Font* LoadFontEx_pointerized( char * fileName, int fontSize,  int * fontChars, int glyphCount){
+Font* LoadFontEx_pointerized( char * fileName, int fontSize,  int * codepoints, int codepointCount){
     Font* ptr = malloc(sizeof(Font));
-    Font ret = LoadFontEx(fileName, fontSize, fontChars, glyphCount); 
+    Font ret = LoadFontEx(fileName, fontSize, codepoints, codepointCount); 
     *ptr = ret; 
     return ptr;
 }
@@ -505,16 +556,16 @@ Font* LoadFontFromImage_pointerized(Image* image, Color* key, int firstChar){
     *ptr = ret; 
     return ptr;
 }
-Font* LoadFontFromMemory_pointerized( char * fileType,  char * fileData, int dataSize, int fontSize,  int * fontChars, int glyphCount){
+Font* LoadFontFromMemory_pointerized( char * fileType,  char * fileData, int dataSize, int fontSize,  int * codepoints, int codepointCount){
     Font* ptr = malloc(sizeof(Font));
-    Font ret = LoadFontFromMemory(fileType, fileData, dataSize, fontSize, fontChars, glyphCount); 
+    Font ret = LoadFontFromMemory(fileType, fileData, dataSize, fontSize, codepoints, codepointCount); 
     *ptr = ret; 
     return ptr;
 }
 bool IsFontReady_pointerized(Font* font){ return IsFontReady(*font); }
-Image* GenImageFontAtlas_pointerized( GlyphInfo * chars,  Rectangle * * recs, int glyphCount, int fontSize, int padding, int packMethod){
+Image* GenImageFontAtlas_pointerized( GlyphInfo * glyphs,  Rectangle * * glyphRecs, int glyphCount, int fontSize, int padding, int packMethod){
     Image* ptr = malloc(sizeof(Image));
-    Image ret = GenImageFontAtlas(chars, recs, glyphCount, fontSize, padding, packMethod); 
+    Image ret = GenImageFontAtlas(glyphs, glyphRecs, glyphCount, fontSize, padding, packMethod); 
     *ptr = ret; 
     return ptr;
 }
@@ -524,7 +575,7 @@ void DrawText_pointerized( char * text, int posX, int posY, int fontSize, Color*
 void DrawTextEx_pointerized(Font* font,  char * text, Vector2* position, float fontSize, float spacing, Color* tint){ DrawTextEx(*font, text, *position, fontSize, spacing, *tint); }
 void DrawTextPro_pointerized(Font* font,  char * text, Vector2* position, Vector2* origin, float rotation, float fontSize, float spacing, Color* tint){ DrawTextPro(*font, text, *position, *origin, rotation, fontSize, spacing, *tint); }
 void DrawTextCodepoint_pointerized(Font* font, int codepoint, Vector2* position, float fontSize, Color* tint){ DrawTextCodepoint(*font, codepoint, *position, fontSize, *tint); }
-void DrawTextCodepoints_pointerized(Font* font,  int * codepoints, int count, Vector2* position, float fontSize, float spacing, Color* tint){ DrawTextCodepoints(*font, codepoints, count, *position, fontSize, spacing, *tint); }
+void DrawTextCodepoints_pointerized(Font* font,  int * codepoints, int codepointCount, Vector2* position, float fontSize, float spacing, Color* tint){ DrawTextCodepoints(*font, codepoints, codepointCount, *position, fontSize, spacing, *tint); }
 Vector2* MeasureTextEx_pointerized(Font* font,  char * text, float fontSize, float spacing){
     Vector2* ptr = malloc(sizeof(Vector2));
     Vector2 ret = MeasureTextEx(*font, text, fontSize, spacing); 
@@ -596,13 +647,14 @@ void UpdateMeshBuffer_pointerized(Mesh* mesh, int index,  void * data, int dataS
 void UnloadMesh_pointerized(Mesh* mesh){ UnloadMesh(*mesh); }
 void DrawMesh_pointerized(Mesh* mesh, Material* material, Matrix* transform){ DrawMesh(*mesh, *material, *transform); }
 void DrawMeshInstanced_pointerized(Mesh* mesh, Material* material,  Matrix * transforms, int instances){ DrawMeshInstanced(*mesh, *material, transforms, instances); }
-bool ExportMesh_pointerized(Mesh* mesh,  char * fileName){ return ExportMesh(*mesh, fileName); }
 BoundingBox* GetMeshBoundingBox_pointerized(Mesh* mesh){
     BoundingBox* ptr = malloc(sizeof(BoundingBox));
     BoundingBox ret = GetMeshBoundingBox(*mesh); 
     *ptr = ret; 
     return ptr;
 }
+bool ExportMesh_pointerized(Mesh* mesh,  char * fileName){ return ExportMesh(*mesh, fileName); }
+bool ExportMeshAsCode_pointerized(Mesh* mesh,  char * fileName){ return ExportMeshAsCode(*mesh, fileName); }
 Mesh* GenMeshPoly_pointerized(int sides, float radius){
     Mesh* ptr = malloc(sizeof(Mesh));
     Mesh ret = GenMeshPoly(sides, radius); 

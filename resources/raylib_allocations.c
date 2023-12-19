@@ -334,13 +334,12 @@ Music* malloc_Music(AudioStream * stream,unsigned int  frameCount, bool  looping
 void free_Music(Music* ptr){
    free(ptr);
 }
-VrDeviceInfo* malloc_VrDeviceInfo(int  hResolution, int  vResolution, float  hScreenSize, float  vScreenSize, float  vScreenCenter, float  eyeToScreenDistance, float  lensSeparationDistance, float  interpupillaryDistance, float  lensDistortionValues[4], float  chromaAbCorrection[4]) {
+VrDeviceInfo* malloc_VrDeviceInfo(int  hResolution, int  vResolution, float  hScreenSize, float  vScreenSize, float  eyeToScreenDistance, float  lensSeparationDistance, float  interpupillaryDistance, float  lensDistortionValues[4], float  chromaAbCorrection[4]) {
    VrDeviceInfo* ptr = malloc(sizeof(VrDeviceInfo));
    ptr->hResolution = hResolution;
    ptr->vResolution = vResolution;
    ptr->hScreenSize = hScreenSize;
    ptr->vScreenSize = vScreenSize;
-   ptr->vScreenCenter = vScreenCenter;
    ptr->eyeToScreenDistance = eyeToScreenDistance;
    ptr->lensSeparationDistance = lensSeparationDistance;
    ptr->interpupillaryDistance = interpupillaryDistance;
@@ -374,5 +373,25 @@ FilePathList* malloc_FilePathList(unsigned int  capacity,unsigned int  count, ch
    return ptr;
 }
 void free_FilePathList(FilePathList* ptr){
+   free(ptr);
+}
+AutomationEvent* malloc_AutomationEvent(unsigned int  frame,unsigned int  type, int  params[4]) {
+   AutomationEvent* ptr = malloc(sizeof(AutomationEvent));
+   ptr->frame = frame;
+   ptr->type = type;
+   memcpy(ptr->params, params, 4 * sizeof(int));
+   return ptr;
+}
+void free_AutomationEvent(AutomationEvent* ptr){
+   free(ptr);
+}
+AutomationEventList* malloc_AutomationEventList(unsigned int  capacity,unsigned int  count, AutomationEvent * events) {
+   AutomationEventList* ptr = malloc(sizeof(AutomationEventList));
+   ptr->capacity = capacity;
+   ptr->count = count;
+   ptr->events = events;
+   return ptr;
+}
+void free_AutomationEventList(AutomationEventList* ptr){
    free(ptr);
 }
