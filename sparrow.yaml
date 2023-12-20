@@ -1,0 +1,10 @@
+tasks:
+  -
+    name: main
+    default: true
+    language: Bash
+    code: |
+      set -e
+      cd source/
+      zef install --/test .
+      zef test .
