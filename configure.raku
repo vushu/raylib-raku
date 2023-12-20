@@ -13,12 +13,13 @@ sub check-if-installed {
 sub get-header-from-pkg-config($library_name) {
     my $proc = shell("pkg-config --cflags $library_name", :out);
     my $res = $proc.out.slurp: :close;
+    $res = $res.trim;
     if !$res {
         say "Searching for raylib.h in usr/include";
         return use-find-raylib-header("/usr/include");
     }
     else {
-        my $raylib-h-file = $res.trim.substr(2);
+        my $raylib-h-file = $res.substr(2);
         $raylib-h-file ~= "/$library_name.h";
         return $raylib-h-file;
     }
@@ -27,8 +28,9 @@ sub get-header-from-pkg-config($library_name) {
 sub use-find-raylib-header($path) {
     my $proc = shell("find $path -name 'raylib.h'", :out);
     my $res = $proc.out.slurp: :close;
-    die "----- Failed to locate raylib.h! abort installation. -----" if $res.trim.chars eq 0;
-    return $res.trim;
+    $res = $res.trim;
+    die "----- Failed to locate raylib.h! abort installation. -----" if $res.chars eq 0;
+    return $res;
 }
 
 sub configure{
