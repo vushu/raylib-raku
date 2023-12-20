@@ -33,7 +33,7 @@
     "libraries/raylib"
   ],
   "test-depends": [],
-  "version": "0.0.16",
+  "version": "0.0.17",
   "source-url": "https://github.com/vushu/raylib-raku.git",
   "builder": "Distribution::Builder::MakeFromJSON",
   "build": {

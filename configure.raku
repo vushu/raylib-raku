@@ -13,7 +13,7 @@ sub check-if-installed {
 sub get-header-from-pkg-config($library_name) {
     my $proc = shell("pkg-config --cflags $library_name", :out);
     my $res = $proc.out.slurp: :close;
-    if $res {
+    if !$res {
         say "Searching for raylib.h in usr/include";
         return use-find-raylib-header("/usr/include");
     }
