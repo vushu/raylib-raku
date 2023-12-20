@@ -22,7 +22,7 @@ tasks:
     code: |
       set -e
       if test $os = "alpine"; then
-        sudo apk add raylib-dev
+        sudo apk add --repository=http://dl-cdn.alpinelinux.org/alpine/edge/testing/ raylib-dev
       elif test $os = "debian"; then
         sudo apt-get install -y raylib-dev 1>/dev/null
       elif test $os = "ubuntu"; then
