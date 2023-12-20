@@ -1,3 +1,8 @@
+image:
+  - melezhik/sparrow:alpine_arm
+  #- melezhik/sparrow:debian_arm
+  #- melezhik/sparrow:ubuntu_arm
+
 tasks:
   -
     name: main
@@ -6,5 +11,20 @@ tasks:
     code: |
       set -e
       cd source/
-      zef install --/test .
+      zef install .
       zef test .
+    depends:
+      -
+        name: system_deps
+  -
+    name: system_deps
+    language: Bash
+    code: |
+      set -e
+      if test $os = "alpine"; then
+        sudo apk add raylib-dev
+      elif test $os = "debian"; then
+        sudo apt-get install -y raylib-dev 1>/dev/null
+      elif test $os = "ubuntu"; then
+        sudo apt-get install -y raylib-dev 1>/dev/null
+      fi      
