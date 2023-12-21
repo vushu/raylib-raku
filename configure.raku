@@ -2,6 +2,8 @@
 use lib 'lib';
 use Raylib::Generator;
 
+my @search-paths = ['/usr/include', '/usr/local/include'];
+
 sub check-if-installed {
     my $library_name = 'raylib';
     my $exitcode = shell("pkg-config --exists $library_name").exitcode;
@@ -15,8 +17,12 @@ sub get-header-from-pkg-config($library_name) {
     my $res = $proc.out.slurp: :close;
     $res = $res.trim;
     if !$res {
-        say "Searching for raylib.h in usr/include";
-        return use-find-raylib-header("/usr/include");
+        for @search-paths -> $path {
+            say "Searching for raylib.h in $path";
+            $res = use-find-raylib-header($path);
+            return $res if $res.chars > 0;
+        }
+        die "----- Failed to locate raylib.h! abort installation. -----";
     }
     else {
         my $raylib-h-file = $res.substr(2);
@@ -29,7 +35,6 @@ sub use-find-raylib-header($path) {
     my $proc = shell("find $path -name 'raylib.h'", :out);
     my $res = $proc.out.slurp: :close;
     $res = $res.trim;
-    die "----- Failed to locate raylib.h! abort installation. -----" if $res.chars eq 0;
     return $res;
 }
 
