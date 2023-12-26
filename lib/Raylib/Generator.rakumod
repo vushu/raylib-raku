@@ -7,6 +7,7 @@ sub generate-bindings($raylib-h-file, $output-dir) is export {
     say "Generating raylib bindings...";
     my $parser = RaylibGrammar.new;
     my $actions = RaylibActions.new;
+    $actions.library-name = "LIBRAYLIB";
     my $raylib = slurp $raylib-h-file;
     my $parsed = $parser.parse($raylib, actions => $actions);
 

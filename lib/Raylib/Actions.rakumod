@@ -12,6 +12,7 @@ class Pointerized {
 }
 
 class RaylibActions {
+    has Str $.library-name is rw;
     has Str @.bindings;
     has Str @.predifined-colors;
     has Str @.pointerized_bindings;
@@ -280,8 +281,8 @@ class RaylibActions {
         my @malloc_function;
         my $struct-name = $struct<identifier>.first.Str;
         if $struct-name !∈ @.ignore-alloc-structs {
-            @.alloc_bindings.push("our sub malloc-$struct-name\($raku-param-list\) returns $struct-name is native(LIBRAYLIB) is symbol('malloc_$struct-name') \{*\}");
-            @.alloc_bindings.push("our sub free-$struct-name\($struct-name \$ptr) is native(LIBRAYLIB) is symbol('free_$struct-name') \{*\}");
+            @.alloc_bindings.push("our sub malloc-$struct-name\($raku-param-list\) returns $struct-name is native($.library-name) is symbol('malloc_$struct-name') \{*\}");
+            @.alloc_bindings.push("our sub free-$struct-name\($struct-name \$ptr) is native($.library-name) is symbol('free_$struct-name') \{*\}");
             @malloc_function.push($struct<identifier>.first.Str ~ '* '~ "malloc_" ~ $struct<identifier>.first.Str ~ "($param-list) \{\n");
             @malloc_function.push("   $struct<identifier>[0]* ptr = malloc(sizeof($struct<identifier>[0]));\n");
             for @pp -> $pv {
@@ -415,8 +416,8 @@ class RaylibActions {
         my $raku-type = self.get-return-type($return-type, $pointer);
         my $kebab-case-name = self.camelcase-to-kebab($function-name.Str);
         return $params 
-            ?? "our sub $kebab-case-name ($params)$raku-type is export is native(LIBRAYLIB) is symbol('$function-name$pointerize')\{ * \}" 
-            !! "our sub term:<$kebab-case-name> ()$raku-type is export is native(LIBRAYLIB) is symbol('$function-name$pointerize')\{ * \}";
+            ?? "our sub $kebab-case-name ($params)$raku-type is export is native($.library-name) is symbol('$function-name$pointerize')\{ * \}" 
+            !! "our sub term:<$kebab-case-name> ()$raku-type is export is native($.library-name) is symbol('$function-name$pointerize')\{ * \}";
     }
 
     # void pointer
