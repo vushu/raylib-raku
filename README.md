@@ -63,6 +63,20 @@ Example:
 my $array = CArray[uint8].new("Foo".encode.list, 0);
 ```
 
+### Termification of functions 
+functions that doesn't require parameters are generated as sub term meaning
+you don't call with parentheses (https://docs.raku.org/language/syntax#term_term:%3C%3E)
+eg.
+
+```
+get-fps;
+get-frame-time;
+get-time;
+begin-draw;
+end-draw;
+etc ...
+```
+
 #### More examples at
 https://www.raylib.com/examples.html
 

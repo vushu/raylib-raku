@@ -2,11 +2,12 @@
 CC = %CC%
 RAKU = %EXECUTABLE%
 CFLAGS =-shared $$(pkg-config --libs --cflags raylib)
+EXT = $(shell uname | awk '{if ($$1 == "Darwin") print "dylib"; else print "so";}')
 
 all: raylib-raku
 
 raylib-raku:
-	$(CC) -g -fPIC resources/raylib_allocations.c resources/raylib_pointerized_wrapper.c $(CFLAGS) -o resources/libraries/libraylib.so
+	$(CC) -g -fPIC resources/raylib_allocations.c resources/raylib_pointerized_wrapper.c $(CFLAGS) -o resources/libraries/libraylib.$(EXT)
 
 install:
 	$(RAKU) configure.raku --install

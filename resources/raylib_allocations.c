@@ -172,7 +172,7 @@ Camera2D* malloc_Camera2D(Vector2 * offset, Vector2 * target, float  rotation, f
 void free_Camera2D(Camera2D* ptr){
    free(ptr);
 }
-Mesh* malloc_Mesh(int  vertexCount, int  triangleCount, float * vertices, float * texcoords, float * texcoords2, float * normals, float * tangents,unsigned char * colors,unsigned short * indices, float * animVertices, float * animNormals,unsigned char * boneIds, float * boneWeights,unsigned int  vaoId,unsigned int * vboId) {
+Mesh* malloc_Mesh(int  vertexCount, int  triangleCount, float * vertices, float * texcoords, float * texcoords2, float * normals, float * tangents,unsigned char * colors,unsigned short * indices, float * animVertices, float * animNormals,unsigned char * boneIds, float * boneWeights, Matrix * boneMatrices, int  boneCount,unsigned int  vaoId,unsigned int * vboId) {
    Mesh* ptr = malloc(sizeof(Mesh));
    ptr->vertexCount = vertexCount;
    ptr->triangleCount = triangleCount;
@@ -187,6 +187,8 @@ Mesh* malloc_Mesh(int  vertexCount, int  triangleCount, float * vertices, float 
    ptr->animNormals = animNormals;
    ptr->boneIds = boneIds;
    ptr->boneWeights = boneWeights;
+   ptr->boneMatrices = boneMatrices;
+   ptr->boneCount = boneCount;
    ptr->vaoId = vaoId;
    ptr->vboId = vboId;
    return ptr;

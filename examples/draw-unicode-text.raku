@@ -3,7 +3,7 @@ use Raylib::Bindings;
 my $black = init-black;
 my $red = init-red;
 
-my Str $text = "Αα Νν Ξξ Οο Ππ Ρρ Σσς Ττ Υυ "; # Important that the unicode is part ot the font or else it won't show.
+my Str $text = "Αα Νν Ξξ Οο Ππ Ρρ Σσς Ττ Υυ "; # Important that the unicode is part of the font or else it won't show.
 my int32 $count = 0;
 init-window(800, 450, "Draw Unicode");
 my Str $file = "resources/fonts/dejavu.fnt"; # You can use .ttf or .fnt, but it seems like .fnt are better supported by Raylib.
