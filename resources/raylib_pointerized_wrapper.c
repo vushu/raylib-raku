@@ -107,6 +107,12 @@ Matrix* GetCameraMatrix2D_pointerized(Camera2D* camera){
     *ptr = ret; 
     return ptr;
 }
+long* GetFileModTime_pointerized( char * fileName){
+    long* ptr = malloc(sizeof(long));
+    long ret = GetFileModTime(fileName); 
+    *ptr = ret; 
+    return ptr;
+}
 FilePathList* LoadDirectoryFiles_pointerized( char * dirPath){
     FilePathList* ptr = malloc(sizeof(FilePathList));
     FilePathList ret = LoadDirectoryFiles(dirPath); 
@@ -127,12 +133,6 @@ FilePathList* LoadDroppedFiles_pointerized(){
     return ptr;
 }
 void UnloadDroppedFiles_pointerized(FilePathList* files){ UnloadDroppedFiles(*files); }
-long* GetFileModTime_pointerized( char * fileName){
-    long* ptr = malloc(sizeof(long));
-    long ret = GetFileModTime(fileName); 
-    *ptr = ret; 
-    return ptr;
-}
 AutomationEventList* LoadAutomationEventList_pointerized( char * fileName){
     AutomationEventList* ptr = malloc(sizeof(AutomationEventList));
     AutomationEventList ret = LoadAutomationEventList(fileName); 
@@ -199,6 +199,7 @@ void DrawLineV_pointerized(Vector2* startPos, Vector2* endPos, Color* color){ Dr
 void DrawLineEx_pointerized(Vector2* startPos, Vector2* endPos, float thick, Color* color){ DrawLineEx(*startPos, *endPos, thick, *color); }
 void DrawLineStrip_pointerized( Vector2 * points, int pointCount, Color* color){ DrawLineStrip(points, pointCount, *color); }
 void DrawLineBezier_pointerized(Vector2* startPos, Vector2* endPos, float thick, Color* color){ DrawLineBezier(*startPos, *endPos, thick, *color); }
+void DrawLineDashed_pointerized(Vector2* startPos, Vector2* endPos, int dashSize, int spaceSize, Color* color){ DrawLineDashed(*startPos, *endPos, dashSize, spaceSize, *color); }
 void DrawCircle_pointerized(int centerX, int centerY, float radius, Color* color){ DrawCircle(centerX, centerY, radius, *color); }
 void DrawCircleSector_pointerized(Vector2* center, float radius, float startAngle, float endAngle, int segments, Color* color){ DrawCircleSector(*center, radius, startAngle, endAngle, segments, *color); }
 void DrawCircleSectorLines_pointerized(Vector2* center, float radius, float startAngle, float endAngle, int segments, Color* color){ DrawCircleSectorLines(*center, radius, startAngle, endAngle, segments, *color); }
@@ -207,7 +208,9 @@ void DrawCircleV_pointerized(Vector2* center, float radius, Color* color){ DrawC
 void DrawCircleLines_pointerized(int centerX, int centerY, float radius, Color* color){ DrawCircleLines(centerX, centerY, radius, *color); }
 void DrawCircleLinesV_pointerized(Vector2* center, float radius, Color* color){ DrawCircleLinesV(*center, radius, *color); }
 void DrawEllipse_pointerized(int centerX, int centerY, float radiusH, float radiusV, Color* color){ DrawEllipse(centerX, centerY, radiusH, radiusV, *color); }
+void DrawEllipseV_pointerized(Vector2* center, float radiusH, float radiusV, Color* color){ DrawEllipseV(*center, radiusH, radiusV, *color); }
 void DrawEllipseLines_pointerized(int centerX, int centerY, float radiusH, float radiusV, Color* color){ DrawEllipseLines(centerX, centerY, radiusH, radiusV, *color); }
+void DrawEllipseLinesV_pointerized(Vector2* center, float radiusH, float radiusV, Color* color){ DrawEllipseLinesV(*center, radiusH, radiusV, *color); }
 void DrawRing_pointerized(Vector2* center, float innerRadius, float outerRadius, float startAngle, float endAngle, int segments, Color* color){ DrawRing(*center, innerRadius, outerRadius, startAngle, endAngle, segments, *color); }
 void DrawRingLines_pointerized(Vector2* center, float innerRadius, float outerRadius, float startAngle, float endAngle, int segments, Color* color){ DrawRingLines(*center, innerRadius, outerRadius, startAngle, endAngle, segments, *color); }
 void DrawRectangle_pointerized(int posX, int posY, int width, int height, Color* color){ DrawRectangle(posX, posY, width, height, *color); }
@@ -216,7 +219,7 @@ void DrawRectangleRec_pointerized(Rectangle* rec, Color* color){ DrawRectangleRe
 void DrawRectanglePro_pointerized(Rectangle* rec, Vector2* origin, float rotation, Color* color){ DrawRectanglePro(*rec, *origin, rotation, *color); }
 void DrawRectangleGradientV_pointerized(int posX, int posY, int width, int height, Color* top, Color* bottom){ DrawRectangleGradientV(posX, posY, width, height, *top, *bottom); }
 void DrawRectangleGradientH_pointerized(int posX, int posY, int width, int height, Color* left, Color* right){ DrawRectangleGradientH(posX, posY, width, height, *left, *right); }
-void DrawRectangleGradientEx_pointerized(Rectangle* rec, Color* topLeft, Color* bottomLeft, Color* topRight, Color* bottomRight){ DrawRectangleGradientEx(*rec, *topLeft, *bottomLeft, *topRight, *bottomRight); }
+void DrawRectangleGradientEx_pointerized(Rectangle* rec, Color* topLeft, Color* bottomLeft, Color* bottomRight, Color* topRight){ DrawRectangleGradientEx(*rec, *topLeft, *bottomLeft, *bottomRight, *topRight); }
 void DrawRectangleLines_pointerized(int posX, int posY, int width, int height, Color* color){ DrawRectangleLines(posX, posY, width, height, *color); }
 void DrawRectangleLinesEx_pointerized(Rectangle* rec, float lineThick, Color* color){ DrawRectangleLinesEx(*rec, lineThick, *color); }
 void DrawRectangleRounded_pointerized(Rectangle* rec, float roundness, int segments, Color* color){ DrawRectangleRounded(*rec, roundness, segments, *color); }
