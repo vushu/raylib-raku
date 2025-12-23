@@ -39,23 +39,23 @@ VrStereoConfig* LoadVrStereoConfig_pointerized(VrDeviceInfo* device){
     return ptr;
 }
 void UnloadVrStereoConfig_pointerized(VrStereoConfig* config){ UnloadVrStereoConfig(*config); }
-Shader* LoadShader_pointerized( char * vsFileName,  char * fsFileName){
+Shader* LoadShader_pointerized(const  char * vsFileName, const  char * fsFileName){
     Shader* ptr = malloc(sizeof(Shader));
     Shader ret = LoadShader(vsFileName, fsFileName); 
     *ptr = ret; 
     return ptr;
 }
-Shader* LoadShaderFromMemory_pointerized( char * vsCode,  char * fsCode){
+Shader* LoadShaderFromMemory_pointerized(const  char * vsCode, const  char * fsCode){
     Shader* ptr = malloc(sizeof(Shader));
     Shader ret = LoadShaderFromMemory(vsCode, fsCode); 
     *ptr = ret; 
     return ptr;
 }
 bool IsShaderValid_pointerized(Shader* shader){ return IsShaderValid(*shader); }
-int GetShaderLocation_pointerized(Shader* shader,  char * uniformName){ return GetShaderLocation(*shader, uniformName); }
-int GetShaderLocationAttrib_pointerized(Shader* shader,  char * attribName){ return GetShaderLocationAttrib(*shader, attribName); }
-void SetShaderValue_pointerized(Shader* shader, int locIndex,  void * value, int uniformType){ SetShaderValue(*shader, locIndex, value, uniformType); }
-void SetShaderValueV_pointerized(Shader* shader, int locIndex,  void * value, int uniformType, int count){ SetShaderValueV(*shader, locIndex, value, uniformType, count); }
+int GetShaderLocation_pointerized(Shader* shader, const  char * uniformName){ return GetShaderLocation(*shader, uniformName); }
+int GetShaderLocationAttrib_pointerized(Shader* shader, const  char * attribName){ return GetShaderLocationAttrib(*shader, attribName); }
+void SetShaderValue_pointerized(Shader* shader, int locIndex, const  void * value, int uniformType){ SetShaderValue(*shader, locIndex, value, uniformType); }
+void SetShaderValueV_pointerized(Shader* shader, int locIndex, const  void * value, int uniformType, int count){ SetShaderValueV(*shader, locIndex, value, uniformType, count); }
 void SetShaderValueMatrix_pointerized(Shader* shader, int locIndex, Matrix* mat){ SetShaderValueMatrix(*shader, locIndex, *mat); }
 void SetShaderValueTexture_pointerized(Shader* shader, int locIndex, Texture2D* texture){ SetShaderValueTexture(*shader, locIndex, *texture); }
 void UnloadShader_pointerized(Shader* shader){ UnloadShader(*shader); }
@@ -107,19 +107,19 @@ Matrix* GetCameraMatrix2D_pointerized(Camera2D* camera){
     *ptr = ret; 
     return ptr;
 }
-long* GetFileModTime_pointerized( char * fileName){
+long* GetFileModTime_pointerized(const  char * fileName){
     long* ptr = malloc(sizeof(long));
     long ret = GetFileModTime(fileName); 
     *ptr = ret; 
     return ptr;
 }
-FilePathList* LoadDirectoryFiles_pointerized( char * dirPath){
+FilePathList* LoadDirectoryFiles_pointerized(const  char * dirPath){
     FilePathList* ptr = malloc(sizeof(FilePathList));
     FilePathList ret = LoadDirectoryFiles(dirPath); 
     *ptr = ret; 
     return ptr;
 }
-FilePathList* LoadDirectoryFilesEx_pointerized( char * basePath,  char * filter, bool scanSubdirs){
+FilePathList* LoadDirectoryFilesEx_pointerized(const  char * basePath, const  char * filter, bool scanSubdirs){
     FilePathList* ptr = malloc(sizeof(FilePathList));
     FilePathList ret = LoadDirectoryFilesEx(basePath, filter, scanSubdirs); 
     *ptr = ret; 
@@ -133,14 +133,14 @@ FilePathList* LoadDroppedFiles_pointerized(){
     return ptr;
 }
 void UnloadDroppedFiles_pointerized(FilePathList* files){ UnloadDroppedFiles(*files); }
-AutomationEventList* LoadAutomationEventList_pointerized( char * fileName){
+AutomationEventList* LoadAutomationEventList_pointerized(const  char * fileName){
     AutomationEventList* ptr = malloc(sizeof(AutomationEventList));
     AutomationEventList ret = LoadAutomationEventList(fileName); 
     *ptr = ret; 
     return ptr;
 }
 void UnloadAutomationEventList_pointerized(AutomationEventList* list){ UnloadAutomationEventList(*list); }
-bool ExportAutomationEventList_pointerized(AutomationEventList* list,  char * fileName){ return ExportAutomationEventList(*list, fileName); }
+bool ExportAutomationEventList_pointerized(AutomationEventList* list, const  char * fileName){ return ExportAutomationEventList(*list, fileName); }
 void PlayAutomationEvent_pointerized(AutomationEvent* event){ PlayAutomationEvent(*event); }
 Vector2* GetMousePosition_pointerized(){
     Vector2* ptr = malloc(sizeof(Vector2));
@@ -197,7 +197,7 @@ void DrawPixelV_pointerized(Vector2* position, Color* color){ DrawPixelV(*positi
 void DrawLine_pointerized(int startPosX, int startPosY, int endPosX, int endPosY, Color* color){ DrawLine(startPosX, startPosY, endPosX, endPosY, *color); }
 void DrawLineV_pointerized(Vector2* startPos, Vector2* endPos, Color* color){ DrawLineV(*startPos, *endPos, *color); }
 void DrawLineEx_pointerized(Vector2* startPos, Vector2* endPos, float thick, Color* color){ DrawLineEx(*startPos, *endPos, thick, *color); }
-void DrawLineStrip_pointerized( Vector2 * points, int pointCount, Color* color){ DrawLineStrip(points, pointCount, *color); }
+void DrawLineStrip_pointerized(const  Vector2 * points, int pointCount, Color* color){ DrawLineStrip(points, pointCount, *color); }
 void DrawLineBezier_pointerized(Vector2* startPos, Vector2* endPos, float thick, Color* color){ DrawLineBezier(*startPos, *endPos, thick, *color); }
 void DrawLineDashed_pointerized(Vector2* startPos, Vector2* endPos, int dashSize, int spaceSize, Color* color){ DrawLineDashed(*startPos, *endPos, dashSize, spaceSize, *color); }
 void DrawCircle_pointerized(int centerX, int centerY, float radius, Color* color){ DrawCircle(centerX, centerY, radius, *color); }
@@ -227,16 +227,16 @@ void DrawRectangleRoundedLines_pointerized(Rectangle* rec, float roundness, int 
 void DrawRectangleRoundedLinesEx_pointerized(Rectangle* rec, float roundness, int segments, float lineThick, Color* color){ DrawRectangleRoundedLinesEx(*rec, roundness, segments, lineThick, *color); }
 void DrawTriangle_pointerized(Vector2* v1, Vector2* v2, Vector2* v3, Color* color){ DrawTriangle(*v1, *v2, *v3, *color); }
 void DrawTriangleLines_pointerized(Vector2* v1, Vector2* v2, Vector2* v3, Color* color){ DrawTriangleLines(*v1, *v2, *v3, *color); }
-void DrawTriangleFan_pointerized( Vector2 * points, int pointCount, Color* color){ DrawTriangleFan(points, pointCount, *color); }
-void DrawTriangleStrip_pointerized( Vector2 * points, int pointCount, Color* color){ DrawTriangleStrip(points, pointCount, *color); }
+void DrawTriangleFan_pointerized(const  Vector2 * points, int pointCount, Color* color){ DrawTriangleFan(points, pointCount, *color); }
+void DrawTriangleStrip_pointerized(const  Vector2 * points, int pointCount, Color* color){ DrawTriangleStrip(points, pointCount, *color); }
 void DrawPoly_pointerized(Vector2* center, int sides, float radius, float rotation, Color* color){ DrawPoly(*center, sides, radius, rotation, *color); }
 void DrawPolyLines_pointerized(Vector2* center, int sides, float radius, float rotation, Color* color){ DrawPolyLines(*center, sides, radius, rotation, *color); }
 void DrawPolyLinesEx_pointerized(Vector2* center, int sides, float radius, float rotation, float lineThick, Color* color){ DrawPolyLinesEx(*center, sides, radius, rotation, lineThick, *color); }
-void DrawSplineLinear_pointerized( Vector2 * points, int pointCount, float thick, Color* color){ DrawSplineLinear(points, pointCount, thick, *color); }
-void DrawSplineBasis_pointerized( Vector2 * points, int pointCount, float thick, Color* color){ DrawSplineBasis(points, pointCount, thick, *color); }
-void DrawSplineCatmullRom_pointerized( Vector2 * points, int pointCount, float thick, Color* color){ DrawSplineCatmullRom(points, pointCount, thick, *color); }
-void DrawSplineBezierQuadratic_pointerized( Vector2 * points, int pointCount, float thick, Color* color){ DrawSplineBezierQuadratic(points, pointCount, thick, *color); }
-void DrawSplineBezierCubic_pointerized( Vector2 * points, int pointCount, float thick, Color* color){ DrawSplineBezierCubic(points, pointCount, thick, *color); }
+void DrawSplineLinear_pointerized(const  Vector2 * points, int pointCount, float thick, Color* color){ DrawSplineLinear(points, pointCount, thick, *color); }
+void DrawSplineBasis_pointerized(const  Vector2 * points, int pointCount, float thick, Color* color){ DrawSplineBasis(points, pointCount, thick, *color); }
+void DrawSplineCatmullRom_pointerized(const  Vector2 * points, int pointCount, float thick, Color* color){ DrawSplineCatmullRom(points, pointCount, thick, *color); }
+void DrawSplineBezierQuadratic_pointerized(const  Vector2 * points, int pointCount, float thick, Color* color){ DrawSplineBezierQuadratic(points, pointCount, thick, *color); }
+void DrawSplineBezierCubic_pointerized(const  Vector2 * points, int pointCount, float thick, Color* color){ DrawSplineBezierCubic(points, pointCount, thick, *color); }
 void DrawSplineSegmentLinear_pointerized(Vector2* p1, Vector2* p2, float thick, Color* color){ DrawSplineSegmentLinear(*p1, *p2, thick, *color); }
 void DrawSplineSegmentBasis_pointerized(Vector2* p1, Vector2* p2, Vector2* p3, Vector2* p4, float thick, Color* color){ DrawSplineSegmentBasis(*p1, *p2, *p3, *p4, thick, *color); }
 void DrawSplineSegmentCatmullRom_pointerized(Vector2* p1, Vector2* p2, Vector2* p3, Vector2* p4, float thick, Color* color){ DrawSplineSegmentCatmullRom(*p1, *p2, *p3, *p4, thick, *color); }
@@ -280,7 +280,7 @@ bool CheckCollisionPointRec_pointerized(Vector2* point, Rectangle* rec){ return 
 bool CheckCollisionPointCircle_pointerized(Vector2* point, Vector2* center, float radius){ return CheckCollisionPointCircle(*point, *center, radius); }
 bool CheckCollisionPointTriangle_pointerized(Vector2* point, Vector2* p1, Vector2* p2, Vector2* p3){ return CheckCollisionPointTriangle(*point, *p1, *p2, *p3); }
 bool CheckCollisionPointLine_pointerized(Vector2* point, Vector2* p1, Vector2* p2, int threshold){ return CheckCollisionPointLine(*point, *p1, *p2, threshold); }
-bool CheckCollisionPointPoly_pointerized(Vector2* point,  Vector2 * points, int pointCount){ return CheckCollisionPointPoly(*point, points, pointCount); }
+bool CheckCollisionPointPoly_pointerized(Vector2* point, const  Vector2 * points, int pointCount){ return CheckCollisionPointPoly(*point, points, pointCount); }
 bool CheckCollisionLines_pointerized(Vector2* startPos1, Vector2* endPos1, Vector2* startPos2, Vector2* endPos2,  Vector2 * collisionPoint){ return CheckCollisionLines(*startPos1, *endPos1, *startPos2, *endPos2, collisionPoint); }
 Rectangle* GetCollisionRec_pointerized(Rectangle* rec1, Rectangle* rec2){
     Rectangle* ptr = malloc(sizeof(Rectangle));
@@ -288,31 +288,31 @@ Rectangle* GetCollisionRec_pointerized(Rectangle* rec1, Rectangle* rec2){
     *ptr = ret; 
     return ptr;
 }
-Image* LoadImage_pointerized( char * fileName){
+Image* LoadImage_pointerized(const  char * fileName){
     Image* ptr = malloc(sizeof(Image));
     Image ret = LoadImage(fileName); 
     *ptr = ret; 
     return ptr;
 }
-Image* LoadImageRaw_pointerized( char * fileName, int width, int height, int format, int headerSize){
+Image* LoadImageRaw_pointerized(const  char * fileName, int width, int height, int format, int headerSize){
     Image* ptr = malloc(sizeof(Image));
     Image ret = LoadImageRaw(fileName, width, height, format, headerSize); 
     *ptr = ret; 
     return ptr;
 }
-Image* LoadImageAnim_pointerized( char * fileName,  int * frames){
+Image* LoadImageAnim_pointerized(const  char * fileName,  int * frames){
     Image* ptr = malloc(sizeof(Image));
     Image ret = LoadImageAnim(fileName, frames); 
     *ptr = ret; 
     return ptr;
 }
-Image* LoadImageAnimFromMemory_pointerized( char * fileType,  char * fileData, int dataSize,  int * frames){
+Image* LoadImageAnimFromMemory_pointerized(const  char * fileType, const  char * fileData, int dataSize,  int * frames){
     Image* ptr = malloc(sizeof(Image));
     Image ret = LoadImageAnimFromMemory(fileType, fileData, dataSize, frames); 
     *ptr = ret; 
     return ptr;
 }
-Image* LoadImageFromMemory_pointerized( char * fileType,  char * fileData, int dataSize){
+Image* LoadImageFromMemory_pointerized(const  char * fileType, const  char * fileData, int dataSize){
     Image* ptr = malloc(sizeof(Image));
     Image ret = LoadImageFromMemory(fileType, fileData, dataSize); 
     *ptr = ret; 
@@ -332,9 +332,9 @@ Image* LoadImageFromScreen_pointerized(){
 }
 bool IsImageValid_pointerized(Image* image){ return IsImageValid(*image); }
 void UnloadImage_pointerized(Image* image){ UnloadImage(*image); }
-bool ExportImage_pointerized(Image* image,  char * fileName){ return ExportImage(*image, fileName); }
-char* ExportImageToMemory_pointerized(Image* image,  char * fileType,  int * fileSize){ return ExportImageToMemory(*image, fileType, fileSize); }
-bool ExportImageAsCode_pointerized(Image* image,  char * fileName){ return ExportImageAsCode(*image, fileName); }
+bool ExportImage_pointerized(Image* image, const  char * fileName){ return ExportImage(*image, fileName); }
+char* ExportImageToMemory_pointerized(Image* image, const  char * fileType,  int * fileSize){ return ExportImageToMemory(*image, fileType, fileSize); }
+bool ExportImageAsCode_pointerized(Image* image, const  char * fileName){ return ExportImageAsCode(*image, fileName); }
 Image* GenImageColor_pointerized(int width, int height, Color* color){
     Image* ptr = malloc(sizeof(Image));
     Image ret = GenImageColor(width, height, *color); 
@@ -383,7 +383,7 @@ Image* GenImageCellular_pointerized(int width, int height, int tileSize){
     *ptr = ret; 
     return ptr;
 }
-Image* GenImageText_pointerized(int width, int height,  char * text){
+Image* GenImageText_pointerized(int width, int height, const  char * text){
     Image* ptr = malloc(sizeof(Image));
     Image ret = GenImageText(width, height, text); 
     *ptr = ret; 
@@ -407,13 +407,13 @@ Image* ImageFromChannel_pointerized(Image* image, int selectedChannel){
     *ptr = ret; 
     return ptr;
 }
-Image* ImageText_pointerized( char * text, int fontSize, Color* color){
+Image* ImageText_pointerized(const  char * text, int fontSize, Color* color){
     Image* ptr = malloc(sizeof(Image));
     Image ret = ImageText(text, fontSize, *color); 
     *ptr = ret; 
     return ptr;
 }
-Image* ImageTextEx_pointerized(Font* font,  char * text, float fontSize, float spacing, Color* tint){
+Image* ImageTextEx_pointerized(Font* font, const  char * text, float fontSize, float spacing, Color* tint){
     Image* ptr = malloc(sizeof(Image));
     Image ret = ImageTextEx(*font, text, fontSize, spacing, *tint); 
     *ptr = ret; 
@@ -457,12 +457,12 @@ void ImageDrawRectangleLines_pointerized( Image * dst, Rectangle* rec, int thick
 void ImageDrawTriangle_pointerized( Image * dst, Vector2* v1, Vector2* v2, Vector2* v3, Color* color){ ImageDrawTriangle(dst, *v1, *v2, *v3, *color); }
 void ImageDrawTriangleEx_pointerized( Image * dst, Vector2* v1, Vector2* v2, Vector2* v3, Color* c1, Color* c2, Color* c3){ ImageDrawTriangleEx(dst, *v1, *v2, *v3, *c1, *c2, *c3); }
 void ImageDrawTriangleLines_pointerized( Image * dst, Vector2* v1, Vector2* v2, Vector2* v3, Color* color){ ImageDrawTriangleLines(dst, *v1, *v2, *v3, *color); }
-void ImageDrawTriangleFan_pointerized( Image * dst,  Vector2 * points, int pointCount, Color* color){ ImageDrawTriangleFan(dst, points, pointCount, *color); }
-void ImageDrawTriangleStrip_pointerized( Image * dst,  Vector2 * points, int pointCount, Color* color){ ImageDrawTriangleStrip(dst, points, pointCount, *color); }
+void ImageDrawTriangleFan_pointerized( Image * dst, const  Vector2 * points, int pointCount, Color* color){ ImageDrawTriangleFan(dst, points, pointCount, *color); }
+void ImageDrawTriangleStrip_pointerized( Image * dst, const  Vector2 * points, int pointCount, Color* color){ ImageDrawTriangleStrip(dst, points, pointCount, *color); }
 void ImageDraw_pointerized( Image * dst, Image* src, Rectangle* srcRec, Rectangle* dstRec, Color* tint){ ImageDraw(dst, *src, *srcRec, *dstRec, *tint); }
-void ImageDrawText_pointerized( Image * dst,  char * text, int posX, int posY, int fontSize, Color* color){ ImageDrawText(dst, text, posX, posY, fontSize, *color); }
-void ImageDrawTextEx_pointerized( Image * dst, Font* font,  char * text, Vector2* position, float fontSize, float spacing, Color* tint){ ImageDrawTextEx(dst, *font, text, *position, fontSize, spacing, *tint); }
-Texture2D* LoadTexture_pointerized( char * fileName){
+void ImageDrawText_pointerized( Image * dst, const  char * text, int posX, int posY, int fontSize, Color* color){ ImageDrawText(dst, text, posX, posY, fontSize, *color); }
+void ImageDrawTextEx_pointerized( Image * dst, Font* font, const  char * text, Vector2* position, float fontSize, float spacing, Color* tint){ ImageDrawTextEx(dst, *font, text, *position, fontSize, spacing, *tint); }
+Texture2D* LoadTexture_pointerized(const  char * fileName){
     Texture2D* ptr = malloc(sizeof(Texture2D));
     Texture2D ret = LoadTexture(fileName); 
     *ptr = ret; 
@@ -490,8 +490,8 @@ bool IsTextureValid_pointerized(Texture2D* texture){ return IsTextureValid(*text
 void UnloadTexture_pointerized(Texture2D* texture){ UnloadTexture(*texture); }
 bool IsRenderTextureValid_pointerized(RenderTexture2D* target){ return IsRenderTextureValid(*target); }
 void UnloadRenderTexture_pointerized(RenderTexture2D* target){ UnloadRenderTexture(*target); }
-void UpdateTexture_pointerized(Texture2D* texture,  void * pixels){ UpdateTexture(*texture, pixels); }
-void UpdateTextureRec_pointerized(Texture2D* texture, Rectangle* rec,  void * pixels){ UpdateTextureRec(*texture, *rec, pixels); }
+void UpdateTexture_pointerized(Texture2D* texture, const  void * pixels){ UpdateTexture(*texture, pixels); }
+void UpdateTextureRec_pointerized(Texture2D* texture, Rectangle* rec, const  void * pixels){ UpdateTextureRec(*texture, *rec, pixels); }
 void SetTextureFilter_pointerized(Texture2D* texture, int filter){ SetTextureFilter(*texture, filter); }
 void SetTextureWrap_pointerized(Texture2D* texture, int wrap){ SetTextureWrap(*texture, wrap); }
 void DrawTexture_pointerized(Texture2D* texture, int posX, int posY, Color* tint){ DrawTexture(*texture, posX, posY, *tint); }
@@ -587,13 +587,13 @@ Font* GetFontDefault_pointerized(){
     *ptr = ret; 
     return ptr;
 }
-Font* LoadFont_pointerized( char * fileName){
+Font* LoadFont_pointerized(const  char * fileName){
     Font* ptr = malloc(sizeof(Font));
     Font ret = LoadFont(fileName); 
     *ptr = ret; 
     return ptr;
 }
-Font* LoadFontEx_pointerized( char * fileName, int fontSize,  int * codepoints, int codepointCount){
+Font* LoadFontEx_pointerized(const  char * fileName, int fontSize, const  int * codepoints, int codepointCount){
     Font* ptr = malloc(sizeof(Font));
     Font ret = LoadFontEx(fileName, fontSize, codepoints, codepointCount); 
     *ptr = ret; 
@@ -605,27 +605,27 @@ Font* LoadFontFromImage_pointerized(Image* image, Color* key, int firstChar){
     *ptr = ret; 
     return ptr;
 }
-Font* LoadFontFromMemory_pointerized( char * fileType,  char * fileData, int dataSize, int fontSize,  int * codepoints, int codepointCount){
+Font* LoadFontFromMemory_pointerized(const  char * fileType, const  char * fileData, int dataSize, int fontSize, const  int * codepoints, int codepointCount){
     Font* ptr = malloc(sizeof(Font));
     Font ret = LoadFontFromMemory(fileType, fileData, dataSize, fontSize, codepoints, codepointCount); 
     *ptr = ret; 
     return ptr;
 }
 bool IsFontValid_pointerized(Font* font){ return IsFontValid(*font); }
-Image* GenImageFontAtlas_pointerized( GlyphInfo * glyphs,  Rectangle * * glyphRecs, int glyphCount, int fontSize, int padding, int packMethod){
+Image* GenImageFontAtlas_pointerized(const  GlyphInfo * glyphs,  Rectangle * * glyphRecs, int glyphCount, int fontSize, int padding, int packMethod){
     Image* ptr = malloc(sizeof(Image));
     Image ret = GenImageFontAtlas(glyphs, glyphRecs, glyphCount, fontSize, padding, packMethod); 
     *ptr = ret; 
     return ptr;
 }
 void UnloadFont_pointerized(Font* font){ UnloadFont(*font); }
-bool ExportFontAsCode_pointerized(Font* font,  char * fileName){ return ExportFontAsCode(*font, fileName); }
-void DrawText_pointerized( char * text, int posX, int posY, int fontSize, Color* color){ DrawText(text, posX, posY, fontSize, *color); }
-void DrawTextEx_pointerized(Font* font,  char * text, Vector2* position, float fontSize, float spacing, Color* tint){ DrawTextEx(*font, text, *position, fontSize, spacing, *tint); }
-void DrawTextPro_pointerized(Font* font,  char * text, Vector2* position, Vector2* origin, float rotation, float fontSize, float spacing, Color* tint){ DrawTextPro(*font, text, *position, *origin, rotation, fontSize, spacing, *tint); }
+bool ExportFontAsCode_pointerized(Font* font, const  char * fileName){ return ExportFontAsCode(*font, fileName); }
+void DrawText_pointerized(const  char * text, int posX, int posY, int fontSize, Color* color){ DrawText(text, posX, posY, fontSize, *color); }
+void DrawTextEx_pointerized(Font* font, const  char * text, Vector2* position, float fontSize, float spacing, Color* tint){ DrawTextEx(*font, text, *position, fontSize, spacing, *tint); }
+void DrawTextPro_pointerized(Font* font, const  char * text, Vector2* position, Vector2* origin, float rotation, float fontSize, float spacing, Color* tint){ DrawTextPro(*font, text, *position, *origin, rotation, fontSize, spacing, *tint); }
 void DrawTextCodepoint_pointerized(Font* font, int codepoint, Vector2* position, float fontSize, Color* tint){ DrawTextCodepoint(*font, codepoint, *position, fontSize, *tint); }
-void DrawTextCodepoints_pointerized(Font* font,  int * codepoints, int codepointCount, Vector2* position, float fontSize, float spacing, Color* tint){ DrawTextCodepoints(*font, codepoints, codepointCount, *position, fontSize, spacing, *tint); }
-Vector2* MeasureTextEx_pointerized(Font* font,  char * text, float fontSize, float spacing){
+void DrawTextCodepoints_pointerized(Font* font, const  int * codepoints, int codepointCount, Vector2* position, float fontSize, float spacing, Color* tint){ DrawTextCodepoints(*font, codepoints, codepointCount, *position, fontSize, spacing, *tint); }
+Vector2* MeasureTextEx_pointerized(Font* font, const  char * text, float fontSize, float spacing){
     Vector2* ptr = malloc(sizeof(Vector2));
     Vector2 ret = MeasureTextEx(*font, text, fontSize, spacing); 
     *ptr = ret; 
@@ -648,7 +648,7 @@ void DrawLine3D_pointerized(Vector3* startPos, Vector3* endPos, Color* color){ D
 void DrawPoint3D_pointerized(Vector3* position, Color* color){ DrawPoint3D(*position, *color); }
 void DrawCircle3D_pointerized(Vector3* center, float radius, Vector3* rotationAxis, float rotationAngle, Color* color){ DrawCircle3D(*center, radius, *rotationAxis, rotationAngle, *color); }
 void DrawTriangle3D_pointerized(Vector3* v1, Vector3* v2, Vector3* v3, Color* color){ DrawTriangle3D(*v1, *v2, *v3, *color); }
-void DrawTriangleStrip3D_pointerized( Vector3 * points, int pointCount, Color* color){ DrawTriangleStrip3D(points, pointCount, *color); }
+void DrawTriangleStrip3D_pointerized(const  Vector3 * points, int pointCount, Color* color){ DrawTriangleStrip3D(points, pointCount, *color); }
 void DrawCube_pointerized(Vector3* position, float width, float height, float length, Color* color){ DrawCube(*position, width, height, length, *color); }
 void DrawCubeV_pointerized(Vector3* position, Vector3* size, Color* color){ DrawCubeV(*position, *size, *color); }
 void DrawCubeWires_pointerized(Vector3* position, float width, float height, float length, Color* color){ DrawCubeWires(*position, width, height, length, *color); }
@@ -664,7 +664,7 @@ void DrawCapsule_pointerized(Vector3* startPos, Vector3* endPos, float radius, i
 void DrawCapsuleWires_pointerized(Vector3* startPos, Vector3* endPos, float radius, int slices, int rings, Color* color){ DrawCapsuleWires(*startPos, *endPos, radius, slices, rings, *color); }
 void DrawPlane_pointerized(Vector3* centerPos, Vector2* size, Color* color){ DrawPlane(*centerPos, *size, *color); }
 void DrawRay_pointerized(Ray* ray, Color* color){ DrawRay(*ray, *color); }
-Model* LoadModel_pointerized( char * fileName){
+Model* LoadModel_pointerized(const  char * fileName){
     Model* ptr = malloc(sizeof(Model));
     Model ret = LoadModel(fileName); 
     *ptr = ret; 
@@ -694,18 +694,18 @@ void DrawBoundingBox_pointerized(BoundingBox* box, Color* color){ DrawBoundingBo
 void DrawBillboard_pointerized(Camera* camera, Texture2D* texture, Vector3* position, float scale, Color* tint){ DrawBillboard(*camera, *texture, *position, scale, *tint); }
 void DrawBillboardRec_pointerized(Camera* camera, Texture2D* texture, Rectangle* source, Vector3* position, Vector2* size, Color* tint){ DrawBillboardRec(*camera, *texture, *source, *position, *size, *tint); }
 void DrawBillboardPro_pointerized(Camera* camera, Texture2D* texture, Rectangle* source, Vector3* position, Vector3* up, Vector2* size, Vector2* origin, float rotation, Color* tint){ DrawBillboardPro(*camera, *texture, *source, *position, *up, *size, *origin, rotation, *tint); }
-void UpdateMeshBuffer_pointerized(Mesh* mesh, int index,  void * data, int dataSize, int offset){ UpdateMeshBuffer(*mesh, index, data, dataSize, offset); }
+void UpdateMeshBuffer_pointerized(Mesh* mesh, int index, const  void * data, int dataSize, int offset){ UpdateMeshBuffer(*mesh, index, data, dataSize, offset); }
 void UnloadMesh_pointerized(Mesh* mesh){ UnloadMesh(*mesh); }
 void DrawMesh_pointerized(Mesh* mesh, Material* material, Matrix* transform){ DrawMesh(*mesh, *material, *transform); }
-void DrawMeshInstanced_pointerized(Mesh* mesh, Material* material,  Matrix * transforms, int instances){ DrawMeshInstanced(*mesh, *material, transforms, instances); }
+void DrawMeshInstanced_pointerized(Mesh* mesh, Material* material, const  Matrix * transforms, int instances){ DrawMeshInstanced(*mesh, *material, transforms, instances); }
 BoundingBox* GetMeshBoundingBox_pointerized(Mesh* mesh){
     BoundingBox* ptr = malloc(sizeof(BoundingBox));
     BoundingBox ret = GetMeshBoundingBox(*mesh); 
     *ptr = ret; 
     return ptr;
 }
-bool ExportMesh_pointerized(Mesh* mesh,  char * fileName){ return ExportMesh(*mesh, fileName); }
-bool ExportMeshAsCode_pointerized(Mesh* mesh,  char * fileName){ return ExportMeshAsCode(*mesh, fileName); }
+bool ExportMesh_pointerized(Mesh* mesh, const  char * fileName){ return ExportMesh(*mesh, fileName); }
+bool ExportMeshAsCode_pointerized(Mesh* mesh, const  char * fileName){ return ExportMeshAsCode(*mesh, fileName); }
 Mesh* GenMeshPoly_pointerized(int sides, float radius){
     Mesh* ptr = malloc(sizeof(Mesh));
     Mesh ret = GenMeshPoly(sides, radius); 
@@ -818,20 +818,20 @@ RayCollision* GetRayCollisionQuad_pointerized(Ray* ray, Vector3* p1, Vector3* p2
     *ptr = ret; 
     return ptr;
 }
-Wave* LoadWave_pointerized( char * fileName){
+Wave* LoadWave_pointerized(const  char * fileName){
     Wave* ptr = malloc(sizeof(Wave));
     Wave ret = LoadWave(fileName); 
     *ptr = ret; 
     return ptr;
 }
-Wave* LoadWaveFromMemory_pointerized( char * fileType,  char * fileData, int dataSize){
+Wave* LoadWaveFromMemory_pointerized(const  char * fileType, const  char * fileData, int dataSize){
     Wave* ptr = malloc(sizeof(Wave));
     Wave ret = LoadWaveFromMemory(fileType, fileData, dataSize); 
     *ptr = ret; 
     return ptr;
 }
 bool IsWaveValid_pointerized(Wave* wave){ return IsWaveValid(*wave); }
-Sound* LoadSound_pointerized( char * fileName){
+Sound* LoadSound_pointerized(const  char * fileName){
     Sound* ptr = malloc(sizeof(Sound));
     Sound ret = LoadSound(fileName); 
     *ptr = ret; 
@@ -850,12 +850,12 @@ Sound* LoadSoundAlias_pointerized(Sound* source){
     return ptr;
 }
 bool IsSoundValid_pointerized(Sound* sound){ return IsSoundValid(*sound); }
-void UpdateSound_pointerized(Sound* sound,  void * data, int sampleCount){ UpdateSound(*sound, data, sampleCount); }
+void UpdateSound_pointerized(Sound* sound, const  void * data, int sampleCount){ UpdateSound(*sound, data, sampleCount); }
 void UnloadWave_pointerized(Wave* wave){ UnloadWave(*wave); }
 void UnloadSound_pointerized(Sound* sound){ UnloadSound(*sound); }
 void UnloadSoundAlias_pointerized(Sound* alias){ UnloadSoundAlias(*alias); }
-bool ExportWave_pointerized(Wave* wave,  char * fileName){ return ExportWave(*wave, fileName); }
-bool ExportWaveAsCode_pointerized(Wave* wave,  char * fileName){ return ExportWaveAsCode(*wave, fileName); }
+bool ExportWave_pointerized(Wave* wave, const  char * fileName){ return ExportWave(*wave, fileName); }
+bool ExportWaveAsCode_pointerized(Wave* wave, const  char * fileName){ return ExportWaveAsCode(*wave, fileName); }
 void PlaySound_pointerized(Sound* sound){ PlaySound(*sound); }
 void StopSound_pointerized(Sound* sound){ StopSound(*sound); }
 void PauseSound_pointerized(Sound* sound){ PauseSound(*sound); }
@@ -871,13 +871,13 @@ Wave* WaveCopy_pointerized(Wave* wave){
     return ptr;
 }
 float* LoadWaveSamples_pointerized(Wave* wave){ return LoadWaveSamples(*wave); }
-Music* LoadMusicStream_pointerized( char * fileName){
+Music* LoadMusicStream_pointerized(const  char * fileName){
     Music* ptr = malloc(sizeof(Music));
     Music ret = LoadMusicStream(fileName); 
     *ptr = ret; 
     return ptr;
 }
-Music* LoadMusicStreamFromMemory_pointerized( char * fileType,  char * data, int dataSize){
+Music* LoadMusicStreamFromMemory_pointerized(const  char * fileType, const  char * data, int dataSize){
     Music* ptr = malloc(sizeof(Music));
     Music ret = LoadMusicStreamFromMemory(fileType, data, dataSize); 
     *ptr = ret; 
@@ -905,7 +905,7 @@ AudioStream* LoadAudioStream_pointerized(int sampleRate, int sampleSize, int cha
 }
 bool IsAudioStreamValid_pointerized(AudioStream* stream){ return IsAudioStreamValid(*stream); }
 void UnloadAudioStream_pointerized(AudioStream* stream){ UnloadAudioStream(*stream); }
-void UpdateAudioStream_pointerized(AudioStream* stream,  void * data, int frameCount){ UpdateAudioStream(*stream, data, frameCount); }
+void UpdateAudioStream_pointerized(AudioStream* stream, const  void * data, int frameCount){ UpdateAudioStream(*stream, data, frameCount); }
 bool IsAudioStreamProcessed_pointerized(AudioStream* stream){ return IsAudioStreamProcessed(*stream); }
 void PlayAudioStream_pointerized(AudioStream* stream){ PlayAudioStream(*stream); }
 void PauseAudioStream_pointerized(AudioStream* stream){ PauseAudioStream(*stream); }

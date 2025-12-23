@@ -378,8 +378,8 @@ class RaylibActions {
         }
         elsif ($parameters<pointer> && $parameters<type>) {
             @current-identifiers.unshift((~$parameters<type>, ~$parameters<identifier>, False));
-            my $modifier = $<parameters><modifier> ?? $<parameters><modifier> !! '';
-            my $const = $<parameters><const> ?? 'const ' !! '';
+            my $modifier = $parameters<modifier> ?? $parameters<modifier> !! '';
+            my $const = $parameters<const> ?? 'const ' !! '';
             return "$const$modifier $($parameters<type>) $parameters<pointer> $parameters<identifier>" ~ $tail;
         }
         else {

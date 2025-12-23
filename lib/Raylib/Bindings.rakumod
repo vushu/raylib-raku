@@ -1,5 +1,5 @@
 # This Raku module is generated from raylib.h
-unit module Raylib::Bindings:ver<0.0.18>:auth<zef:vushu>;
+unit module Raylib::Bindings:ver<0.0.20>:auth<zef:vushu>;
 use NativeCall;
 constant LIBRAYLIB = %?RESOURCES<libraries/raylib>;
 class Vector2 is export is repr('CStruct') is rw {
