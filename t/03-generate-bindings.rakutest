@@ -134,7 +134,7 @@ RLAPI void SetSaveFileTextCallback(SaveFileTextCallback callback); // Set custom
 END
 
 my $parser = RaylibGrammar.new;
-my $actions = RaylibActions.new;
+my $actions = RaylibActions.new: :library-name<LIBRAYLIB>;
 
 $parser.parse($code, actions => $actions);
 
